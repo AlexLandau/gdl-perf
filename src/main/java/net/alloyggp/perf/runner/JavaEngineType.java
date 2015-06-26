@@ -1,14 +1,15 @@
 package net.alloyggp.perf.runner;
 
-import java.io.BufferedReader;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import net.alloyggp.perf.ObservedError;
 
+import org.ggp.base.util.concurrency.ConcurrencyUtils;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.ruleengine.RuleEngine;
 import org.ggp.base.util.ruleengine.RuleEngineFactory;
@@ -25,6 +26,7 @@ import org.ggp.base.util.statemachine.superprover2.CompiledProverRuleEngineFacto
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public enum JavaEngineType {
 	PROVER(getStateMachinePerfTestRunnable(ProverStateMachineFactory.createNormal()),
@@ -46,6 +48,10 @@ public enum JavaEngineType {
 
 	public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
 		return perfRunnable.runPerfTest(gameRules, secondsToRun);
+	}
+
+	public void runCorrectnessTest(String gameRules, int stateChangesToRun, GameActionRecorder recorder) throws Exception {
+		correctnessRunnable.runCorrectnessTest(gameRules, stateChangesToRun, recorder);
 	}
 
 	public static interface PerfTestRunnable {
@@ -224,14 +230,15 @@ public enum JavaEngineType {
 
 	//TODO: Limit number of errors we find?
 	public Optional<ObservedError> validateCorrectnessTestOutput(
-			Game game, BufferedReader in) throws Exception {
+			Game game, BlockingQueue<GameActionMessage> messages) throws Exception {
 		StateMachine sm = getStateMachine(this, game); //TODO: Initialize
 
-		BlockingQueue<GameActionMessage> messages = GameActionParser.convert(in);
+		int numStateChanges = 0;
+//		BlockingQueue<GameActionMessage> messages = GameActionParser.convert(in);
 		List<Role> ourRoles = sm.getRoles();
 		List<Role> theirRoles = messages.take().expectRolesMessage().getRoles();
 		if (!ourRoles.equals(theirRoles)) {
-			return Optional.of(ObservedError.create("Role mismatch", ourRoles, theirRoles));
+			return Optional.of(ObservedError.create("Role mismatch", ourRoles, theirRoles, numStateChanges));
 		}
 		//TODO: ...
 		MachineState initialState = sm.getInitialState();
@@ -240,6 +247,7 @@ public enum JavaEngineType {
 			List<List<Move>> moveHistory = Lists.newArrayList();
 			//TODO: ...
 			while (true) {
+				ConcurrencyUtils.checkForInterruption();
 				boolean ourTerminal = sm.isTerminal(curState);
 				GameActionMessage message = messages.take();
 				if (message.isEndOfMessages()) {
@@ -247,7 +255,7 @@ public enum JavaEngineType {
 				}
 				boolean theirTerminal = message.expectTerminalityMessage().isTerminal();
 				if (ourTerminal != theirTerminal) {
-					return Optional.of(ObservedError.create("Terminality mismatch", ourTerminal, theirTerminal, moveHistory));
+					return Optional.of(ObservedError.create("Terminality mismatch", ourTerminal, theirTerminal, numStateChanges, moveHistory));
 				}
 				if (ourTerminal) {
 					break;
@@ -255,22 +263,23 @@ public enum JavaEngineType {
 				//TODO: Continue non-terminal case
 				//Check legal moves
 				for (Role role : theirRoles) {
-					List<Move> ourMoves = sm.getLegalMoves(curState, role);
-					List<Move> theirMoves = messages.take().expectLegalMovesMessage().getMoves();
+					Set<Move> ourMoves = Sets.newHashSet(sm.getLegalMoves(curState, role));
+					Set<Move> theirMoves = Sets.newHashSet(messages.take().expectLegalMovesMessage().getMoves());
 					if (!ourMoves.equals(theirMoves)) {
-						return Optional.of(ObservedError.create("Legal move mismatch for role " + role, ourMoves, theirMoves, moveHistory));
+						return Optional.of(ObservedError.create("Legal move mismatch for role " + role, ourMoves, theirMoves, numStateChanges, moveHistory));
 					}
 				}
 				List<Move> jointMove = messages.take().expectChosenMovesMessage().getJointMove();
 				//Nothing to check
 				moveHistory.add(jointMove);
 				curState = sm.getNextState(curState, jointMove);
+				numStateChanges++;
 			}
 			//TODO: Continue terminal case
 			List<Integer> ourGoals = sm.getGoals(curState);
 			List<Integer> theirGoals = messages.take().expectGoalsMessage().getGoals();
 			if (!ourGoals.equals(theirGoals)) {
-				return Optional.of(ObservedError.create("Goal values mismatch", ourGoals, theirGoals, moveHistory));
+				return Optional.of(ObservedError.create("Goal values mismatch", ourGoals, theirGoals, numStateChanges, moveHistory));
 			}
 		}
 	}

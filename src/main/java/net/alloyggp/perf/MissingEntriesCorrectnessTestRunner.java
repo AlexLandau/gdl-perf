@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -21,13 +23,14 @@ import net.alloyggp.perf.runner.GameActionParser;
 import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.TimeoutSignaler;
 
+import org.ggp.base.util.Immutables;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.gdl.grammar.GdlPool;
 
 import com.google.common.collect.Lists;
 
-public class CorrectnessTestRunner {
-	private static final EngineType ENGINE_TO_TEST = EngineType.TUPLE_PROVER;
+public class MissingEntriesCorrectnessTestRunner {
+	private static final EngineType ENGINE_TO_TEST = EngineType.COMPILED_PROVER;
 	//To make things simpler, restrict validation to the Java engine types
 	private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.PROVER;
 	private static final int MIN_NUM_STATE_CHANGES_TO_TEST = 1000;
@@ -36,7 +39,11 @@ public class CorrectnessTestRunner {
 	public static void main(String[] args) throws Exception {
 		File outputCsvFile = getCsvOutputFileForEngine(ENGINE_TO_TEST);
 
+		Set<GameKey> alreadyTestedGames = loadAlreadyTestedGames(outputCsvFile);
 		for (GameKey gameKey : GameKey.loadAllValidGameKeys()) {
+			if (alreadyTestedGames.contains(gameKey)) {
+				continue;
+			}
 			System.out.println("Testing game " + gameKey);
 			try {
 				CorrectnessTestResult result = runTest(ENGINE_TO_TEST, VALIDATION_ENGINE, gameKey);
@@ -51,6 +58,13 @@ public class CorrectnessTestRunner {
 			GdlPool.drainPool();
 			System.gc();
 		}
+	}
+
+	private static Set<GameKey> loadAlreadyTestedGames(File outputCsvFile) throws IOException {
+		List<CorrectnessTestResult> results = CsvFiles.load(outputCsvFile, CorrectnessTestResult.getCsvLoader());
+		return results.stream()
+					  .map(CorrectnessTestResult::getGameKey)
+					  .collect(Immutables.collectSet());
 	}
 
 	public static File getCsvOutputFileForEngine(EngineType engineToTest) throws IOException {
@@ -94,11 +108,16 @@ public class CorrectnessTestRunner {
 		Future<Optional<ObservedError>> errorFuture = executor.submit(validationCallable);
 		timeoutSignaler.onTimeoutShutdownNow(executor);
 
-		startTimeoutThread(timedOut, process, timeoutSignaler, MAX_SECONDS_PER_TEST);
+		CountDownLatch finishedSignal = new CountDownLatch(1);
+		startTimeoutThread(timedOut, finishedSignal, timeoutSignaler, MAX_SECONDS_PER_TEST);
 		process.waitFor();
 		Optional<ObservedError> error = errorFuture.get();
+		finishedSignal.countDown(); //cleans up stuff
 		int numStateChanges = MIN_NUM_STATE_CHANGES_TO_TEST;
-		if (error == null) {
+		if (timedOut.get()) {
+			error = Optional.of(ObservedError.create("Timed out after " + MAX_SECONDS_PER_TEST + " seconds", 0));
+			return CorrectnessTestResult.create(gameKey, engineToTest, validationEngine, numStateChanges, error);
+		} else if (error == null) {
 			System.out.println("No results; validation failed");
 			return null;
 		} else {
@@ -110,20 +129,19 @@ public class CorrectnessTestRunner {
 	}
 
 	private static void startTimeoutThread(AtomicBoolean timedOut,
-			Process process, TimeoutSignaler timeoutSignaler, int maxSecondsPerTest) {
+			CountDownLatch finishedSignal, TimeoutSignaler timeoutSignaler, int maxSecondsPerTest) {
 		Runnable runnable = () -> {
 			try {
-				boolean finishedNormally = process.waitFor(maxSecondsPerTest, TimeUnit.SECONDS);
+				boolean finishedNormally = finishedSignal.await(maxSecondsPerTest, TimeUnit.SECONDS);
 				if (!finishedNormally) {
 					System.out.println("Timing out...");
 					timedOut.set(true);
-					timeoutSignaler.signalTimeout();
 				}
+				timeoutSignaler.signalTimeout();
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
 		};
 		new Thread(runnable, "Correctness test timeout thread").start();
 	}
-
 }

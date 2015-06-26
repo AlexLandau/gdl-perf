@@ -3,14 +3,15 @@ package net.alloyggp.perf.runner;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.google.common.collect.Queues;
 
 public class GameActionParser {
 
-	public static BlockingQueue<GameActionMessage> convert(BufferedReader in) {
-		BlockingQueue<GameActionMessage> queue = Queues.newLinkedBlockingDeque();
+	public static BlockingQueue<GameActionMessage> convert(BufferedReader in, TimeoutSignaler timeoutSignaler) {
+		BlockingQueue<GameActionMessage> queue = Queues.newLinkedBlockingDeque(1000);
 
 		Runnable runnable = () -> {
 			try {
@@ -42,7 +43,12 @@ public class GameActionParser {
 		};
 
 		//Actually run the runnable...
-		Executors.newSingleThreadExecutor().submit(runnable);
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.submit(runnable);
+
+		timeoutSignaler.onTimeout(() -> {
+			executor.shutdownNow();
+		});
 
 		return queue;
 	}

@@ -40,6 +40,7 @@ public class CsvFiles {
 				results.add(value);
 			} catch (Exception e) {
 				//Ignore the line
+				e.printStackTrace();
 			}
 		}
 		return results;
