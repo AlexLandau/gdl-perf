@@ -1,3 +1,5 @@
+This isn't ready for primetime yet! Check back later.
+
 TODO: Fix dependency to be on GGP-Base rather than Alloy
 
 Performance tests are run in their own process, one per game. Interactions with the framework use the command line and files written in a standard format. This has two advantages:
