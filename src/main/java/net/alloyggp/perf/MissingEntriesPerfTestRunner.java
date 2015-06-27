@@ -9,7 +9,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 public class MissingEntriesPerfTestRunner {
-	private static final EngineType ENGINE_TO_TEST = EngineType.PROVER;
+	private static final EngineType ENGINE_TO_TEST = EngineType.COMPILED_PROVER;
 	private static final int TEST_LENGTH_SECONDS = 30;
 	private static final int SECONDS_BEFORE_CANCELLING = 240;
 

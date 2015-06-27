@@ -12,7 +12,7 @@ import org.ggp.base.util.game.Game;
 import com.google.common.io.Files;
 
 public class PerfTestRunner {
-	private static final EngineType ENGINE_TO_TEST = EngineType.PROVER;
+	private static final EngineType ENGINE_TO_TEST = EngineType.TUPLE_PROVER;
 	private static final int TEST_LENGTH_SECONDS = 30;
 	private static final int SECONDS_BEFORE_CANCELLING = 240;
 
