@@ -2,7 +2,6 @@ package net.alloyggp.perf;
 
 import java.util.List;
 
-import org.ggp.base.util.Immutables;
 import org.ggp.base.util.statemachine.Move;
 
 import com.google.common.collect.ImmutableList;

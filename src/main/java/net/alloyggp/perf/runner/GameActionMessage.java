@@ -3,7 +3,7 @@ package net.alloyggp.perf.runner;
 import java.util.Arrays;
 import java.util.function.Function;
 
-import org.ggp.base.util.Immutables;
+import net.alloyggp.perf.Immutables;
 
 import com.google.common.collect.ImmutableList;
 

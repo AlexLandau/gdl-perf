@@ -25,7 +25,7 @@ public class RolesMessage implements GameActionMessage {
 	public static GameActionMessage parse(String line) {
 		line = line.substring(GameActionFormat.ROLES_PREFIX.length());
 
-		ImmutableList<Role> roles = GameActionMessage.split(line, Role::new);
+		ImmutableList<Role> roles = GameActionMessage.split(line, Role::create);
 		return new RolesMessage(roles);
 	}
 

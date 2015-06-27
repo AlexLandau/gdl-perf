@@ -14,8 +14,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.annotation.Nullable;
-
 import net.alloyggp.perf.runner.GameActionMessage;
 import net.alloyggp.perf.runner.GameActionParser;
 import net.alloyggp.perf.runner.JavaEngineType;
@@ -25,9 +23,10 @@ import org.ggp.base.util.game.Game;
 import org.ggp.base.util.gdl.grammar.GdlPool;
 
 import com.google.common.collect.Lists;
+import com.sun.istack.internal.Nullable;
 
 public class CorrectnessTestRunner {
-	private static final EngineType ENGINE_TO_TEST = EngineType.TUPLE_PROVER;
+	private static final EngineType ENGINE_TO_TEST = EngineType.PROVER;
 	//To make things simpler, restrict validation to the Java engine types
 	private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.PROVER;
 	private static final int MIN_NUM_STATE_CHANGES_TO_TEST = 1000;

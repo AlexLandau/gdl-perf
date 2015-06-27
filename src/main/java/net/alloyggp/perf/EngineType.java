@@ -15,10 +15,6 @@ import com.google.common.collect.Lists;
 public enum EngineType {
 	PROVER(getJavaPerfTestCommands(JavaEngineType.PROVER),
 			getJavaCorrectnessTestCommands(JavaEngineType.PROVER)),
-	TUPLE_PROVER(getJavaPerfTestCommands(JavaEngineType.TUPLE_PROVER),
-			getJavaCorrectnessTestCommands(JavaEngineType.TUPLE_PROVER)),
-	COMPILED_PROVER(getJavaPerfTestCommands(JavaEngineType.COMPILED_PROVER),
-			getJavaCorrectnessTestCommands(JavaEngineType.COMPILED_PROVER)),
 	;
 	private final ImmutableList<String> commandsForPerfTest;
 	private final ImmutableList<String> commandsForCorrectnessTest;
