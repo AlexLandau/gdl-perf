@@ -50,7 +50,8 @@ public class MissingEntriesCorrectnessTestRunner {
 				}
 			} catch (Exception e) {
 				ObservedError error = ObservedError.create(e.getMessage(), 0);
-				CorrectnessTestResult result = CorrectnessTestResult.create(gameKey, ENGINE_TO_TEST, VALIDATION_ENGINE, 0, Optional.of(error));
+				CorrectnessTestResult result = CorrectnessTestResult.create(gameKey, ENGINE_TO_TEST.getWithVersion(),
+				        VALIDATION_ENGINE, VALIDATION_ENGINE.getCurrentVersion(), 0, Optional.of(error));
 				CsvFiles.append(result, outputCsvFile);
 			}
 			GdlPool.drainPool();
@@ -114,7 +115,8 @@ public class MissingEntriesCorrectnessTestRunner {
 		int numStateChanges = MIN_NUM_STATE_CHANGES_TO_TEST;
 		if (timedOut.get()) {
 			error = Optional.of(ObservedError.create("Timed out after " + MAX_SECONDS_PER_TEST + " seconds", 0));
-			return CorrectnessTestResult.create(gameKey, engineToTest, validationEngine, numStateChanges, error);
+			return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(), validationEngine,
+			        validationEngine.getCurrentVersion(), numStateChanges, error);
 		} else if (error == null) {
 			System.out.println("No results; validation failed");
 			return null;
@@ -122,7 +124,8 @@ public class MissingEntriesCorrectnessTestRunner {
 			if (error.isPresent()) {
 				numStateChanges = error.get().getNumStateChangesBeforeFinding();
 			}
-			return CorrectnessTestResult.create(gameKey, engineToTest, validationEngine, numStateChanges, error);
+			return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(), validationEngine,
+			        validationEngine.getCurrentVersion(), numStateChanges, error);
 		}
 	}
 

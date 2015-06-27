@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import net.alloyggp.perf.EngineType;
 import net.alloyggp.perf.ObservedError;
 import net.alloyggp.perf.runner.ggpbase.ProverStateMachineFactory;
 import net.alloyggp.perf.runner.ggpbase.StateMachineFactory;
@@ -35,6 +36,10 @@ public enum JavaEngineType {
 		this.correctnessRunnable = correctnessRunnable;
 	}
 
+    public String getCurrentVersion() {
+        //TODO: Come up with a non-hacky way to do this!
+        return EngineType.valueOf(name()).getCurrentVersion();
+    }
 
 	public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
 		return perfRunnable.runPerfTest(gameRules, secondsToRun);
@@ -191,5 +196,6 @@ public enum JavaEngineType {
 		}
 		throw new IllegalArgumentException(javaEngineType.toString());
 	}
+
 
 }

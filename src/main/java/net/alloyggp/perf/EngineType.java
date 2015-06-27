@@ -13,13 +13,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 public enum EngineType {
-	PROVER(getJavaPerfTestCommands(JavaEngineType.PROVER),
+	PROVER("2015-04-26", getJavaPerfTestCommands(JavaEngineType.PROVER),
 			getJavaCorrectnessTestCommands(JavaEngineType.PROVER)),
 	;
+	private final String version;
 	private final ImmutableList<String> commandsForPerfTest;
 	private final ImmutableList<String> commandsForCorrectnessTest;
 
-	private EngineType(List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
+	private EngineType(String version, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
+	    this.version = version;
 		this.commandsForPerfTest = ImmutableList.copyOf(commandsForPerfTest);
 		this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
 	}
@@ -85,4 +87,15 @@ public enum EngineType {
 	public List<String> getCommandsForCorrectnessTest() {
 		return commandsForCorrectnessTest;
 	}
+
+	/**
+	 * Returns an EngineVersion with this engine's current version.
+	 */
+    public EngineVersion getWithVersion() {
+        return EngineVersion.create(this, version);
+    }
+
+    public String getCurrentVersion() {
+        return version;
+    }
 }

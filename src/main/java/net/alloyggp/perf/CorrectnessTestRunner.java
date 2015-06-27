@@ -44,7 +44,8 @@ public class CorrectnessTestRunner {
 				}
 			} catch (Exception e) {
 				ObservedError error = ObservedError.create(e.getMessage(), 0);
-				CorrectnessTestResult result = CorrectnessTestResult.create(gameKey, ENGINE_TO_TEST, VALIDATION_ENGINE, 0, Optional.of(error));
+				CorrectnessTestResult result = CorrectnessTestResult.create(gameKey, ENGINE_TO_TEST.getWithVersion(), VALIDATION_ENGINE,
+				        VALIDATION_ENGINE.getCurrentVersion(), 0, Optional.of(error));
 				CsvFiles.append(result, outputCsvFile);
 			}
 			GdlPool.drainPool();
@@ -104,7 +105,8 @@ public class CorrectnessTestRunner {
 			if (error.isPresent()) {
 				numStateChanges = error.get().getNumStateChangesBeforeFinding();
 			}
-			return CorrectnessTestResult.create(gameKey, engineToTest, validationEngine, numStateChanges, error);
+			return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(), validationEngine,
+			        validationEngine.getCurrentVersion(), numStateChanges, error);
 		}
 	}
 

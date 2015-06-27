@@ -55,7 +55,7 @@ public class PerfTestRunner {
 		if (results.containsKey(CsvKeys.MILLISECONDS_TAKEN)
 				&& results.containsKey(CsvKeys.NUM_STATE_CHANGES)
 				&& results.containsKey(CsvKeys.NUM_ROLLOUTS)) {
-			result = PerfTestResult.createSuccess(gameKey, ENGINE_TO_TEST,
+			result = PerfTestResult.createSuccess(gameKey, ENGINE_TO_TEST.getWithVersion(),
 					Long.parseLong(results.get(CsvKeys.MILLISECONDS_TAKEN)),
 					Long.parseLong(results.get(CsvKeys.NUM_STATE_CHANGES)),
 					Long.parseLong(results.get(CsvKeys.NUM_ROLLOUTS)));
@@ -63,19 +63,19 @@ public class PerfTestRunner {
 			//Error case
 			if (results.isEmpty()) {
 				if (completed == TestCompleted.NO) {
-					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST,
+					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST.getWithVersion(),
 							"Test process timed out after " + SECONDS_BEFORE_CANCELLING + " seconds");
 				} else {
-					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST,
+					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST.getWithVersion(),
 							"Test process failed to output results for unknown reason");
 				}
 			} else {
 				String errorMessage = results.get(CsvKeys.ERROR_MESSAGE);
 				if (errorMessage != null) {
-					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST,
+					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST.getWithVersion(),
 							errorMessage);
 				} else {
-					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST,
+					result = PerfTestResult.createFailure(gameKey, ENGINE_TO_TEST.getWithVersion(),
 							"Test process failed to output error message for unknown reason");
 				}
 			}
