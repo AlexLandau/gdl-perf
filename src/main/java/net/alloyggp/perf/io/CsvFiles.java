@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.io;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+
+import net.alloyggp.perf.Csvable;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -58,6 +60,8 @@ public class CsvFiles {
 			if (value.contains(delimiter)) {
 				throw new RuntimeException("Delimiter " + delimiter +
 						" found in CSV value: " + value + " among values: " + values);
+			} else if (value.contains("\n") || value.contains("\r")) {
+			    throw new RuntimeException("Newline found in CSV value: " + value + " among values: " + values);
 			}
 		}
 	}

@@ -2,7 +2,7 @@ package net.alloyggp.perf;
 
 import java.util.List;
 
-import net.alloyggp.perf.CsvFiles.CsvLoadFunction;
+import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;

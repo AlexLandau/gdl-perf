@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import net.alloyggp.perf.io.CsvFiles;
+
 import com.google.common.collect.Lists;
 
 public class RemovePerfTestInvalidGameEntries {

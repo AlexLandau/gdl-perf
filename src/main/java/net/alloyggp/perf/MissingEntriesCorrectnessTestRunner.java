@@ -16,6 +16,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.alloyggp.perf.io.CsvFiles;
+import net.alloyggp.perf.io.GameFiles;
 import net.alloyggp.perf.runner.GameActionMessage;
 import net.alloyggp.perf.runner.GameActionParser;
 import net.alloyggp.perf.runner.JavaEngineType;

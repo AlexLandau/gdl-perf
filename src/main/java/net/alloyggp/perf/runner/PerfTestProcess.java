@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import net.alloyggp.perf.CsvKeys;
-import net.alloyggp.perf.GameFiles;
-import net.alloyggp.perf.ResultFiles;
+import net.alloyggp.perf.io.GameFiles;
+import net.alloyggp.perf.io.ResultFiles;
 
 import com.google.common.collect.ImmutableMap;
 

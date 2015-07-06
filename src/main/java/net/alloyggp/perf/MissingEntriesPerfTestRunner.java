@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import net.alloyggp.perf.io.CsvFiles;
+
 import com.google.common.collect.Sets;
 
 public class MissingEntriesPerfTestRunner {

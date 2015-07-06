@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.io;
 
 import java.io.BufferedWriter;
 import java.io.File;

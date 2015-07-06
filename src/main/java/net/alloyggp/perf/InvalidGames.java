@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import net.alloyggp.perf.io.CsvFiles;
+
 import com.google.common.collect.Maps;
 
 public class InvalidGames {

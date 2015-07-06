@@ -2,7 +2,7 @@ package net.alloyggp.perf.runner;
 
 import java.io.File;
 
-import net.alloyggp.perf.GameFiles;
+import net.alloyggp.perf.io.GameFiles;
 
 import com.google.common.base.Preconditions;
 

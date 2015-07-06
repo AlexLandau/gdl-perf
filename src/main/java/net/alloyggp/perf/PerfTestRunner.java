@@ -6,6 +6,9 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 import net.alloyggp.perf.EngineType.TestCompleted;
+import net.alloyggp.perf.io.CsvFiles;
+import net.alloyggp.perf.io.GameFiles;
+import net.alloyggp.perf.io.ResultFiles;
 
 import org.ggp.base.util.game.Game;
 
