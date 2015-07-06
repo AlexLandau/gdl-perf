@@ -7,14 +7,14 @@ import org.ggp.base.util.statemachine.Role;
 
 public interface GameActionRecorder {
 
-	void writeRoles(List<Role> roles);
+    void writeRoles(List<Role> roles);
 
-	void recordTerminality(boolean isTerminal);
+    void recordTerminality(boolean isTerminal);
 
-	void recordLegalMoves(List<Move> legalMoves);
+    void recordLegalMoves(List<Move> legalMoves);
 
-	void recordChosenJointMove(List<Move> jointMove);
+    void recordChosenJointMove(List<Move> jointMove);
 
-	void recordGoalValues(List<Integer> goals);
+    void recordGoalValues(List<Integer> goals);
 
 }

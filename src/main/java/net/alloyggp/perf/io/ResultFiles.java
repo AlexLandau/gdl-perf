@@ -12,33 +12,33 @@ import com.google.common.collect.Maps;
 
 public class ResultFiles {
 
-	public static Map<String, String> read(File resultFile) {
-		Map<String, String> results = Maps.newHashMap();
+    public static Map<String, String> read(File resultFile) {
+        Map<String, String> results = Maps.newHashMap();
 
-		try {
-			for (String line : Files.readAllLines(resultFile.toPath())) {
-				String[] split = line.split("=", 2);
-				if (split.length == 2) {
-					String key = split[0].trim();
-					String value = split[1].trim();
-					results.put(key, value);
-				}
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+        try {
+            for (String line : Files.readAllLines(resultFile.toPath())) {
+                String[] split = line.split("=", 2);
+                if (split.length == 2) {
+                    String key = split[0].trim();
+                    String value = split[1].trim();
+                    results.put(key, value);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-		return results;
-	}
+        return results;
+    }
 
-	public static void write(Map<String, String> results, File outputFile) {
-		try (BufferedWriter out = new BufferedWriter(new FileWriter(outputFile))) {
-			for (Entry<String, String> entry : results.entrySet()) {
-				out.write(entry.getKey() + " = " + entry.getValue());
-				out.write("\n");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public static void write(Map<String, String> results, File outputFile) {
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(outputFile))) {
+            for (Entry<String, String> entry : results.entrySet()) {
+                out.write(entry.getKey() + " = " + entry.getValue());
+                out.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

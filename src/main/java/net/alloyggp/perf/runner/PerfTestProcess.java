@@ -15,29 +15,29 @@ import com.google.common.collect.ImmutableMap;
  */
 public class PerfTestProcess {
 
-	public static void main(String[] args) throws IOException {
-		JavaEngineType engine = JavaEngineType.valueOf(args[0]);
-		File gameFile = new File(args[1]);
-		File outputFile = new File(args[2]);
-		int secondsToRun = Integer.parseInt(args[3]);
+    public static void main(String[] args) throws IOException {
+        JavaEngineType engine = JavaEngineType.valueOf(args[0]);
+        File gameFile = new File(args[1]);
+        File outputFile = new File(args[2]);
+        int secondsToRun = Integer.parseInt(args[3]);
 
-		String gameRules = GameFiles.read(gameFile);
+        String gameRules = GameFiles.read(gameFile);
 
-		try {
-			PerfTestReport result = engine.runPerfTest(gameRules, secondsToRun);
-			ResultFiles.write(result.toKeyValuePairs(), outputFile);
-		} catch (Throwable e) {
-			ResultFiles.write(toErrorResult(e), outputFile);
-		}
-	}
+        try {
+            PerfTestReport result = engine.runPerfTest(gameRules, secondsToRun);
+            ResultFiles.write(result.toKeyValuePairs(), outputFile);
+        } catch (Throwable e) {
+            ResultFiles.write(toErrorResult(e), outputFile);
+        }
+    }
 
-	private static Map<String, String> toErrorResult(Throwable e) {
-		if (e.getMessage() == null) {
-			return ImmutableMap.of(CsvKeys.ERROR_MESSAGE, "Exception of type " + e.getClass().getSimpleName());
-		} else {
-			return ImmutableMap.of(CsvKeys.ERROR_MESSAGE, e.getClass().getSimpleName() + ": " + e.getMessage());
-		}
-	}
+    private static Map<String, String> toErrorResult(Throwable e) {
+        if (e.getMessage() == null) {
+            return ImmutableMap.of(CsvKeys.ERROR_MESSAGE, "Exception of type " + e.getClass().getSimpleName());
+        } else {
+            return ImmutableMap.of(CsvKeys.ERROR_MESSAGE, e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+    }
 
 
 }

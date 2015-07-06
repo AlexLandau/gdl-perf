@@ -13,84 +13,84 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 public enum EngineType {
-	PROVER("2015-04-26", getJavaPerfTestCommands(JavaEngineType.PROVER),
-			getJavaCorrectnessTestCommands(JavaEngineType.PROVER)),
-	;
-	private final String version;
-	private final ImmutableList<String> commandsForPerfTest;
-	private final ImmutableList<String> commandsForCorrectnessTest;
+    PROVER("2015-04-26", getJavaPerfTestCommands(JavaEngineType.PROVER),
+            getJavaCorrectnessTestCommands(JavaEngineType.PROVER)),
+            ;
+    private final String version;
+    private final ImmutableList<String> commandsForPerfTest;
+    private final ImmutableList<String> commandsForCorrectnessTest;
 
-	private EngineType(String version, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
-	    this.version = version;
-		this.commandsForPerfTest = ImmutableList.copyOf(commandsForPerfTest);
-		this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
-	}
+    private EngineType(String version, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
+        this.version = version;
+        this.commandsForPerfTest = ImmutableList.copyOf(commandsForPerfTest);
+        this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
+    }
 
-	private static List<String> getJavaPerfTestCommands(JavaEngineType engineType) {
-		return ImmutableList.of(getJavaCommand(), "-cp", getClasspath(), PerfTestProcess.class.getName(), engineType.toString());
-	}
+    private static List<String> getJavaPerfTestCommands(JavaEngineType engineType) {
+        return ImmutableList.of(getJavaCommand(), "-cp", getClasspath(), PerfTestProcess.class.getName(), engineType.toString());
+    }
 
-	private static List<String> getJavaCorrectnessTestCommands(JavaEngineType engineType) {
-		return ImmutableList.of(getJavaCommand(), "-cp", getClasspath(), CorrectnessTestProcess.class.getName(), engineType.toString());
-	}
+    private static List<String> getJavaCorrectnessTestCommands(JavaEngineType engineType) {
+        return ImmutableList.of(getJavaCommand(), "-cp", getClasspath(), CorrectnessTestProcess.class.getName(), engineType.toString());
+    }
 
-	private static String getClasspath() {
-		return System.getProperty("java.class.path");
-	}
+    private static String getClasspath() {
+        return System.getProperty("java.class.path");
+    }
 
-	private static String getJavaCommand() {
-		String command = System.getProperty("java.home") + "/bin/java";
-		if (isWindows()) {
-			return command + ".exe";
-		}
-		return command;
-	}
+    private static String getJavaCommand() {
+        String command = System.getProperty("java.home") + "/bin/java";
+        if (isWindows()) {
+            return command + ".exe";
+        }
+        return command;
+    }
 
-	private static boolean isWindows() {
-		//Apache commons uses this approach
-		return System.getProperty("os.name").startsWith("Windows");
-	}
+    private static boolean isWindows() {
+        //Apache commons uses this approach
+        return System.getProperty("os.name").startsWith("Windows");
+    }
 
-	public static enum TestCompleted {
-		YES,
-		NO
-	}
+    public static enum TestCompleted {
+        YES,
+        NO
+    }
 
-	public TestCompleted runPerfTest(PerfTestConfig perfTestConfig) throws IOException, InterruptedException {
-		List<String> commands = Lists.newArrayList();
-		commands.addAll(getCommandsForPerfTest());
-		commands.add(perfTestConfig.getGameFile().getAbsolutePath());
-		commands.add(perfTestConfig.getOutputFile().getAbsolutePath());
-		commands.add(Integer.toString(perfTestConfig.getNumSeconds()));
-		ProcessBuilder pb = new ProcessBuilder(commands);
+    public TestCompleted runPerfTest(PerfTestConfig perfTestConfig) throws IOException, InterruptedException {
+        List<String> commands = Lists.newArrayList();
+        commands.addAll(getCommandsForPerfTest());
+        commands.add(perfTestConfig.getGameFile().getAbsolutePath());
+        commands.add(perfTestConfig.getOutputFile().getAbsolutePath());
+        commands.add(Integer.toString(perfTestConfig.getNumSeconds()));
+        ProcessBuilder pb = new ProcessBuilder(commands);
 
-		//These cause output from the test process to be displayed on the console of the
-		//test runner process.
-		pb.redirectOutput(Redirect.INHERIT);
-		pb.redirectError(Redirect.INHERIT);
+        //These cause output from the test process to be displayed on the console of the
+        //test runner process.
+        pb.redirectOutput(Redirect.INHERIT);
+        pb.redirectError(Redirect.INHERIT);
 
-		Process process = pb.start();
-		boolean exited = process.waitFor(perfTestConfig.getSecondsBeforeCancelling(), TimeUnit.SECONDS);
-		if (exited) {
-			return TestCompleted.YES;
-		}
-		//Kill the process, and wait until it dies before continuing
-		process.destroyForcibly();
-		process.waitFor();
-		return TestCompleted.NO;
-	}
+        Process process = pb.start();
+        boolean exited = process.waitFor(perfTestConfig.getSecondsBeforeCancelling(), TimeUnit.SECONDS);
+        if (exited) {
+            return TestCompleted.YES;
+        }
+        //Kill the process, and wait until it dies before continuing
+        process.destroyForcibly();
+        process.waitFor();
+        return TestCompleted.NO;
+    }
 
-	private List<String> getCommandsForPerfTest() {
-		return this.commandsForPerfTest;
-	}
+    private List<String> getCommandsForPerfTest() {
+        return this.commandsForPerfTest;
+    }
 
-	public List<String> getCommandsForCorrectnessTest() {
-		return commandsForCorrectnessTest;
-	}
+    public List<String> getCommandsForCorrectnessTest() {
+        return commandsForCorrectnessTest;
+    }
 
-	/**
-	 * Returns an EngineVersion with this engine's current version.
-	 */
+    /**
+     * Returns an EngineVersion with this engine's current version.
+     */
     public EngineVersion getWithVersion() {
         return EngineVersion.create(this, version);
     }
