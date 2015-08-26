@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-import net.alloyggp.perf.Csvable;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
+import net.alloyggp.perf.Csvable;
 
 public class CsvFiles {
     public static void append(Csvable result, File outputCsvFile) {
@@ -19,7 +19,6 @@ public class CsvFiles {
     }
 
     public static void append(List<? extends Csvable> allResults, File outputCsvFile) {
-        //TODO: Should this be in "append" mode?
         try (BufferedWriter out = new BufferedWriter(new FileWriter(outputCsvFile, true))) {
             for (Csvable result : allResults) {
                 List<String> values = result.getValuesForCsv();

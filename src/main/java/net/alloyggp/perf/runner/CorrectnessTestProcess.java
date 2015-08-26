@@ -2,9 +2,9 @@ package net.alloyggp.perf.runner;
 
 import java.io.File;
 
-import net.alloyggp.perf.io.GameFiles;
-
 import com.google.common.base.Preconditions;
+
+import net.alloyggp.perf.io.GameFiles;
 
 public class CorrectnessTestProcess {
 
