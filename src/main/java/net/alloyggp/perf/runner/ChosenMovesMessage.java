@@ -7,25 +7,25 @@ import org.ggp.base.util.statemachine.Move;
 import com.google.common.collect.ImmutableList;
 
 public class ChosenMovesMessage implements GameActionMessage {
-	private final ImmutableList<Move> jointMove;
+    private final ImmutableList<Move> jointMove;
 
-	private ChosenMovesMessage(ImmutableList<Move> jointMove) {
-		this.jointMove = jointMove;
-	}
+    private ChosenMovesMessage(ImmutableList<Move> jointMove) {
+        this.jointMove = jointMove;
+    }
 
-	@Override
-	public ChosenMovesMessage expectChosenMovesMessage() {
-		return this;
-	}
+    @Override
+    public ChosenMovesMessage expectChosenMovesMessage() {
+        return this;
+    }
 
-	public List<Move> getJointMove() {
-		return jointMove;
-	}
+    public List<Move> getJointMove() {
+        return jointMove;
+    }
 
-	public static GameActionMessage parse(String line) {
-		line = line.substring(GameActionFormat.CHOSEN_MOVES_PREFIX.length());
+    public static GameActionMessage parse(String line) {
+        line = line.substring(GameActionFormat.CHOSEN_MOVES_PREFIX.length());
 
-		ImmutableList<Move> jointMove = GameActionMessage.split(line, Move::create);
-		return new ChosenMovesMessage(jointMove);
-	}
+        ImmutableList<Move> jointMove = GameActionMessage.split(line, Move::create);
+        return new ChosenMovesMessage(jointMove);
+    }
 }

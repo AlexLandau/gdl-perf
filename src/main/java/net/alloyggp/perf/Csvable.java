@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface Csvable {
 
-	String getDelimiter();
+    String getDelimiter();
 
-	List<String> getValuesForCsv();
+    List<String> getValuesForCsv();
 
 }
