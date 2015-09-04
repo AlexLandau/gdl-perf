@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import net.alloyggp.perf.EngineType;
 import net.alloyggp.perf.ObservedError;
@@ -23,10 +24,19 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import cs227b.teamIago.gameProver.GameSimulator;
+import cs227b.teamIago.resolver.ExpList;
+import cs227b.teamIago.resolver.Expression;
+import cs227b.teamIago.resolver.Predicate;
+
 public enum JavaEngineType {
     PROVER(getStateMachinePerfTestRunnable(ProverStateMachineFactory.create()),
             getStateMachineCorrectnessTestRunnable(ProverStateMachineFactory.create())),
-            ;
+    PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE(getPalamedesPerfTestRunnable(false),
+            getPalamedesCorrectnessTestRunnable(false)),
+    PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE(getPalamedesPerfTestRunnable(true),
+            getPalamedesCorrectnessTestRunnable(true)),
+    ;
     private final PerfTestRunnable perfRunnable;
     private final CorrectnessTestRunnable correctnessRunnable;
 
@@ -133,6 +143,10 @@ public enum JavaEngineType {
         int index = RANDOM.nextInt(legalMoves.size());
         return legalMoves.get(index);
     }
+    private static Expression pickOneAtRandom(ExpList legalMoves) {
+        int index = RANDOM.nextInt(legalMoves.size());
+        return legalMoves.get(index);
+    }
 
     //TODO: Limit number of errors we find?
     public Optional<ObservedError> validateCorrectnessTestOutput(
@@ -197,4 +211,125 @@ public enum JavaEngineType {
     }
 
 
+    private static PerfTestRunnable getPalamedesPerfTestRunnable(boolean useOpt) {
+        return new PerfTestRunnable() {
+            @Override
+            public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
+                GameSimulator simulator = new GameSimulator(false, useOpt);
+                simulator.ParseDescIntoTheory(gameRules);
+
+                ExpList roles = simulator.GetRoles();
+                Random rand = new Random();
+
+                long numStateChanges = 0;
+                long numRollouts = 0;
+                Stopwatch timer = new Stopwatch().start();
+                outer : while (true) {
+                    if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
+                        break outer;
+                    }
+                    simulator.SimulateStart();
+                    while (!simulator.IsTerminal()) {
+                        if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
+                            break outer;
+                        }
+
+                        ExpList moves = new ExpList();
+                        for (int r = 0; r < roles.size(); r++) {
+                            Expression role = roles.get(r);
+                            ExpList legalMoves = simulator.GetLegalMoves(role);
+                            int chosenIndex = rand.nextInt(legalMoves.size());
+                            Expression chosenMove = legalMoves.get(chosenIndex);
+                            moves.add(chosenMove);
+                        }
+                        simulator.SimulateStep(moves);
+
+                        numStateChanges++;
+                    }
+                    for (int r = 0; r < roles.size(); r++) {
+                        Expression role = roles.get(r);
+                        simulator.GetGoalValue(role);
+                    }
+
+                    numRollouts++;
+                }
+                long millisecondsTaken = timer.stop().elapsed(TimeUnit.MILLISECONDS);
+
+                return new PerfTestReport(millisecondsTaken, numStateChanges, numRollouts);
+            }
+        };
+    }
+
+    private static CorrectnessTestRunnable getPalamedesCorrectnessTestRunnable(boolean useOpt) {
+        return new CorrectnessTestRunnable() {
+            @Override
+            public void runCorrectnessTest(String gameRules,
+                    int stateChangesToRun, GameActionRecorder recorder) throws Exception {
+                GameSimulator simulator = new GameSimulator(false, useOpt);
+                simulator.ParseDescIntoTheory(gameRules);
+
+                runTest(simulator, stateChangesToRun, recorder);
+            }
+
+            private void runTest(GameSimulator simulator, int stateChangesToRun,
+                    GameActionRecorder recorder) throws Exception {
+                ExpList roles = simulator.GetRoles();
+                recorder.writeRoles(toRoles(roles));
+                int stateChangesSoFar = 0;
+                simulator.SimulateStart();
+                if (simulator.IsTerminal()) {
+                    recorder.recordTerminality(true);
+                    return; //otherwise stateChangesSoFar will never increase
+                }
+                while (true) {
+                    simulator.SimulateStart();
+                    while (!simulator.IsTerminal()) {
+                        recorder.recordTerminality(false);
+                        ExpList jointMove = new ExpList();
+                        for (int r = 0; r < roles.size(); r++) {
+                            ExpList legalMoves = simulator.GetLegalMoves(roles.get(r));
+                            List<Move> translatedMoves = translatePalamedesMoves(legalMoves);
+                            recorder.recordLegalMoves(translatedMoves);
+                            jointMove.add(pickOneAtRandom(legalMoves));
+                        }
+                        List<Move> translatedJointMove = translatePalamedesMoves(jointMove);
+                        recorder.recordChosenJointMove(translatedJointMove);
+                        simulator.SimulateStep(jointMove);
+                        stateChangesSoFar++;
+                    }
+                    recorder.recordTerminality(true);
+                    List<Integer> goalValues = Lists.newArrayList();
+                    for (int r = 0; r < roles.size(); r++) {
+                        Expression role = roles.get(r);
+                        goalValues.add(simulator.GetGoalValue(role));
+                    }
+                    recorder.recordGoalValues(goalValues);
+                    //Do we end here?
+                    if (stateChangesSoFar > stateChangesToRun) {
+                        return;
+                    }
+                }
+            }
+
+        };
+    }
+
+    public static List<Move> translatePalamedesMoves(ExpList legalMoves) {
+        List<Move> translatedMoves = ((List<?>)legalMoves.toArrayList()).stream()
+                .map(obj -> (Predicate) obj)
+                .map(predicate -> predicate.getOperands().get(1))
+                .map(Expression::toString)
+                .map(Move::create)
+                .collect(Collectors.toList());
+        return translatedMoves;
+    }
+
+    public static List<Role> toRoles(ExpList expRoles) {
+        List<Role> roles = Lists.newArrayList();
+        for (int r = 0; r < expRoles.size(); r++) {
+            Expression expRole = expRoles.get(r);
+            roles.add(Role.create(expRole.toString()));
+        }
+        return roles;
+    }
 }

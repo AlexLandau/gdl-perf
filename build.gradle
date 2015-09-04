@@ -11,4 +11,13 @@ repositories {
 dependencies {
 //    compile 'org.slf4j:slf4j-api:1.7.5'
 //    testCompile "junit:junit:4.11"
+    compile files(
+        'lib/palamedes/JavaProver.jar',
+        'lib/palamedes/org.eclipse.palamedes.gdl.core_0.6.1.jar',
+        'lib/palamedes/org.eclipse.palamedes.kif.core_0.6.1.jar',
+    )
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
 }

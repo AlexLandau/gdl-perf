@@ -1,6 +1,5 @@
 /bin/
-computerName.txt
-.classpath
-.project
-.settings/
-.gradle/
+/computerName.txt
+/.gradle/
+/.checkstyle
+/compiled/

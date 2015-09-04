@@ -15,6 +15,14 @@ import com.google.common.collect.Lists;
 public enum EngineType {
     PROVER("2015-04-26", getJavaPerfTestCommands(JavaEngineType.PROVER),
             getJavaCorrectnessTestCommands(JavaEngineType.PROVER)),
+    //Palamedes BasicPlayer Java prover (linked from Dresden GGP page)
+    PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE("0.6.1",
+            getJavaPerfTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE),
+            getJavaCorrectnessTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE)),
+    PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE("0.6.1",
+            getJavaPerfTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE),
+            getJavaCorrectnessTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE)),
+    //
             ;
     private final String version;
     private final ImmutableList<String> commandsForPerfTest;
