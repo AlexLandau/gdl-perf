@@ -32,7 +32,7 @@ import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.TimeoutSignaler;
 
 public class MissingEntriesCorrectnessTestRunner {
-    private static final EngineType ENGINE_TO_TEST = EngineType.COMPILED_PROVER;
+    private static final EngineType ENGINE_TO_TEST = EngineType.TUPLE_PROVER;
     //To make things simpler, restrict validation to the Java engine types
     private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.PROVER;
     private static final int MIN_NUM_STATE_CHANGES_TO_TEST = 1000;

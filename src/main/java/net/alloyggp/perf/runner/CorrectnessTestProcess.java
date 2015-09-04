@@ -16,6 +16,7 @@ public class CorrectnessTestProcess {
         int stateChangesToRun = Integer.parseInt(args[2]);
 
         GameActionRecorder recorder = new StandardGameActionRecorder();
+        System.out.println("Game rules: " + gameRules);
         engineType.runCorrectnessTest(gameRules, stateChangesToRun, recorder);
     }
 

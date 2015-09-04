@@ -11,7 +11,7 @@ import com.google.common.collect.Sets;
 import net.alloyggp.perf.io.CsvFiles;
 
 public class MissingEntriesPerfTestRunner {
-    private static final EngineType ENGINE_TO_TEST = EngineType.COMPILED_PROVER;
+    private static final EngineType ENGINE_TO_TEST = EngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE;
     private static final int TEST_LENGTH_SECONDS = 30;
     private static final int SECONDS_BEFORE_CANCELLING = 240;
 
