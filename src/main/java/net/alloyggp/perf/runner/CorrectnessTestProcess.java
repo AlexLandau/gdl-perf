@@ -10,8 +10,6 @@ public class CorrectnessTestProcess {
 
     public static void main(String[] args) throws Exception {
         Preconditions.checkArgument(args.length == 3);
-        //TODO: Implement!
-        //Arguments are going to be...
         JavaEngineType engineType = JavaEngineType.valueOf(args[0]);
         File gameRulesFile = new File(args[1]);
         String gameRules = GameFiles.read(gameRulesFile);

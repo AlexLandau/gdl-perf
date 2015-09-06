@@ -137,7 +137,7 @@ public enum JavaEngineType {
     //TODO: Limit number of errors we find?
     public Optional<ObservedError> validateCorrectnessTestOutput(
             Game game, BlockingQueue<GameActionMessage> messages) throws Exception {
-        StateMachine sm = getStateMachine(this, game); //TODO: Initialize
+        StateMachine sm = getStateMachine(this, game);
 
         int numStateChanges = 0;
         List<Role> ourRoles = sm.getRoles();
