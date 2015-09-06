@@ -37,7 +37,7 @@ public class MissingEntriesPerfTestRunner {
 
         for (PerfTestResult result : resultsSoFar) {
             if (result.wasSuccessful()) {
-                nonfailed.add(GameKey.create(result.getGameKey()));
+                nonfailed.add(result.getGameKey());
             }
         }
         return nonfailed;

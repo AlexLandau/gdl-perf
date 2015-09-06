@@ -16,6 +16,7 @@ dependencies {
         'lib/palamedes/org.eclipse.palamedes.gdl.core_0.6.1.jar',
         'lib/palamedes/org.eclipse.palamedes.kif.core_0.6.1.jar',
     )
+    compile 'org.apache.commons:commons-math3:3.5'
 }
 
 task wrapper(type: Wrapper) {

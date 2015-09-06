@@ -26,7 +26,7 @@ public class RemovePerfTestInvalidGameEntries {
     }
 
     private static boolean isValid(PerfTestResult result, Set<GameKey> invalidGames) {
-        if (invalidGames.contains(GameKey.create(result.getGameKey()))) {
+        if (invalidGames.contains(result.getGameKey())) {
             return false;
         }
         return true;
