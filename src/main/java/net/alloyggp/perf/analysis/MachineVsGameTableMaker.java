@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.List;
 
 import net.alloyggp.perf.EngineType;
+import net.alloyggp.perf.PerfTest;
 import net.alloyggp.perf.PerfTestResult;
-import net.alloyggp.perf.PerfTestRunner;
 import net.alloyggp.perf.io.CsvFiles;
 
 import com.google.common.base.Function;
@@ -39,7 +39,7 @@ public class MachineVsGameTableMaker {
     private static List<PerfTestResult> loadAllResults() throws IOException {
         List<PerfTestResult> allResults = Lists.newArrayList();
         for (EngineType engine : EngineType.values()) {
-            File outputCsvFile = PerfTestRunner.getCsvOutputFileForEngine(engine);
+            File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engine);
             if (outputCsvFile.isFile()) {
                 allResults.addAll(CsvFiles.load(outputCsvFile, PerfTestResult.getCsvLoader()));
             }

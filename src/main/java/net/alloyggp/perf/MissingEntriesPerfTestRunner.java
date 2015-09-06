@@ -16,7 +16,7 @@ public class MissingEntriesPerfTestRunner {
     private static final int SECONDS_BEFORE_CANCELLING = 240;
 
     public static void main(String[] args) throws Exception {
-        File outputCsvFile = PerfTestRunner.getCsvOutputFileForEngine(ENGINE_TO_TEST);
+        File outputCsvFile = PerfTest.getCsvOutputFileForEngine(ENGINE_TO_TEST);
 
         Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
         gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile));
@@ -24,7 +24,7 @@ public class MissingEntriesPerfTestRunner {
         for (GameKey gameKey : gameKeysToTest) {
             System.out.println("Running perf test for game key: " + gameKey);
 
-            final PerfTestResult result = PerfTestRunner.runTest(gameKey, ENGINE_TO_TEST,
+            final PerfTestResult result = PerfTest.runTest(gameKey, ENGINE_TO_TEST,
                     TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
 
             CsvFiles.append(result, outputCsvFile);

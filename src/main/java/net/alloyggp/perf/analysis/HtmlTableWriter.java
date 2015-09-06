@@ -3,6 +3,7 @@ package net.alloyggp.perf.analysis;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -27,7 +28,9 @@ public class HtmlTableWriter {
         //TODO: Better ordering
         //Fix the column and row ordering
         List<String> columns = Lists.newArrayList(table.columnKeySet());
+        Collections.sort(columns);
         List<String> rows = Lists.newArrayList(table.rowKeySet());
+        Collections.sort(rows);
         //Add headers
         html.append("<tr><th/>");
         for (String col : columns) {
