@@ -12,9 +12,17 @@ dependencies {
 //    compile 'org.slf4j:slf4j-api:1.7.5'
 //    testCompile "junit:junit:4.11"
     compile files(
+        //TODO: Add some exported jar from GGP-Base instead of an
+        //implicit dependency (at least until GGP-Base gets
+        //versioning and publishing)
+    
         'lib/palamedes/JavaProver.jar',
         'lib/palamedes/org.eclipse.palamedes.gdl.core_0.6.1.jar',
         'lib/palamedes/org.eclipse.palamedes.kif.core_0.6.1.jar',
+        //TODO: Clean up this jar before committing
+        //ALSO export the sources
+        //dependent jars should go in lib/rekkura (when applicable)
+        'lib/rekkura/rekkura-1.0.0.jar'
     )
     compile 'org.apache.commons:commons-math3:3.5'
 }

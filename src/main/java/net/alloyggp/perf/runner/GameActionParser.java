@@ -1,7 +1,6 @@
 package net.alloyggp.perf.runner;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,9 +34,9 @@ public class GameActionParser {
                         queue.put(TerminalityMessage.parse(line));
                     }
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
+                GameActionMessage errorMessage = ErrorMessage.create(e);
+                while (!queue.offer(errorMessage)) { /* repeat until successful */ }
                 throw new RuntimeException(e);
             }
         };

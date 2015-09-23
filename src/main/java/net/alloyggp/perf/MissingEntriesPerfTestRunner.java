@@ -6,12 +6,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import net.alloyggp.perf.io.CsvFiles;
-
 import com.google.common.collect.Sets;
 
+import net.alloyggp.perf.io.CsvFiles;
+
 public class MissingEntriesPerfTestRunner {
-    private static final EngineType ENGINE_TO_TEST = EngineType.PROVER;
+    private static final EngineType ENGINE_TO_TEST = EngineType.REKKURA_BACKWARD_PROVER;
     private static final int TEST_LENGTH_SECONDS = 30;
     private static final int SECONDS_BEFORE_CANCELLING = 240;
 

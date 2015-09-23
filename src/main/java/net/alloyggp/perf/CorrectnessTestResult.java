@@ -3,12 +3,12 @@ package net.alloyggp.perf;
 import java.util.List;
 import java.util.Optional;
 
-import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
-import net.alloyggp.perf.runner.JavaEngineType;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+
+import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
+import net.alloyggp.perf.runner.JavaEngineType;
 
 public class CorrectnessTestResult implements Csvable {
     private final GameKey gameKey;

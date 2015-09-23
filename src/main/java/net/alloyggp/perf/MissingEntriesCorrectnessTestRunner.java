@@ -16,6 +16,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.ggp.base.util.game.Game;
+import org.ggp.base.util.gdl.grammar.GdlPool;
+
+import com.google.common.collect.Lists;
+import com.sun.istack.internal.Nullable;
+
 import net.alloyggp.perf.io.CsvFiles;
 import net.alloyggp.perf.io.GameFiles;
 import net.alloyggp.perf.runner.GameActionMessage;
@@ -23,20 +29,15 @@ import net.alloyggp.perf.runner.GameActionParser;
 import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.TimeoutSignaler;
 
-import org.ggp.base.util.game.Game;
-import org.ggp.base.util.gdl.grammar.GdlPool;
-
-import com.google.common.collect.Lists;
-import com.sun.istack.internal.Nullable;
-
 public class MissingEntriesCorrectnessTestRunner {
-    private static final EngineType ENGINE_TO_TEST = EngineType.PROVER;
+    private static final EngineType ENGINE_TO_TEST = EngineType.REKKURA_BACKWARD_PROVER;
     //To make things simpler, restrict validation to the Java engine types
     private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.PROVER;
     private static final int MIN_NUM_STATE_CHANGES_TO_TEST = 1000;
     private static final int MAX_SECONDS_PER_TEST = 240;
 
     public static void main(String[] args) throws Exception {
+        GdlPool.caseSensitive = false;
         File outputCsvFile = getCsvOutputFileForEngine(ENGINE_TO_TEST);
 
         Set<GameKey> alreadyTestedGames = loadAlreadyTestedGames(outputCsvFile);
@@ -53,7 +54,7 @@ public class MissingEntriesCorrectnessTestRunner {
             } catch (Exception e) {
                 ObservedError error = ObservedError.create(e.getMessage(), 0);
                 CorrectnessTestResult result = CorrectnessTestResult.create(gameKey, ENGINE_TO_TEST.getWithVersion(),
-                        VALIDATION_ENGINE, VALIDATION_ENGINE.getCurrentVersion(), 0, Optional.of(error));
+                        VALIDATION_ENGINE, VALIDATION_ENGINE.getVersion(), 0, Optional.of(error));
                 CsvFiles.append(result, outputCsvFile);
             }
             GdlPool.drainPool();
@@ -118,7 +119,7 @@ public class MissingEntriesCorrectnessTestRunner {
         if (timedOut.get()) {
             error = Optional.of(ObservedError.create("Timed out after " + MAX_SECONDS_PER_TEST + " seconds", 0));
             return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(), validationEngine,
-                    validationEngine.getCurrentVersion(), numStateChanges, error);
+                    validationEngine.getVersion(), numStateChanges, error);
         } else if (error == null) {
             System.out.println("No results; validation failed");
             return null;
@@ -127,7 +128,7 @@ public class MissingEntriesCorrectnessTestRunner {
                 numStateChanges = error.get().getNumStateChangesBeforeFinding();
             }
             return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(), validationEngine,
-                    validationEngine.getCurrentVersion(), numStateChanges, error);
+                    validationEngine.getVersion(), numStateChanges, error);
         }
     }
 
