@@ -9,6 +9,13 @@ import net.alloyggp.perf.io.GameFiles;
 public class CorrectnessTestProcess {
 
     public static void main(String[] args) throws Exception {
+//        Game game = GameRepository.getDefaultRepository().getGame("ticTacToe");
+//        File gameFile = new File("ticTacToe.kif");
+//        GameFiles.write(game, gameFile);
+//        if (true) {
+//            return;
+//        }
+
         Preconditions.checkArgument(args.length == 3);
         JavaEngineType engineType = JavaEngineType.valueOf(args[0]);
         File gameRulesFile = new File(args[1]);

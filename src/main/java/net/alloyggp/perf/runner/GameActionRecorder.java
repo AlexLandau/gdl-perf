@@ -2,18 +2,15 @@ package net.alloyggp.perf.runner;
 
 import java.util.List;
 
-import org.ggp.base.util.statemachine.Move;
-import org.ggp.base.util.statemachine.Role;
-
 public interface GameActionRecorder {
 
-    void writeRoles(List<Role> roles);
+    void writeRoles(List<String> roleNames);
 
     void recordTerminality(boolean isTerminal);
 
-    void recordLegalMoves(List<Move> legalMoves);
+    void recordLegalMoves(List<String> legalMoveNames);
 
-    void recordChosenJointMove(List<Move> jointMove);
+    void recordChosenJointMove(List<String> jointMoveNames);
 
     void recordGoalValues(List<Integer> goals);
 

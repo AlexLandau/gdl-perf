@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="lib/palamedes/org.eclipse.palamedes.gdl.core_0.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/palamedes/org.eclipse.palamedes.kif.core_0.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/jocular/jocular-0.2.jar"/>
+	<classpathentry kind="lib" path="lib/rekkura/rekkura-1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

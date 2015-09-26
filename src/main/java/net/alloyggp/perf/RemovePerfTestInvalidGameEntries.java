@@ -13,7 +13,7 @@ public class RemovePerfTestInvalidGameEntries {
     public static void main(String[] args) throws Exception {
         Set<GameKey> invalidGames = InvalidGames.loadInvalidGames().keySet();
         for (EngineType engine : EngineType.values()) {
-            File csvFile = PerfTestRunner.getCsvOutputFileForEngine(engine);
+            File csvFile = PerfTest.getCsvOutputFileForEngine(engine);
             List<PerfTestResult> results = CsvFiles.load(csvFile, PerfTestResult.getCsvLoader());
             List<PerfTestResult> newResults = Lists.newArrayList();
             for (PerfTestResult result : results) {
@@ -26,7 +26,7 @@ public class RemovePerfTestInvalidGameEntries {
     }
 
     private static boolean isValid(PerfTestResult result, Set<GameKey> invalidGames) {
-        if (invalidGames.contains(GameKey.create(result.getGameKey()))) {
+        if (invalidGames.contains(result.getGameKey())) {
             return false;
         }
         return true;

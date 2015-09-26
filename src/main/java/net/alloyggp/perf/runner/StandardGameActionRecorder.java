@@ -3,19 +3,13 @@ package net.alloyggp.perf.runner;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.ggp.base.util.statemachine.Move;
-import org.ggp.base.util.statemachine.Role;
-
 import com.google.common.base.Joiner;
 
 public class StandardGameActionRecorder implements GameActionRecorder {
 
     @Override
-    public void writeRoles(List<Role> roles) {
-        List<String> roleStrings = roles.stream()
-                .map(Role::toString)
-                .collect(Collectors.toList());
-        System.out.println(GameActionFormat.ROLES_PREFIX + toList(roleStrings));
+    public void writeRoles(List<String> roleNames) {
+        System.out.println(GameActionFormat.ROLES_PREFIX + toList(roleNames));
     }
 
     @Override
@@ -24,19 +18,13 @@ public class StandardGameActionRecorder implements GameActionRecorder {
     }
 
     @Override
-    public void recordLegalMoves(List<Move> legalMoves) {
-        List<String> moveStrings = legalMoves.stream()
-                .map(Move::toString)
-                .collect(Collectors.toList());
-        System.out.println(GameActionFormat.LEGAL_MOVES_PREFIX + toList(moveStrings));
+    public void recordLegalMoves(List<String> legalMoveNames) {
+        System.out.println(GameActionFormat.LEGAL_MOVES_PREFIX + toList(legalMoveNames));
     }
 
     @Override
-    public void recordChosenJointMove(List<Move> jointMove) {
-        List<String> moveStrings = jointMove.stream()
-                .map(Move::toString)
-                .collect(Collectors.toList());
-        System.out.println(GameActionFormat.CHOSEN_MOVES_PREFIX + toList(moveStrings));
+    public void recordChosenJointMove(List<String> jointMoveNames) {
+        System.out.println(GameActionFormat.CHOSEN_MOVES_PREFIX + toList(jointMoveNames));
     }
 
     @Override

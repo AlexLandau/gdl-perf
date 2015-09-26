@@ -22,23 +22,23 @@ public interface GameActionMessage {
     }
 
     default RolesMessage expectRolesMessage() {
-        throw new IllegalStateException("Expected a RolesMessage, but was a " + getClass().getSimpleName());
+        throw new IllegalStateException("Expected a RolesMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
     default TerminalityMessage expectTerminalityMessage() {
-        throw new IllegalStateException("Expected a TerminalityMessage, but was a " + getClass().getSimpleName());
+        throw new IllegalStateException("Expected a TerminalityMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
     default LegalMovesMessage expectLegalMovesMessage() {
-        throw new IllegalStateException("Expected a LegalMovesMessage, but was a " + getClass().getSimpleName());
+        throw new IllegalStateException("Expected a LegalMovesMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
     default ChosenMovesMessage expectChosenMovesMessage() {
-        throw new IllegalStateException("Expected a ChosenMovesMessage, but was a " + getClass().getSimpleName());
+        throw new IllegalStateException("Expected a ChosenMovesMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
     default GoalsMessage expectGoalsMessage() {
-        throw new IllegalStateException("Expected a GoalsMessage, but was a " + getClass().getSimpleName());
+        throw new IllegalStateException("Expected a GoalsMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
     default boolean isEndOfMessages() {
@@ -50,6 +50,11 @@ public interface GameActionMessage {
             @Override
             public boolean isEndOfMessages() {
                 return true;
+            }
+
+            @Override
+            public String toString() {
+                return "End of messages";
             }
         };
     }

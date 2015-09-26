@@ -5,9 +5,6 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.ggp.base.util.statemachine.implementation.tupleprover.TupleProverStateMachine;
-import org.ggp.base.util.statemachine.superprover2.CompiledProverRuleEngine;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -16,23 +13,20 @@ import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.PerfTestProcess;
 
 public enum EngineType {
-    PROVER("2015-04-26", getJavaPerfTestCommands(JavaEngineType.PROVER),
-            getJavaCorrectnessTestCommands(JavaEngineType.PROVER)),
-    TUPLE_PROVER(TupleProverStateMachine.VERSION,
-            getJavaPerfTestCommands(JavaEngineType.TUPLE_PROVER),
-            getJavaCorrectnessTestCommands(JavaEngineType.TUPLE_PROVER)),
-    COMPILED_PROVER(CompiledProverRuleEngine.VERSION,
-            getJavaPerfTestCommands(JavaEngineType.COMPILED_PROVER),
-            getJavaCorrectnessTestCommands(JavaEngineType.COMPILED_PROVER)),
+    PROVER(JavaEngineType.PROVER),
+    TUPLE_PROVER(JavaEngineType.TUPLE_PROVER),
+    COMPILED_PROVER_CACHING(JavaEngineType.COMPILED_PROVER_CACHING),
     //Palamedes BasicPlayer Java prover (linked from Dresden GGP page)
-    PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE("0.6.1",
-            getJavaPerfTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE),
-            getJavaCorrectnessTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE)),
-    PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE("0.6.1",
-            getJavaPerfTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE),
-            getJavaCorrectnessTestCommands(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE)),
-    //
-            ;
+    PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE),
+    PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE),
+    //From Peter Pham's Rekkura codebase
+    REKKURA_GENERIC_FORWARD_PROVER_OSTD(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER_OSTD),
+    REKKURA_GENERIC_FORWARD_PROVER(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER),
+    REKKURA_GENERIC_BACKWARD_PROVER_OSTD(JavaEngineType.REKKURA_GENERIC_BACKWARD_PROVER_OSTD),
+    REKKURA_GENERIC_BACKWARD_PROVER(JavaEngineType.REKKURA_GENERIC_BACKWARD_PROVER),
+    REKKURA_BACKWARD_PROVER_OSTD(JavaEngineType.REKKURA_BACKWARD_PROVER_OSTD),
+    REKKURA_BACKWARD_PROVER(JavaEngineType.REKKURA_BACKWARD_PROVER),
+    ;
     private final String version;
     private final ImmutableList<String> commandsForPerfTest;
     private final ImmutableList<String> commandsForCorrectnessTest;
@@ -43,11 +37,17 @@ public enum EngineType {
         this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
     }
 
-    private static List<String> getJavaPerfTestCommands(JavaEngineType engineType) {
+    private EngineType(JavaEngineType engineType) {
+        this.version = engineType.getVersion();
+        this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
+        this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
+    }
+
+    private static ImmutableList<String> getJavaPerfTestCommands(JavaEngineType engineType) {
         return ImmutableList.of(getJavaCommand(), "-cp", getClasspath(), PerfTestProcess.class.getName(), engineType.toString());
     }
 
-    private static List<String> getJavaCorrectnessTestCommands(JavaEngineType engineType) {
+    private static ImmutableList<String> getJavaCorrectnessTestCommands(JavaEngineType engineType) {
         return ImmutableList.of(getJavaCommand(), "-cp", getClasspath(), CorrectnessTestProcess.class.getName(), engineType.toString());
     }
 
