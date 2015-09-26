@@ -10,22 +10,26 @@ import com.google.common.collect.ImmutableList;
 import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
 import net.alloyggp.perf.runner.JavaEngineType;
 
+//TODO: Explicitly treat timeouts differently, record time allotted length
 public class CorrectnessTestResult implements Csvable {
     private final GameKey gameKey;
     private final EngineVersion testedEngine;
     private final JavaEngineType referenceEngine;
     private final String referenceEngineVersion;
+    private final long millisecondsTaken;
     private final int numStateChanges;
     private final Optional<ObservedError> error;
 
     private CorrectnessTestResult(GameKey gameKey, EngineVersion testedEngine,
             JavaEngineType referenceEngine, String referenceEngineVersion,
+            long millisecondsTaken,
             int numStateChanges,
             Optional<ObservedError> error) {
         this.gameKey = gameKey;
         this.testedEngine = testedEngine;
         this.referenceEngine = referenceEngine;
         this.referenceEngineVersion = referenceEngineVersion;
+        this.millisecondsTaken = millisecondsTaken;
         this.numStateChanges = numStateChanges;
         this.error = error;
     }
@@ -33,9 +37,10 @@ public class CorrectnessTestResult implements Csvable {
     public static CorrectnessTestResult create(GameKey gameKey,
             EngineVersion testedEngine, JavaEngineType referenceEngine,
             String referenceEngineVersion,
+            long millisecondsTaken,
             int numStateChanges, Optional<ObservedError> error) {
         return new CorrectnessTestResult(gameKey, testedEngine, referenceEngine,
-                referenceEngineVersion, numStateChanges, error);
+                referenceEngineVersion, millisecondsTaken, numStateChanges, error);
     }
 
     public GameKey getGameKey() {
@@ -52,6 +57,10 @@ public class CorrectnessTestResult implements Csvable {
 
     public Optional<ObservedError> getError() {
         return error;
+    }
+
+    public long getMillisecondsTaken() {
+        return millisecondsTaken;
     }
 
     @Override
@@ -75,32 +84,35 @@ public class CorrectnessTestResult implements Csvable {
                 testedEngine.getVersion(),
                 referenceEngine.toString(),
                 referenceEngineVersion,
+                Long.toString(millisecondsTaken),
                 Integer.toString(numStateChanges),
                 Boolean.toString(error.isPresent()),
                 errorString.replaceAll(";", ",")
-                .replaceAll("\n", "    "));
+                .replaceAll("\n", "    ")
+                .replaceAll("\r", ""));
     }
 
     public static CsvLoadFunction<CorrectnessTestResult> getCsvLoader() {
         return line -> {
             List<String> split = ImmutableList.copyOf(Splitter.on(";").split(line));
-            Preconditions.checkArgument(split.size() == 8);
+            Preconditions.checkArgument(split.size() == 9);
             GameKey gameKey = GameKey.create(split.get(0));
             EngineVersion testedEngine = EngineVersion.parse(split.get(1), split.get(2));
             JavaEngineType referenceEngine = JavaEngineType.valueOf(split.get(3));
             String referenceEngineVersion = split.get(4);
-            int numStateChanges = Integer.parseInt(split.get(5));
-            boolean errorPresent = Boolean.parseBoolean(split.get(6));
+            long millisecondsTaken = Long.parseLong(split.get(5));
+            int numStateChanges = Integer.parseInt(split.get(6));
+            boolean errorPresent = Boolean.parseBoolean(split.get(7));
             Optional<ObservedError> error;
             //Slightly hacky for now; not a complete reproduction of internal state
             if (errorPresent) {
-                error = Optional.of(ObservedError.create(split.get(7), numStateChanges));
+                error = Optional.of(ObservedError.create(split.get(8), numStateChanges));
             } else {
                 error = Optional.empty();
             }
 
             return new CorrectnessTestResult(gameKey, testedEngine, referenceEngine,
-                    referenceEngineVersion, numStateChanges, error);
+                    referenceEngineVersion, millisecondsTaken, numStateChanges, error);
         };
     }
 }

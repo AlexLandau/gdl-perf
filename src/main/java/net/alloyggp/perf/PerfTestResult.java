@@ -4,12 +4,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
+import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
+
+//TODO: Record time allotted length?
 public class PerfTestResult implements Csvable {
     private final GameKey gameKey;
     private final EngineVersion engineVersion;
@@ -108,7 +109,30 @@ public class PerfTestResult implements Csvable {
         };
     }
 
-    public static Map<GameKey, PerfTestResult> groupByGame(
+    public static Map<GameKey, Map<EngineVersion, PerfTestResult>> groupByGameAndEngine(
+            Collection<PerfTestResult> results) {
+        Map<GameKey, Map<EngineVersion, PerfTestResult>> map = Maps.newHashMap();
+        for (PerfTestResult result : results) {
+            EngineVersion engineVersion = result.getEngineVersion();
+            GameKey game = result.getGameKey();
+            if (!map.containsKey(game)) {
+                Map<EngineVersion, PerfTestResult> newMap = Maps.newHashMap();
+                newMap.put(engineVersion, result);
+                map.put(game, newMap);
+            } else {
+                Map<EngineVersion, PerfTestResult> innerMap = map.get(game);
+                if (!innerMap.containsKey(engineVersion)) {
+                    innerMap.put(engineVersion, result);
+                } else {
+                    PerfTestResult existingResult = innerMap.get(engineVersion);
+                    innerMap.put(engineVersion, mergeResults(result, existingResult));
+                }
+            }
+        }
+        return map;
+    }
+
+    public static Map<GameKey, PerfTestResult> groupByGameSingleEngineVersion(
             Collection<PerfTestResult> results) {
         Map<GameKey, PerfTestResult> map = Maps.newHashMap();
         for (PerfTestResult result : results) {

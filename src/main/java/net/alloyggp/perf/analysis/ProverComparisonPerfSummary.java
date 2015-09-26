@@ -63,9 +63,9 @@ public class ProverComparisonPerfSummary {
         //Load results, find set of games where neither have errors
         //TODO: Filter by version
         List<PerfTestResult> allProverResults = PerfResultLoader.loadAllResults(EngineType.PROVER);
-        Map<GameKey, PerfTestResult> proverResultsMap = PerfTestResult.groupByGame(allProverResults);
+        Map<GameKey, PerfTestResult> proverResultsMap = PerfTestResult.groupByGameSingleEngineVersion(allProverResults);
         List<PerfTestResult> allEngineResults = PerfResultLoader.loadAllResults(engine);
-        Map<GameKey, PerfTestResult> engineResultsMap = PerfTestResult.groupByGame(allEngineResults);
+        Map<GameKey, PerfTestResult> engineResultsMap = PerfTestResult.groupByGameSingleEngineVersion(allEngineResults);
 
         Set<GameKey> gamesWithoutErrors = Sets.newHashSet();
         gamesWithoutErrors.addAll(Sets.intersection(proverResultsMap.keySet(), engineResultsMap.keySet()));
@@ -121,7 +121,7 @@ public class ProverComparisonPerfSummary {
         public static SingleEnginePerfSummary create(Set<GameKey> gamesToUse,
                 EngineVersion engine, Collection<PerfTestResult> results) {
             results = Collections2.filter(results, result -> result.getEngineVersion().equals(engine));
-            Map<GameKey, PerfTestResult> resultsByGame = PerfTestResult.groupByGame(results);
+            Map<GameKey, PerfTestResult> resultsByGame = PerfTestResult.groupByGameSingleEngineVersion(results);
 
             Set<GameKey> gamesWithErrors = Sets.newHashSet();
             Map<GameKey, Double> averageStatesPerSecond = Maps.newHashMap();

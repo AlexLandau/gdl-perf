@@ -51,6 +51,11 @@ public interface GameActionMessage {
             public boolean isEndOfMessages() {
                 return true;
             }
+
+            @Override
+            public String toString() {
+                return "End of messages";
+            }
         };
     }
 
