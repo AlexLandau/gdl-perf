@@ -544,3 +544,8 @@ BASE/gt_two_thirds_4p;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;false;Exceptio
 BASE/colonelBlotto;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;false;Test process timed out after 240 seconds;0;0;0
 BASE/queens;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;true;;145722;10;1
 BASE/alexChess;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;false;Exception of type StackOverflowError;0;0;0
+BASE/mineClearingSmall;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;true;;30002;4073;340
+BASE/queens31lg;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;false;Test process timed out after 240 seconds;0;0;0
+BASE/queens08lg;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;false;Test process timed out after 240 seconds;0;0;0
+BASE/queens08ug;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;false;Test process timed out after 240 seconds;0;0;0
+BASE/queens06ug;PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE;0.6.1;true;;51799;12;2
