@@ -92,12 +92,12 @@ public class StateMachineRunnables {
             }
 
             @Override
-            public String getMoveName(Move move) {
+            public String getMoveName(StateMachine sm, Move move) {
                 return move.toString();
             }
 
             @Override
-            public String getRoleName(Role role) {
+            public String getRoleName(StateMachine sm, Role role) {
                 return role.toString();
             }
         };

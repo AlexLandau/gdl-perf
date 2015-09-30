@@ -44,10 +44,10 @@ public class JavaCorrectnessTestRunnable<Simulator, State, Role, Move> implement
                 List<Move> jointMove = Lists.newArrayList();
                 for (Role role : roles) {
                     List<Move> legalMoves = wrapper.getLegalMoves(sm, curState, role);
-                    recorder.recordLegalMoves(wrapper.getMoveNames(legalMoves));
+                    recorder.recordLegalMoves(wrapper.getMoveNames(sm, legalMoves));
                     jointMove.add(pickOneAtRandom(legalMoves));
                 }
-                recorder.recordChosenJointMove(wrapper.getMoveNames(jointMove));
+                recorder.recordChosenJointMove(wrapper.getMoveNames(sm, jointMove));
                 curState = wrapper.getNextState(sm, curState, jointMove);
                 stateChangesSoFar++;
             }

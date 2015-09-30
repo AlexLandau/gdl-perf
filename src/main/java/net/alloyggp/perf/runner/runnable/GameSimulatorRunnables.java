@@ -137,12 +137,12 @@ public class GameSimulatorRunnables {
             }
 
             @Override
-            public String getMoveName(Expression move) {
+            public String getMoveName(GameSimulator simulator, Expression move) {
                 return ((Predicate) move).getOperands().get(1).toString();
             }
 
             @Override
-            public String getRoleName(Expression role) {
+            public String getRoleName(GameSimulator simulator, Expression role) {
                 return role.toString();
             }
 

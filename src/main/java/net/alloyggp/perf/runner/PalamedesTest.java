@@ -1,20 +1,8 @@
 package net.alloyggp.perf.runner;
 
+import org.ggp.base.player.gamer.Gamer;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.game.GameRepository;
-
-import stanfordlogic.game.GameManager;
-import stanfordlogic.game.Gamer;
-import stanfordlogic.gdl.GdlList;
-import stanfordlogic.gdl.Parser;
-import stanfordlogic.jocular.game.GenericGamerFactory;
-import stanfordlogic.knowledge.BasicKB;
-import stanfordlogic.knowledge.GameInformation;
-import stanfordlogic.knowledge.KnowledgeBase;
-import stanfordlogic.knowledge.MetaGdl;
-import stanfordlogic.prover.AbstractReasoner;
-import stanfordlogic.prover.BasicReasoner;
-import stanfordlogic.prover.GroundFact;
 
 public class PalamedesTest {
 

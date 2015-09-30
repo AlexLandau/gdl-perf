@@ -146,12 +146,12 @@ public class RekkuraRunnables {
             }
 
             @Override
-            public String getMoveName(Dob move) {
+            public String getMoveName(GgpStateMachine2 sm, Dob move) {
                 return KifFormat.inst.toString(move.at(2));
             }
 
             @Override
-            public String getRoleName(Dob role) {
+            public String getRoleName(GgpStateMachine2 sm, Dob role) {
                 String inParens = role.toString();
                 return inParens.substring(1, inParens.length() - 1);
             }
