@@ -19,6 +19,7 @@ dependencies {
         'lib/palamedes/JavaProver.jar',
         'lib/palamedes/org.eclipse.palamedes.gdl.core_0.6.1.jar',
         'lib/palamedes/org.eclipse.palamedes.kif.core_0.6.1.jar',
+        'lib/jocular/jocular-0.2.jar',
         //TODO: Clean up this jar before committing
         //ALSO export the sources
         //dependent jars should go in lib/rekkura (when applicable)
