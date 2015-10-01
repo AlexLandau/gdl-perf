@@ -1,45 +1,40 @@
 package net.alloyggp.perf.runner.runnable;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.ggp.base.util.game.Game;
 
-public interface JavaSimulatorWrapper<Simulator, State, Role, Move> {
-    public static class RandomSource {
-        public static final Random RANDOM = new Random();
-    }
+public interface JavaSimulatorWrapper<Engine, State, Role, Move> {
+    Engine createSimulator(String gameRules, Game game);
 
-    Simulator createSimulator(String gameRules, Game game);
+    State getInitialState(Engine sm);
 
-    State getInitialState(Simulator sm);
+    boolean isTerminal(Engine sm, State state) throws Exception;
 
-    boolean isTerminal(Simulator sm, State state);
+    State getRandomNextState(Engine sm, State state) throws Exception;
 
-    State getRandomNextState(Simulator sm, State state) throws Exception;
+    List<Integer> getGoals(Engine sm, State state) throws Exception;
 
-    List<Integer> getGoals(Simulator sm, State state) throws Exception;
+    List<Role> getRoles(Engine sm);
 
-    List<Role> getRoles(Simulator sm);
+    List<Move> getLegalMoves(Engine sm, State state, Role role) throws Exception;
 
-    List<Move> getLegalMoves(Simulator sm, State state, Role role) throws Exception;
+    State getNextState(Engine sm, State curState, List<Move> jointMove) throws Exception;
 
-    State getNextState(Simulator sm, State curState, List<Move> jointMove) throws Exception;
-
-    default List<String> getMoveNames(Simulator sm, List<Move> legalMoves) {
+    default List<String> getMoveNames(Engine simulator, List<Move> legalMoves) {
         return legalMoves.stream()
-                .map(move -> getMoveName(sm, move))
+                .map(move -> getMoveName(simulator, move))
                 .collect(Collectors.toList());
     }
 
-    String getMoveName(Simulator sm, Move move);
+    String getMoveName(Engine simulator, Move move);
 
-    default List<String> getRoleNames(Simulator sm) {
+    default List<String> getRoleNames(Engine sm) {
         return getRoles(sm).stream()
                 .map(role -> getRoleName(sm, role))
                 .collect(Collectors.toList());
     }
 
-    String getRoleName(Simulator sm, Role role);
+    String getRoleName(Engine simulator, Role role);
 }

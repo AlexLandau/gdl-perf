@@ -98,7 +98,6 @@ public class MissingEntriesCorrectnessTestRunner {
     public static File getCsvOutputFileForEngine(EngineType engineToTest) throws IOException {
         File outputDir = PerfTest.getOutputDir("correctnessResults");
         File outputCsvFile = new File(outputDir, engineToTest.toString() + ".csv");
-        outputCsvFile.createNewFile();
         return outputCsvFile;
     }
 

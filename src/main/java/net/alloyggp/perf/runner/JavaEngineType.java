@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
+import org.eclipse.palamedes.gdl.core.model.GameFactory;
 import org.ggp.base.util.concurrency.ConcurrencyUtils;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.statemachine.MachineState;
@@ -26,6 +27,7 @@ import net.alloyggp.perf.runner.runnable.GameSimulatorRunnables;
 import net.alloyggp.perf.runner.runnable.JavaCorrectnessTestRunnable;
 import net.alloyggp.perf.runner.runnable.JavaPerfTestRunnable;
 import net.alloyggp.perf.runner.runnable.JavaSimulatorWrapper;
+import net.alloyggp.perf.runner.runnable.PalamedesCoreRunnables;
 import net.alloyggp.perf.runner.runnable.PerfTestRunnable;
 import net.alloyggp.perf.runner.runnable.RekkuraRunnables;
 import net.alloyggp.perf.runner.runnable.RuleEngineRunnables;
@@ -44,6 +46,10 @@ public enum JavaEngineType {
             GameSimulatorRunnables.getWrapper(false)),
     PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE("0.6.1",
             GameSimulatorRunnables.getWrapper(true)),
+    PALAMEDES_JOCULAR("0.6.1",
+            PalamedesCoreRunnables.getWrapper(GameFactory.JOCULAR)),
+    PALAMEDES_JAVA_ECLIPSE("0.6.1",
+            PalamedesCoreRunnables.getWrapper(GameFactory.PROLOGPROVER)),
     REKKURA_GENERIC_FORWARD_PROVER_OSTD("1.0.0",
             RekkuraRunnables.getWrapper(GgpStateMachine.GENERIC_FORWARD_PROVER_OSTD)),
     REKKURA_GENERIC_FORWARD_PROVER("1.0.0",
