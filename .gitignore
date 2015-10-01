@@ -3,3 +3,6 @@
 /.gradle/
 /.checkstyle
 /compiled/
+/.classpath
+/.project
+/.settings/

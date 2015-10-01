@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-import net.alloyggp.perf.EngineType.TestCompleted;
-import net.alloyggp.perf.io.GameFiles;
-import net.alloyggp.perf.io.ResultFiles;
-
 import org.ggp.base.util.game.Game;
 
 import com.google.common.io.Files;
+
+import net.alloyggp.perf.EngineType.TestCompleted;
+import net.alloyggp.perf.io.GameFiles;
+import net.alloyggp.perf.io.ResultFiles;
 
 public class PerfTest {
 
@@ -74,7 +74,6 @@ public class PerfTest {
     public static File getCsvOutputFileForEngine(EngineType engineToTest) throws IOException {
         File outputDir = PerfTest.getOutputDir("results");
         File outputCsvFile = new File(outputDir, engineToTest.toString() + ".csv");
-        outputCsvFile.createNewFile();
         return outputCsvFile;
     }
 

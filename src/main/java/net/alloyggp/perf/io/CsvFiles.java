@@ -34,6 +34,9 @@ public class CsvFiles {
 
     public static <T extends Csvable> List<T> load(File csvFile, CsvLoadFunction<T> function) throws IOException {
         List<T> results = Lists.newArrayList();
+        if (!csvFile.isFile()) {
+            return results;
+        }
         List<String> lines = Files.readAllLines(csvFile.toPath());
         for (String line : lines) {
             try {
@@ -66,6 +69,9 @@ public class CsvFiles {
     }
 
     public static void rewrite(File csvFile, List<? extends Csvable> newResults) {
+        if (!csvFile.isFile()) {
+            return;
+        }
         try (BufferedWriter out = new BufferedWriter(new FileWriter(csvFile, false))) {
             for (Csvable result : newResults) {
                 List<String> values = result.getValuesForCsv();
