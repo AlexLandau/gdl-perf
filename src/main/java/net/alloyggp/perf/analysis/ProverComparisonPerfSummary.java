@@ -6,11 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.alloyggp.perf.EngineType;
-import net.alloyggp.perf.EngineVersion;
-import net.alloyggp.perf.GameKey;
-import net.alloyggp.perf.PerfTestResult;
-
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.google.common.base.Preconditions;
@@ -20,6 +15,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
+import net.alloyggp.perf.EngineType;
+import net.alloyggp.perf.EngineVersion;
+import net.alloyggp.perf.GameKey;
+import net.alloyggp.perf.PerfTestResult;
 
 public class ProverComparisonPerfSummary {
     private final int numGamesInResults;
@@ -43,6 +43,34 @@ public class ProverComparisonPerfSummary {
         this.speedupGeometricMean = speedupGeometricMean;
     }
 
+    public int getNumGamesInResults() {
+        return numGamesInResults;
+    }
+
+    public int getNumGamesWithErrors() {
+        return numGamesWithErrors;
+    }
+
+    public double getTimeToRun1000StatesPerGameRatio() {
+        return timeToRun1000StatesPerGameRatio;
+    }
+
+    public double getNumStateChangesWith1SecondPerGameRatio() {
+        return numStateChangesWith1SecondPerGameRatio;
+    }
+
+    public double getMeanSpeedup() {
+        return meanSpeedup;
+    }
+
+    public double getMedianSpeedup() {
+        return medianSpeedup;
+    }
+
+    public double getSpeedupGeometricMean() {
+        return speedupGeometricMean;
+    }
+
     public static void main(String[] args) throws IOException {
         for (EngineType engine : EngineType.values()) {
             if (engine == EngineType.PROVER) {
@@ -50,21 +78,20 @@ public class ProverComparisonPerfSummary {
             }
 
             //Calculate a few relative values
-            ProverComparisonPerfSummary summary = ProverComparisonPerfSummary.create(engine);
+            ProverComparisonPerfSummary summary = ProverComparisonPerfSummary.create(engine.getWithVersion());
             System.out.println("For engine " + engine + ":");
             System.out.println(summary);
             System.out.println();
         }
     }
 
-    public static ProverComparisonPerfSummary create(EngineType engine) throws IOException {
+    public static ProverComparisonPerfSummary create(EngineVersion engineVersion) throws IOException {
         EngineVersion proverVersion = EngineType.PROVER.getWithVersion();
-        EngineVersion engineVersion = engine.getWithVersion();
         //Load results, find set of games where neither have errors
         //TODO: Filter by version
-        List<PerfTestResult> allProverResults = PerfResultLoader.loadAllResults(EngineType.PROVER);
+        List<PerfTestResult> allProverResults = PerfResultLoader.loadAllResults(proverVersion);
         Map<GameKey, PerfTestResult> proverResultsMap = PerfTestResult.groupByGameSingleEngineVersion(allProverResults);
-        List<PerfTestResult> allEngineResults = PerfResultLoader.loadAllResults(engine);
+        List<PerfTestResult> allEngineResults = PerfResultLoader.loadAllResults(engineVersion);
         Map<GameKey, PerfTestResult> engineResultsMap = PerfTestResult.groupByGameSingleEngineVersion(allEngineResults);
 
         Set<GameKey> gamesWithoutErrors = Sets.newHashSet();

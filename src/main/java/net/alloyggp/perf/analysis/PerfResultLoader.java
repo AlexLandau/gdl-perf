@@ -3,6 +3,7 @@ package net.alloyggp.perf.analysis;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -31,6 +32,13 @@ public class PerfResultLoader {
             allResults.addAll(loadAllResults(engine));
         }
         return allResults;
+    }
+
+    public static List<PerfTestResult> loadAllResults(EngineVersion engineVersion) throws IOException {
+        return loadAllResults(engineVersion.getType())
+                .stream()
+                .filter(result -> result.getEngineVersion().equals(engineVersion))
+                .collect(Collectors.toList());
     }
 
     public static List<PerfTestResult> loadAllResults(EngineType engine) throws IOException {
