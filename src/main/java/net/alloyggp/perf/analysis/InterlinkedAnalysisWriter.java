@@ -211,7 +211,11 @@ public class InterlinkedAnalysisWriter {
     	if (result.getMillisecondsTaken() == 0) {
     		return "error";
     	}
-        return Long.toString((result.getNumStateChanges() * 1000L) / result.getMillisecondsTaken());
+        return Long.toString(getAvgNum(result));
+    }
+
+    private long getAvgNum(PerfTestResult result) {
+        return (result.getNumStateChanges() * 1000L) / result.getMillisecondsTaken();
     }
 
     private String link(EngineVersion engine) {
@@ -249,15 +253,23 @@ public class InterlinkedAnalysisWriter {
             HtmlAdHocTable errorsTable = HtmlAdHocTable.create();
             errorsTable.addRow("Game", "Error message");
             boolean anyErrorsFound = false;
+            List<PerfTestResult> resultsToSort = Lists.newArrayList();
             for (GameKey game : validGameKeys) {
                 PerfTestResult result = resultsByGame.get(game).get(engine);
-                if (result.wasSuccessful()) {
-                    int ranking = rankingsByGame.get(game).indexOf(engine) + 1;
-                    gameTable.addRow(link(game), getAvg(result), ranking+"");
-                } else {
-                    errorsTable.addRow(link(game), result.getErrorMessage());
-                    anyErrorsFound = true;
+                if (result != null) {
+                	if (result.wasSuccessful()) {
+                	    resultsToSort.add(result);
+                	} else {
+                		errorsTable.addRow(link(game), result.getErrorMessage());
+                		anyErrorsFound = true;
+                	}
                 }
+            }
+            resultsToSort.sort(Comparator.comparing(this::getAvgNum).reversed());
+            for (PerfTestResult result : resultsToSort) {
+                GameKey game = result.getGameKey();
+                int ranking = rankingsByGame.get(game).indexOf(engine) + 1;
+                gameTable.addRow(link(game), getAvg(result), ranking+"");
             }
             page.addText("Game-by-game statistics:");
             page.add(gameTable);
