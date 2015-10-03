@@ -18,6 +18,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
@@ -106,19 +107,31 @@ public class InterlinkedAnalysisWriter {
             if (resultsByEngine == null) {
                 page.addText("No perf results found for game.");
             } else {
-                SortedSet<Pair<EngineVersion, PerfTestResult>> resultPairs = Sets.newTreeSet(
-                        Comparator.comparing((Pair<EngineVersion, PerfTestResult> pair) -> {
-                            PerfTestResult result = pair.right;
-                            return result.getNumStateChanges() / (double) result.getMillisecondsTaken();
-                        }).reversed());
-                for (Entry<EngineVersion, PerfTestResult> entry : resultsByEngine.entrySet()) {
-                    resultPairs.add(Pair.from(entry));
+                Map<EngineVersion, PerfTestResult> successfulResults = Maps.filterValues(resultsByEngine, result -> result.wasSuccessful());
+                Map<EngineVersion, PerfTestResult> resultsWithErrors = Maps.filterValues(resultsByEngine, result -> !result.wasSuccessful());
+                if (!successfulResults.isEmpty()) {
+                	SortedSet<Pair<EngineVersion, PerfTestResult>> resultPairs = Sets.newTreeSet(
+                			Comparator.comparing((Pair<EngineVersion, PerfTestResult> pair) -> {
+                				PerfTestResult result = pair.right;
+                				return result.getNumStateChanges() / (double) result.getMillisecondsTaken();
+                			}).reversed());
+                	for (Entry<EngineVersion, PerfTestResult> entry : successfulResults.entrySet()) {
+                		resultPairs.add(Pair.from(entry));
+                	}
+                	HtmlAdHocTable engineTable = HtmlAdHocTable.create();
+                	for (Pair<EngineVersion, PerfTestResult> resultPair : resultPairs) {
+                		engineTable.addRow(link(resultPair.left), getAvg(resultPair.right));
+                	}
+                	page.add(engineTable);
                 }
-                HtmlAdHocTable engineTable = HtmlAdHocTable.create();
-                for (Pair<EngineVersion, PerfTestResult> resultPair : resultPairs) {
-                    engineTable.addRow(link(resultPair.left), getAvg(resultPair.right));
+                if (!resultsWithErrors.isEmpty()) {
+                	page.addText("Machines with errors:");
+                	HtmlAdHocTable errorTable = HtmlAdHocTable.create();
+                	for (Entry<EngineVersion, PerfTestResult> entry : resultsWithErrors.entrySet()) {
+                		errorTable.addRow(link(entry.getKey()), entry.getValue().getErrorMessage());
+                	}
+                	page.add(errorTable);
                 }
-                page.add(engineTable);
             }
         } else {
             page.addText("Game is considered invalid.");
@@ -127,6 +140,9 @@ public class InterlinkedAnalysisWriter {
     }
 
     private String getAvg(PerfTestResult result) {
+    	if (result.getMillisecondsTaken() == 0) {
+    		return "error";
+    	}
         return Long.toString((result.getNumStateChanges() * 1000L) / result.getMillisecondsTaken());
     }
 
