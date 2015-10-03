@@ -48,7 +48,7 @@ public class MissingEntriesCorrectnessTestRunner {
         GdlPool.caseSensitive = false;
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             System.out.println("Testing engine " + engineToTest);
-            File outputCsvFile = getCsvOutputFileForEngine(engineToTest);
+            File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
 
             Set<GameKey> alreadyTestedGames = loadAlreadyTestedGames(outputCsvFile);
             for (GameKey gameKey : GameKey.loadAllValidGameKeys()) {
@@ -95,11 +95,6 @@ public class MissingEntriesCorrectnessTestRunner {
                 .collect(Immutables.collectSet());
     }
 
-    public static File getCsvOutputFileForEngine(EngineType engineToTest) throws IOException {
-        File outputDir = PerfTest.getOutputDir("correctnessResults");
-        File outputCsvFile = new File(outputDir, engineToTest.toString() + ".csv");
-        return outputCsvFile;
-    }
 
     //TODO: Wrap all this in a big try block
     private static @Nullable CorrectnessTestResult runTest(int numStateChangesToTest,
