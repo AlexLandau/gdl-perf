@@ -46,7 +46,7 @@ public class HtmlPage implements Htmlable {
 
     public void addText(String text) {
         //TODO: Escape text
-        contents.add(RawHtml.create(text));
+        contents.add(RawHtml.create("<p>"+text+"</p>\n"));
     }
 
     public String toHtml() {
