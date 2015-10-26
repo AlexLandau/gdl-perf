@@ -127,10 +127,10 @@ public class GameKey {
                 InvalidGames.loadInvalidGames().keySet());
     }
 
-    public static ImmutableSet<GameKey> createSet(String... gameKeyStrings) {
+    public static ImmutableSet<GameKey> createSet(RepoId repoId, String... gameNames) {
         ImmutableSet.Builder<GameKey> result = ImmutableSet.builder();
-        for (String gameKeyString : gameKeyStrings) {
-            result.add(create(gameKeyString));
+        for (String gameName : gameNames) {
+            result.add(create(repoId, gameName));
         }
         return result.build();
     }

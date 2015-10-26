@@ -15,11 +15,12 @@ public class SamplePerfTestRunner {
                     EngineType.REKKURA_BACKWARD_PROVER,
                     EngineType.PALAMEDES_JAVA_PROVER_USEOPT_TRUE);
     private final ImmutableSet<GameKey> gamesToTest =
-            GameKey.createSet("BASE/ticTacToe",
-                    "BASE/connectFour",
-                    "BASE/hex",
-                    "BASE/speedChess",
-                    "BASE/reversi");
+            GameKey.createSet(RepoId.BASE,
+                    "ticTacToe",
+                    "connectFour",
+                    "hex",
+                    "speedChess",
+                    "reversi");
     private static final int TEST_LENGTH_SECONDS = 15;
     private static final int SECONDS_BEFORE_CANCELLING = 240;
 
