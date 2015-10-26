@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.ggp.base.util.game.Game;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -84,5 +85,13 @@ public class GameKey {
     public static Set<GameKey> loadAllValidGameKeys() throws IOException {
         return Sets.difference(Sets.newHashSet(loadAllGameKeys()),
                 InvalidGames.loadInvalidGames().keySet());
+    }
+
+    public static ImmutableSet<GameKey> createSet(String... gameKeyStrings) {
+        ImmutableSet.Builder<GameKey> result = ImmutableSet.builder();
+        for (String gameKeyString : gameKeyStrings) {
+            result.add(create(gameKeyString));
+        }
+        return result.build();
     }
 }
