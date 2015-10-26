@@ -11,10 +11,13 @@ repositories {
 dependencies {
 //    compile 'org.slf4j:slf4j-api:1.7.5'
 //    testCompile "junit:junit:4.11"
+    compile 'com.google.guava:guava:14.0.1'
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile files(
         //TODO: Add some exported jar from GGP-Base instead of an
         //implicit dependency (at least until GGP-Base gets
         //versioning and publishing)
+        'lib/ggp-base.jar', //currently needs to be user-provided
     
         'lib/palamedes/JavaProver.jar',
         'lib/palamedes/org.eclipse.palamedes.gdl.core_0.6.1.jar',

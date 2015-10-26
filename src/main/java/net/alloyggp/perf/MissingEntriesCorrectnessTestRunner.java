@@ -21,7 +21,7 @@ import org.ggp.base.util.gdl.grammar.GdlPool;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.Nullable;
+import javax.annotation.Nullable;
 
 import net.alloyggp.perf.io.CsvFiles;
 import net.alloyggp.perf.io.GameFiles;
