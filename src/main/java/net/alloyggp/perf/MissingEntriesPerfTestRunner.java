@@ -22,6 +22,7 @@ public class MissingEntriesPerfTestRunner {
     public static void main(String[] args) throws Exception {
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             System.out.println("Testing engine " + engineToTest);
+
             File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engineToTest);
 
             Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
@@ -29,6 +30,19 @@ public class MissingEntriesPerfTestRunner {
                 gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile));
             } else {
                 gameKeysToTest.removeAll(loadAllGameKeys(outputCsvFile));
+            }
+
+            if (gameKeysToTest.isEmpty()) {
+                // Skip the engine test
+                continue;
+            }
+            System.out.println("Checking if engine can run on this computer...");
+            boolean success = engineToTest.runCompatibilityTest();
+            if (success) {
+                System.out.println("Compatibility test successful");
+            } else {
+                System.out.println("Compatibility test failed, skipping engine");
+                continue;
             }
 
             for (GameKey gameKey : gameKeysToTest) {

@@ -116,4 +116,22 @@ public enum EngineType {
     public String getCurrentVersion() {
         return version;
     }
+
+    /**
+     * Runs a compatibility test that checks if the engine is configured
+     * sufficiently correctly on this computer to give results for a
+     * simple game.
+     */
+    public boolean runCompatibilityTest() throws IOException, InterruptedException {
+        PerfTestResult result = PerfTest.runTest(
+                GameKey.create(RepoId.BASE, "ticTacToe"),
+                this,
+                5, //test length in seconds
+                60); //seconds before cancelling
+
+        if (!result.wasSuccessful()) {
+            System.out.println("Error from compatibility test: " + result.getErrorMessage());
+        }
+        return result.wasSuccessful();
+    }
 }

@@ -20,6 +20,10 @@ public class GameKey {
         this.gameKey = gameKey;
     }
 
+    public static GameKey create(RepoId repo, String gameKey) {
+        return new GameKey(repo, gameKey);
+    }
+
     public Game loadGame() {
         return repo.getRepo().getGame(gameKey);
     }
