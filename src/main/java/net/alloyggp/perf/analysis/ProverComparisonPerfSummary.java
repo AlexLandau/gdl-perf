@@ -73,7 +73,7 @@ public class ProverComparisonPerfSummary {
 
     public static void main(String[] args) throws IOException {
         for (EngineType engine : EngineType.values()) {
-            if (engine == EngineType.PROVER) {
+            if (engine == EngineType.GGP_BASE_PROVER) {
                 continue;
             }
 
@@ -86,7 +86,7 @@ public class ProverComparisonPerfSummary {
     }
 
     public static ProverComparisonPerfSummary create(EngineVersion engineVersion) throws IOException {
-        EngineVersion proverVersion = EngineType.PROVER.getWithVersion();
+        EngineVersion proverVersion = EngineType.GGP_BASE_PROVER.getWithVersion();
         //Load results, find set of games where neither have errors
         //TODO: Filter by version
         List<PerfTestResult> allProverResults = PerfResultLoader.loadAllResults(proverVersion);

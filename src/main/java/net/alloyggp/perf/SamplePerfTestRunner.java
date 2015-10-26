@@ -10,10 +10,10 @@ import net.alloyggp.perf.io.CsvFiles;
 //TODO: Merge better with MissingEntriesPerfTestRunner
 public class SamplePerfTestRunner {
     private final ImmutableSet<EngineType> enginesToTest =
-            ImmutableSet.of(EngineType.PROVER,
+            ImmutableSet.of(EngineType.GGP_BASE_PROVER,
                     EngineType.PALAMEDES_JOCULAR,
                     EngineType.REKKURA_BACKWARD_PROVER,
-                    EngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE);
+                    EngineType.PALAMEDES_JAVA_PROVER_USEOPT_TRUE);
     private final ImmutableSet<GameKey> gamesToTest =
             GameKey.createSet("BASE/ticTacToe",
                     "BASE/connectFour",

@@ -30,12 +30,12 @@ import net.alloyggp.perf.runner.runnable.StateMachineRunnables;
 import rekkura.ggp.machina.GgpStateMachine;
 
 public enum JavaEngineType {
-    PROVER("2015-04-26",
+    GGP_BASE_PROVER("2015-04-26",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.create())),
     //NOTE: The 0.6.1 version is taken from Palamedes, which includes this version.
-    PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE("0.6.1",
+    PALAMEDES_JAVA_PROVER_USEOPT_FALSE("0.6.1",
             GameSimulatorRunnables.getWrapper(false)),
-    PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE("0.6.1",
+    PALAMEDES_JAVA_PROVER_USEOPT_TRUE("0.6.1",
             GameSimulatorRunnables.getWrapper(true)),
     PALAMEDES_JOCULAR("0.6.1",
             PalamedesCoreRunnables.getWrapper(GameFactory.JOCULAR)),
@@ -75,7 +75,6 @@ public enum JavaEngineType {
     }
 
     public String getVersion() {
-        //TODO: Come up with a non-hacky way to do this! Obvious ways lead to circular dependencies.
         return version;
     }
 
@@ -86,8 +85,6 @@ public enum JavaEngineType {
     public void runCorrectnessTest(String gameRules, int stateChangesToRun, GameActionRecorder recorder) throws Exception {
         correctnessRunnable.runCorrectnessTest(gameRules, stateChangesToRun, recorder);
     }
-
-
 
     //TODO: Limit number of errors we find?
     public Optional<ObservedError> validateCorrectnessTestOutput(
@@ -100,12 +97,12 @@ public enum JavaEngineType {
         if (!ourRoles.equals(theirRoles)) {
             return Optional.of(ObservedError.create("Role mismatch", ourRoles, theirRoles, numStateChanges));
         }
-        //TODO: ...
+
         MachineState initialState = sm.getInitialState();
         while (true) {
             MachineState curState = initialState;
             List<List<Move>> moveHistory = Lists.newArrayList();
-            //TODO: ...
+
             while (true) {
                 ConcurrencyUtils.checkForInterruption();
                 boolean ourTerminal = sm.isTerminal(curState);
@@ -120,7 +117,7 @@ public enum JavaEngineType {
                 if (ourTerminal) {
                     break;
                 }
-                //TODO: Continue non-terminal case
+
                 //Check legal moves
                 for (Role role : ourRoles) {
                     Set<Move> ourMoves = Sets.newHashSet(sm.getLegalMoves(curState, role));
@@ -135,7 +132,7 @@ public enum JavaEngineType {
                 curState = sm.getNextState(curState, jointMove);
                 numStateChanges++;
             }
-            //TODO: Continue terminal case
+
             List<Integer> ourGoals = sm.getGoals(curState);
             List<Integer> theirGoals = messages.take().expectGoalsMessage().getGoals();
             if (!ourGoals.equals(theirGoals)) {
@@ -144,101 +141,11 @@ public enum JavaEngineType {
         }
     }
 
-    private boolean equalsIgnoringCase(List<Role> ourRoles, List<Role> theirRoles) {
-        if (ourRoles.size() != theirRoles.size()) {
-            return false;
-        }
-        for (int i = 0; i < ourRoles.size(); i++) {
-            if (!ourRoles.get(i).toString().equalsIgnoreCase(theirRoles.get(i).toString())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private static StateMachine getStateMachine(JavaEngineType javaEngineType, Game game) {
-        if (javaEngineType == PROVER) {
+        if (javaEngineType == GGP_BASE_PROVER) {
             return ProverStateMachineFactory.create().buildInitializedForGame(game);
         }
         throw new IllegalArgumentException(javaEngineType.toString());
     }
-
-
-//    private static PerfTestRunnable getRekkuraPerfTestRunnable(Factory<? extends GgpStateMachine> factory) {
-//        return new PerfTestRunnable() {
-//            @Override
-//            public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
-//                Game game = Game.createEphemeralGame(Game.preprocessRulesheet(gameRules));
-//                List<String> ruleStrings = game.getRules().stream()
-//                        .map(Gdl::toString)
-//                        .collect(Collectors.toList());
-//                List<Rule> rules = KifFormat.genericStringsToRules(ruleStrings.toArray(new String[0]));
-//                GgpStateMachine sm = factory.create(rules);
-//
-//                long numStateChanges = 0;
-//                long numRollouts = 0;
-//                Stopwatch timer = new Stopwatch().start();
-//                outer : while (true) {
-//                    if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
-//                        break outer;
-//                    }
-//                    Set<Dob> state = sm.getInitial();
-//                    while (!sm.isTerminal(state)) {
-//                        if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
-//                            break outer;
-//                        }
-//                        state = sm.getRandomNextState(state);
-//                        numStateChanges++;
-//                    }
-//                    sm.getGoals(state);
-//                    numRollouts++;
-//                }
-//                long millisecondsTaken = timer.stop().elapsed(TimeUnit.MILLISECONDS);
-//
-//                return new PerfTestReport(millisecondsTaken, numStateChanges, numRollouts);
-//            }
-//        };
-//    }
-//
-//    private static CorrectnessTestRunnable getRekkuraCorrectnessTestRunnable(Factory<? extends GgpStateMachine> factory) {
-//        return (gameRules, stateChangesToRun, recorder) -> {
-//            Game game = Game.createEphemeralGame(Game.preprocessRulesheet(gameRules));
-//            List<String> ruleStrings = game.getRules().stream()
-//                    .map(Gdl::toString)
-//                    .collect(Collectors.toList());
-//            List<Rule> rules = KifFormat.genericStringsToRules(ruleStrings.toArray(new String[0]));
-//            GgpStateMachine sm = factory.create(rules);
-//
-//            List<Role> roles = sm.getRoles();
-//            recorder.writeRoles(roles);
-//            int stateChangesSoFar = 0;
-//            MachineState initialState = sm.getInitialState();
-//            if (sm.isTerminal(initialState)) {
-//                recorder.recordTerminality(true);
-//                return; //otherwise stateChangesSoFar will never increase
-//            }
-//            while (true) {
-//                MachineState curState = initialState;
-//                while (!sm.isTerminal(curState)) {
-//                    recorder.recordTerminality(false);
-//                    List<Move> jointMove = Lists.newArrayList();
-//                    for (Role role : roles) {
-//                        List<Move> legalMoves = sm.getLegalMoves(curState, role);
-//                        recorder.recordLegalMoves(legalMoves);
-//                        jointMove.add(pickOneAtRandom(legalMoves));
-//                    }
-//                    recorder.recordChosenJointMove(jointMove);
-//                    curState = sm.getNextState(curState, jointMove);
-//                    stateChangesSoFar++;
-//                }
-//                recorder.recordTerminality(true);
-//                recorder.recordGoalValues(sm.getGoals(curState));
-//                //Do we end here?
-//                if (stateChangesSoFar > stateChangesToRun) {
-//                    return;
-//                }
-//            }
-//        };
-//    }
 
 }

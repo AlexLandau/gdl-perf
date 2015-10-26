@@ -13,10 +13,10 @@ import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.PerfTestProcess;
 
 public enum EngineType {
-    PROVER(JavaEngineType.PROVER),
+    GGP_BASE_PROVER(JavaEngineType.GGP_BASE_PROVER),
     //Palamedes BasicPlayer Java prover (linked from Dresden GGP page)
-    PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE),
-    PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE),
+    PALAMEDES_JAVA_PROVER_USEOPT_FALSE(JavaEngineType.PALAMEDES_JAVA_PROVER_USEOPT_FALSE),
+    PALAMEDES_JAVA_PROVER_USEOPT_TRUE(JavaEngineType.PALAMEDES_JAVA_PROVER_USEOPT_TRUE),
     //And others in Palamedes Core
     PALAMEDES_JOCULAR(JavaEngineType.PALAMEDES_JOCULAR),
     PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
