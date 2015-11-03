@@ -10,11 +10,6 @@ import org.ggp.base.util.ruleengine.RuleEngineFactory;
 import org.ggp.base.util.ruleengine.RuleEngineState;
 
 public class RuleEngineRunnables {
-    public static PerfTestRunnable getPerfTestRunnable(
-            RuleEngineFactory<? extends RuleEngine<?,?>> ref) {
-        return JavaPerfTestRunnable.create(getWrapper(ref));
-    }
-
     public static <M,S extends RuleEngineState<M,S>> JavaSimulatorWrapper<RuleEngine<M,S>, S, Integer, M>
             getWrapper(final RuleEngineFactory<? extends RuleEngine<M,S>> ref) {
         return new JavaSimulatorWrapper<RuleEngine<M,S>, S, Integer, M>() {
@@ -70,10 +65,5 @@ public class RuleEngineRunnables {
                 return sm.getRoles().get(roleIndex).toString();
             }
         };
-    }
-
-    public static CorrectnessTestRunnable getCorrectnessTestRunnable(
-            RuleEngineFactory<? extends RuleEngine<?,?>> ref) {
-        return JavaCorrectnessTestRunnable.create(getWrapper(ref));
     }
 }
