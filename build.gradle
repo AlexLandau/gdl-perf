@@ -11,10 +11,13 @@ repositories {
 dependencies {
 //    compile 'org.slf4j:slf4j-api:1.7.5'
 //    testCompile "junit:junit:4.11"
+    compile 'com.google.guava:guava:14.0.1'
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile files(
         //TODO: Add some exported jar from GGP-Base instead of an
         //implicit dependency (at least until GGP-Base gets
         //versioning and publishing)
+        'lib/Alloy.jar', //currently needs to be user-provided
     
         'lib/palamedes/JavaProver.jar',
         'lib/palamedes/org.eclipse.palamedes.gdl.core_0.6.1.jar',
@@ -31,4 +34,28 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
+}
+
+// Run perf tests with all games and all working engine types.
+// This may take multiple days to complete.
+// Skips tests that have already been completed.
+task runPerfAll(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.MissingEntriesPerfTestRunner'
+}
+
+// Run perf tests with a few games and a few engine types.
+// This takes a few minutes.
+// This is recommended for generating a small sample set of data when
+// trying out analysis tools.
+task runPerfSample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.SamplePerfTestRunner'
+}
+
+// Runs an analysis of performance test results that produces HTML
+// output in the 'analyses' directory.
+task perfAnalysis(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.analysis.InterlinkedAnalysisWriter'
 }

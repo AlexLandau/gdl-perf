@@ -13,12 +13,12 @@ import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.PerfTestProcess;
 
 public enum EngineType {
-    PROVER(JavaEngineType.PROVER),
-    TUPLE_PROVER(JavaEngineType.TUPLE_PROVER),
-    COMPILED_PROVER_CACHING(JavaEngineType.COMPILED_PROVER_CACHING),
+    GGP_BASE_PROVER(JavaEngineType.GGP_BASE_PROVER),
+    ALLOY_TUPLE_PROVER(JavaEngineType.ALLOY_TUPLE_PROVER),
+    ALLOY_COMPILED_PROVER_CACHING(JavaEngineType.ALLOY_COMPILED_PROVER_CACHING),
     //Palamedes BasicPlayer Java prover (linked from Dresden GGP page)
-    PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_FALSE),
-    PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE(JavaEngineType.PALAMEDES_GAME_SIMULATOR_USEOPT_TRUE),
+    PALAMEDES_JAVA_PROVER_USEOPT_FALSE(JavaEngineType.PALAMEDES_JAVA_PROVER_USEOPT_FALSE),
+    PALAMEDES_JAVA_PROVER_USEOPT_TRUE(JavaEngineType.PALAMEDES_JAVA_PROVER_USEOPT_TRUE),
     //And others in Palamedes Core
     PALAMEDES_JOCULAR(JavaEngineType.PALAMEDES_JOCULAR),
     PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
@@ -117,5 +117,23 @@ public enum EngineType {
 
     public String getCurrentVersion() {
         return version;
+    }
+
+    /**
+     * Runs a compatibility test that checks if the engine is configured
+     * sufficiently correctly on this computer to give results for a
+     * simple game.
+     */
+    public boolean runCompatibilityTest() throws IOException, InterruptedException {
+        PerfTestResult result = PerfTest.runTest(
+                GameKey.create(RepoId.BASE, "ticTacToe"),
+                this,
+                5, //test length in seconds
+                60); //seconds before cancelling
+
+        if (!result.wasSuccessful()) {
+            System.out.println("Error from compatibility test: " + result.getErrorMessage());
+        }
+        return result.wasSuccessful();
     }
 }

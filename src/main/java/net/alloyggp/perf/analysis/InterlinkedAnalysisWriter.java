@@ -255,14 +255,17 @@ public class InterlinkedAnalysisWriter {
             boolean anyErrorsFound = false;
             List<PerfTestResult> resultsToSort = Lists.newArrayList();
             for (GameKey game : validGameKeys) {
-                PerfTestResult result = resultsByGame.get(game).get(engine);
-                if (result != null) {
-                	if (result.wasSuccessful()) {
-                	    resultsToSort.add(result);
-                	} else {
-                		errorsTable.addRow(link(game), result.getErrorMessage());
-                		anyErrorsFound = true;
-                	}
+                Map<EngineVersion, PerfTestResult> resultsByEngine = resultsByGame.get(game);
+                if (resultsByEngine != null) {
+                    PerfTestResult result = resultsByEngine.get(engine);
+                    if (result != null) {
+                        if (result.wasSuccessful()) {
+                            resultsToSort.add(result);
+                        } else {
+                            errorsTable.addRow(link(game), result.getErrorMessage());
+                            anyErrorsFound = true;
+                        }
+                    }
                 }
             }
             resultsToSort.sort(Comparator.comparing(this::getAvgNum).reversed());

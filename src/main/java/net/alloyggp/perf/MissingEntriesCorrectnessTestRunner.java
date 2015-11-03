@@ -16,13 +16,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.annotation.Nullable;
+
 import org.ggp.base.util.Immutables;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.gdl.grammar.GdlPool;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.Nullable;
 
 import net.alloyggp.perf.io.CsvFiles;
 import net.alloyggp.perf.io.GameFiles;
@@ -38,7 +39,7 @@ public class MissingEntriesCorrectnessTestRunner {
             ImmutableList.copyOf(EngineType.values());
     //To make things simpler, restrict validation to the Java engine types
     //TODO: Find a faster known-good reference engine for testing
-    private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.PROVER;
+    private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.GGP_BASE_PROVER;
 //    private static final int MIN_NUM_STATE_CHANGES_TO_TEST = 1000;
     private static final int INITIAL_NUM_STATE_CHANGES_TO_TEST = 5;
     private static final int MIN_SECONDS_PER_TEST = 30; //Should be under 1/3rd of max

@@ -1,8 +1,12 @@
 This isn't ready for primetime yet! Check back later.
 
-TODO: Fix dependency to be on GGP-Base rather than Alloy
+TODO: Fix GGP-Base dependency to not be user-provided
 
-This is a tool for testing the performance and correctness of interpreters of GDL game rules. It was inspired by an article by _______ in the 2013 GIGA ___ that tested the performance of various such interpreters. It is designed so that tools from different programming languages can be tested. As a benefit of being open-source, programmers can add hooks for their own creations, or at least check that their code is being tested correctly. Having the results in a standardized format also means that analyses and visualizations can be created once, committed to the code base, and used with future results.
+TODO: Store game versions
+
+TODO: Add Sancho engine
+
+This is a tool for testing the performance and correctness of interpreters of GDL game rules. It was inspired by an article by Yngvi Björnsson and Stephan Schiffel in the [GIGA '13](http://giga13.ru.is/) proceedings that tested the performance of various such interpreters. It is designed so that tools from different programming languages can be tested. As a benefit of being open-source, programmers can add hooks for their own creations, or at least check that their code is being tested correctly. Having the results in a standardized format also means that analyses and visualizations can be created once, committed to the code base, and used with future results.
 
 Performance tests are run in their own process, one per game. Interactions with the framework use the command line and files written in a standard format. This has two advantages:
 

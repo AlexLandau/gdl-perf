@@ -1,85 +1,85 @@
-DRESDEN/Nine_Mens_Morris_0.11_2p;Validator: The sentence with the name closingMill appears with two different arities, 5 and 3.
-DRESDEN/themathematician_medium;Validator: The function with the name operation appears with two different arities, 1 and 2
-DRESDEN/meier;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
-DRESDEN/ruledepthquadratic;Validator: ( <= ( legal robot giveup ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/asteroids;Validator: ( <= ( legal ship thrust ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/eotcitcit;Validator: ( terminal ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/sudoku_simple;Validator: The function with the name cell appears with two different arities, 2 and 3
-DRESDEN/themathematician_easy;Validator: The function with the name operation appears with two different arities, 1 and 2
-DRESDEN/blocksworldserial;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
-DRESDEN/tictactoeserial;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
-DRESDEN/tritactoe;Validator: Unsafe rule ( <= ( distinctCell ?x ?y ?m ?n ) ( distinct ?x ?m ) ): Variable ?x is not defined in a positive relation in the rule's body
-DRESDEN/ad_game_2x2;Validator: ( <= ( bestscoreaccumulator 0 0 0 ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/clobber;Validator: ( movePossible ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/beatmania;Validator: ( <= ( legal player ( play 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/3conn3;Validator: ( not-filled ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/dobutsushogi;Validator: The negation ( not ( distinct ?col_from ?col_to ) ) contains a literal ( distinct ?col_from ?col_to ) that is not a sentence. Only a single sentence is allowed inside a negation.
-DRESDEN/duplicatestatelarge;Validator: The negation ( not ( distinct ?dir c3 ) ) contains a literal ( distinct ?dir c3 ) that is not a sentence. Only a single sentence is allowed inside a negation.
-DRESDEN/duplicatestatesmall;Validator: The negation ( not ( distinct ?dir c3 ) ) contains a literal ( distinct ?dir c3 ) that is not a sentence. Only a single sentence is allowed inside a negation.
-DRESDEN/firesheep;Validator: ( sheep_exist ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/numbertictactoe;Validator: ( diagonal ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/coopconn4;Validator: ( not-filled ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/incredible;Validator: ( <= ( legal robot move ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/gt_attrition;Validator: ( gameOver ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
-DRESDEN/othello-comp2007;Validator: The negation ( not ( distinct ?black ?red ) ) contains a literal ( distinct ?black ?red ) that is not a sentence. Only a single sentence is allowed inside a negation.
-DRESDEN/ruledepthexponential;Validator: ( <= ( legal robot giveup ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/duplicatestatemedium;Validator: The negation ( not ( distinct ?dir c3 ) ) contains a literal ( distinct ?dir c3 ) that is not a sentence. Only a single sentence is allowed inside a negation.
-DRESDEN/Projet_Tutore1;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
-DRESDEN/gt_centipede;Validator: ( gameOver ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
-DRESDEN/asteroidsparallel;Validator: ( <= ( legal ship ( do thrustthrust ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/PEG_3v1_turn;Validator: ( captured ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/conn4;Validator: ( not-filled ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/farmingquandries;Validator: ( year_transition ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/mastermind;Validator: The function with the name set appears with two different arities, 2 and 4
-DRESDEN/montyhall;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
-DRESDEN/asteroidsserial;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
-DRESDEN/Pilgrimage;Validator: ( move_conflict ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/mastermind448;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
-DRESDEN/Qyshinsu;Validator: The sentence with the name base appears with two different arities, 2 and 1.
-DRESDEN/dualconnect4;Validator: ( some_win ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/maze;Validator: ( <= ( legal robot move ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/pointgrab_state;Validator: ( <= ( legal ?r grab1 ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/platformjumpers;Validator: ( some_pos_achieved ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/vis_pacman3p;Validator: The next relation should never be in the body of a rule.
-DRESDEN/wargame02;Validator: ( <= ( legal soldier noop ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/ruledepthlinear;Validator: ( <= ( legal robot giveup ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/wargame01;Validator: ( <= ( legal soldier noop ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/RobinsonRoulette_no_white_peg;Validator: Unsafe rule ( <= ( goal player 100 ) ( not ( true ( outer ?x empty ) ) ) ): Variable ?x is not defined in a positive relation in the rule's body
-DRESDEN/blockerserial;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
-DRESDEN/wallmaze;Validator: ( collision ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-DRESDEN/rendezvous_asteroids;Validator: ( <= ( legal ship1 thrust ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-DRESDEN/othellosuicide;Validator: The negation ( not ( distinct ?black ?red ) ) contains a literal ( distinct ?black ?red ) that is not a sentence. Only a single sentence is allowed inside a negation.
-DRESDEN/walkingman;Validator: ( captured ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-STANFORD/pilgrimage;Validator: ( move_conflict ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-STANFORD/hamilton;Validator: ( <= ( base ( score 0 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-STANFORD/chinesecheckers;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-STANFORD/kono;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-STANFORD/multiplehamilton;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-STANFORD/chinesecheckers4;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-STANFORD/farmingquandries;Validator: ( year_transition ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-STANFORD/horseshoe;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-STANFORD/tictoctoe;Validator: The input relation should have arity 2 (first argument: the player, second argument: the move)
-STANFORD/alquerque;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-STANFORD/tictictoe;Validator: The input relation should have arity 2 (first argument: the player, second argument: the move)
-STANFORD/jointconnectfour;Validator: ( some_win ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-STANFORD/battleofnumbers;Validator: The negation ( not ( distinct ?count1 ?count2 ) ) contains a literal ( distinct ?count1 ?count2 ) that is not a sentence. Only a single sentence is allowed inside a negation.
-STANFORD/firesheep;Validator: ( sheep_moving ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-STANFORD/dualconnectfour;Validator: ( some_win ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
-STANFORD/dualhamilton;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
-BASE/chess;Got goal results of size: 0 when expecting size one. Results were: []
-DRESDEN/ggp-course2013_a1;Got goal results of size: 2 when expecting size one. Results were: [( goal white 0 ), ( goal white 100 )]
-DRESDEN/othello-new-horse;Got goal results of size: 3 when expecting size one. Results were: [( goal white 50 ), ( goal white 0 ), ( goal white 100 )]
-DRESDEN/kriegTTT_5x5;Got goal results of size: 2 when expecting size one. Results were: [( goal xplayer 100 ), ( goal xplayer 0 )]
-DRESDEN/nothello;Got goal results of size: 3 when expecting size one. Results were: [( goal white 100 ), ( goal white 0 ), ( goal white 50 )]
-DRESDEN/Checkers-BreakThrough;Got goal results of size: 0 when expecting size one. Results were: []
-DRESDEN/othello-new;Got goal results of size: 3 when expecting size one. Results were: [( goal white 50 ), ( goal white 0 ), ( goal white 100 )]
-DRESDEN/othello-fourway;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 50 ), ( goal whiterow 100 ), ( goal whiterow 0 )]
-DRESDEN/fighter;Got goal results of size: 0 when expecting size one. Results were: []
-DRESDEN/othello-fourway-teamswitch;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 100 ), ( goal whiterow 50 ), ( goal whiterow 0 )]
-DRESDEN/othello;Got goal results of size: 3 when expecting size one. Results were: [( goal white 0 ), ( goal white 100 ), ( goal white 50 )]
-DRESDEN/othellooo;Got goal results of size: 3 when expecting size one. Results were: [( goal white 0 ), ( goal white 100 ), ( goal white 50 )]
-DRESDEN/othello-fourway-teamswitchA;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 0 ), ( goal whiterow 100 ), ( goal whiterow 50 )]
-DRESDEN/othello-fourway-teamswitchB;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 0 ), ( goal whiterow 100 ), ( goal whiterow 50 )]
-DRESDEN/othello2;Got goal results of size: 3 when expecting size one. Results were: [( goal white 50 ), ( goal white 100 ), ( goal white 0 )]
-BASE/racer4;Invalid goal definitions when 2 or 3 players finish on the same turn
-DRESDEN/racer4;Invalid goal definitions when 2 or 3 players finish on the same turn
+DRESDEN/Nine_Mens_Morris_0.11_2p/h31Ruw;Validator: The sentence with the name closingMill appears with two different arities, 5 and 3.
+DRESDEN/themathematician_medium/60rnCw;Validator: The function with the name operation appears with two different arities, 1 and 2
+DRESDEN/meier/AH3Z_g;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
+DRESDEN/ruledepthquadratic/mNApLg;Validator: ( <= ( legal robot giveup ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/asteroids/1EYqAw;Validator: ( <= ( legal ship thrust ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/eotcitcit/-8luRQ;Validator: ( terminal ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/sudoku_simple/AIr0oQ;Validator: The function with the name cell appears with two different arities, 2 and 3
+DRESDEN/themathematician_easy/sD2kbQ;Validator: The function with the name operation appears with two different arities, 1 and 2
+DRESDEN/blocksworldserial/GkRZ3w;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
+DRESDEN/tictactoeserial/xxjGZQ;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
+DRESDEN/tritactoe/C9k7-w;Validator: Unsafe rule ( <= ( distinctCell ?x ?y ?m ?n ) ( distinct ?x ?m ) ): Variable ?x is not defined in a positive relation in the rule's body
+DRESDEN/ad_game_2x2/VCN6Ww;Validator: ( <= ( bestscoreaccumulator 0 0 0 ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/clobber/wpU3Iw;Validator: ( movePossible ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/beatmania/OKagtA;Validator: ( <= ( legal player ( play 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/3conn3/JV3xlg;Validator: ( not-filled ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/dobutsushogi/jIjkWA;Validator: The negation ( not ( distinct ?col_from ?col_to ) ) contains a literal ( distinct ?col_from ?col_to ) that is not a sentence. Only a single sentence is allowed inside a negation.
+DRESDEN/duplicatestatelarge/rbPS8w;Validator: The negation ( not ( distinct ?dir c3 ) ) contains a literal ( distinct ?dir c3 ) that is not a sentence. Only a single sentence is allowed inside a negation.
+DRESDEN/duplicatestatesmall/ZRoHDw;Validator: The negation ( not ( distinct ?dir c3 ) ) contains a literal ( distinct ?dir c3 ) that is not a sentence. Only a single sentence is allowed inside a negation.
+DRESDEN/firesheep/aLi38A;Validator: ( sheep_exist ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/numbertictactoe/1Y90gQ;Validator: ( diagonal ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/coopconn4/RFhMFQ;Validator: ( not-filled ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/incredible/4_vJDQ;Validator: ( <= ( legal robot move ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/gt_attrition/FwMgKQ;Validator: ( gameOver ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
+DRESDEN/othello-comp2007/FbS6qw;Validator: The negation ( not ( distinct ?black ?red ) ) contains a literal ( distinct ?black ?red ) that is not a sentence. Only a single sentence is allowed inside a negation.
+DRESDEN/ruledepthexponential/o_Pr5Q;Validator: ( <= ( legal robot giveup ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/duplicatestatemedium/RWuLFw;Validator: The negation ( not ( distinct ?dir c3 ) ) contains a literal ( distinct ?dir c3 ) that is not a sentence. Only a single sentence is allowed inside a negation.
+DRESDEN/Projet_Tutore1/F6XFMQ;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
+DRESDEN/gt_centipede/FRYpsA;Validator: ( gameOver ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
+DRESDEN/asteroidsparallel/Hx771g;Validator: ( <= ( legal ship ( do thrustthrust ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/PEG_3v1_turn/JZ5tDw;Validator: ( captured ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/conn4/9zJwuw;Validator: ( not-filled ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/farmingquandries/gJ3-cg;Validator: ( year_transition ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/mastermind/-3QVjw;Validator: The function with the name set appears with two different arities, 2 and 4
+DRESDEN/montyhall/9w_iYw;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
+DRESDEN/asteroidsserial/7WGpbg;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
+DRESDEN/Pilgrimage/Qe4sNg;Validator: ( move_conflict ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/mastermind448/miAYiA;Validator: The keyword does is being used as a function. It should only be used as the name of a sentence.
+DRESDEN/Qyshinsu/ZhUdgQ;Validator: The sentence with the name base appears with two different arities, 2 and 1.
+DRESDEN/dualconnect4/9ogDSA;Validator: ( some_win ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/maze/8BYEIg;Validator: ( <= ( legal robot move ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/pointgrab_state/sLvCJQ;Validator: ( <= ( legal ?r grab1 ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/platformjumpers/kqOdCQ;Validator: ( some_pos_achieved ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/vis_pacman3p/ySOUkg;Validator: The next relation should never be in the body of a rule.
+DRESDEN/wargame02/z16XSQ;Validator: ( <= ( legal soldier noop ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/ruledepthlinear/PcIWPw;Validator: ( <= ( legal robot giveup ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/wargame01/PrPpkw;Validator: ( <= ( legal soldier noop ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/RobinsonRoulette_no_white_peg/TDUnzQ;Validator: Unsafe rule ( <= ( goal player 100 ) ( not ( true ( outer ?x empty ) ) ) ): Variable ?x is not defined in a positive relation in the rule's body
+DRESDEN/blockerserial/f085xw;Validator: ( game1overlock ) is written as a zero-arity function, it should be written as a constant instead. (Try dropping the parentheses.)
+DRESDEN/wallmaze/38dZtA;Validator: ( collision ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+DRESDEN/rendezvous_asteroids/6t3CsA;Validator: ( <= ( legal ship1 thrust ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+DRESDEN/othellosuicide/4sIsHw;Validator: The negation ( not ( distinct ?black ?red ) ) contains a literal ( distinct ?black ?red ) that is not a sentence. Only a single sentence is allowed inside a negation.
+DRESDEN/walkingman/2zhWjQ;Validator: ( captured ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+STANFORD/pilgrimage/Yc4KGg;Validator: ( move_conflict ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+STANFORD/hamilton/JGwv-A;Validator: ( <= ( base ( score 0 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/chinesecheckers/3YPwkQ;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/kono/oLqaXg;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/multiplehamilton/SiUpTw;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/chinesecheckers4/9KJCmw;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/farmingquandries/gJ3-cg;Validator: ( year_transition ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+STANFORD/horseshoe/9wr2WA;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/tictoctoe/Ra9NmQ;Validator: The input relation should have arity 2 (first argument: the player, second argument: the move)
+STANFORD/alquerque/IJjVGg;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/tictictoe/9wsyZA;Validator: The input relation should have arity 2 (first argument: the player, second argument: the move)
+STANFORD/jointconnectfour/vhU59g;Validator: ( some_win ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+STANFORD/battleofnumbers/J-EIbg;Validator: The negation ( not ( distinct ?count1 ?count2 ) ) contains a literal ( distinct ?count1 ?count2 ) that is not a sentence. Only a single sentence is allowed inside a negation.
+STANFORD/firesheep/hYMFGw;Validator: ( sheep_moving ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+STANFORD/dualconnectfour/vhU59g;Validator: ( some_win ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
+STANFORD/dualhamilton/c0r4vw;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+BASE/chess/cX6VBQ;Got goal results of size: 0 when expecting size one. Results were: []
+DRESDEN/ggp-course2013_a1/aVbTyw;Got goal results of size: 2 when expecting size one. Results were: [( goal white 0 ), ( goal white 100 )]
+DRESDEN/othello-new-horse/ojhmwQ;Got goal results of size: 3 when expecting size one. Results were: [( goal white 50 ), ( goal white 0 ), ( goal white 100 )]
+DRESDEN/kriegTTT_5x5/__UVUA;Got goal results of size: 2 when expecting size one. Results were: [( goal xplayer 100 ), ( goal xplayer 0 )]
+DRESDEN/nothello/c5f_QQ;Got goal results of size: 3 when expecting size one. Results were: [( goal white 100 ), ( goal white 0 ), ( goal white 50 )]
+DRESDEN/Checkers-BreakThrough/kc3Luw;Got goal results of size: 0 when expecting size one. Results were: []
+DRESDEN/othello-new/tp5WhA;Got goal results of size: 3 when expecting size one. Results were: [( goal white 50 ), ( goal white 0 ), ( goal white 100 )]
+DRESDEN/othello-fourway/0jBQBQ;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 50 ), ( goal whiterow 100 ), ( goal whiterow 0 )]
+DRESDEN/fighter/q3v34g;Got goal results of size: 0 when expecting size one. Results were: []
+DRESDEN/othello-fourway-teamswitch/B30SVA;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 100 ), ( goal whiterow 50 ), ( goal whiterow 0 )]
+DRESDEN/othello/NHorpw;Got goal results of size: 3 when expecting size one. Results were: [( goal white 0 ), ( goal white 100 ), ( goal white 50 )]
+DRESDEN/othellooo/STtDSQ;Got goal results of size: 3 when expecting size one. Results were: [( goal white 0 ), ( goal white 100 ), ( goal white 50 )]
+DRESDEN/othello-fourway-teamswitchA/Y08KBQ;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 0 ), ( goal whiterow 100 ), ( goal whiterow 50 )]
+DRESDEN/othello-fourway-teamswitchB/ye2KBQ;Got goal results of size: 3 when expecting size one. Results were: [( goal whiterow 0 ), ( goal whiterow 100 ), ( goal whiterow 50 )]
+DRESDEN/othello2/5wxZ8g;Got goal results of size: 3 when expecting size one. Results were: [( goal white 50 ), ( goal white 100 ), ( goal white 0 )]
+BASE/racer4/07wxZA;Invalid goal definitions when 2 or 3 players finish on the same turn
+DRESDEN/racer4/t3B5-Q;Invalid goal definitions when 2 or 3 players finish on the same turn
