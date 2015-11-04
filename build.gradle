@@ -59,3 +59,10 @@ task perfAnalysis(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'net.alloyggp.perf.analysis.InterlinkedAnalysisWriter'
 }
+
+task zipAnalysis(type: Zip) {
+    dependsOn perfAnalysis
+    from 'analyses'
+    baseName = 'perfAnalysis'
+}
+
