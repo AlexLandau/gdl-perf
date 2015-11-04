@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import org.ggp.base.util.Pair;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
@@ -245,6 +246,42 @@ public class InterlinkedAnalysisWriter {
 
             page.add(comparisonTable);
         }
+        //Comparisons with other engines
+        {
+            page.addText("Comparison with other engines:");
+            HtmlAdHocTable table = HtmlAdHocTable.create();
+            table.addRow("Engine", "We're faster in N games", "Only they fail", "They're faster in N games", "Only we fail");
+            for (EngineVersion otherEngine : allEngines) {
+                if (otherEngine.equals(engine)) {
+                    continue;
+                }
+                int thisIsFasterCount = 0;
+                int otherIsFasterCount = 0;
+                int onlyTheyFail = 0;
+                int onlyWeFail = 0;
+                for (List<EngineVersion> ranking : rankingsByGame.values()) {
+                    int ourIndex = ranking.indexOf(engine);
+                    int theirIndex = ranking.indexOf(otherEngine);
+                    if (ourIndex >= 0 && theirIndex >= 0) {
+                        if (ourIndex < theirIndex) {
+                            thisIsFasterCount++;
+                        } else {
+                            Preconditions.checkState(ourIndex > theirIndex);
+                            otherIsFasterCount++;
+                        }
+                    } else if (ourIndex >= 0 && theirIndex == -1) {
+                        onlyTheyFail++;
+                    } else if (ourIndex == -1 && theirIndex >= 0) {
+                        onlyWeFail++;
+                    }
+                }
+                table.addRow(link(otherEngine), thisIsFasterCount+"", onlyTheyFail+"",
+                        otherIsFasterCount+"", onlyWeFail+"");
+            }
+            //TODO: Sort table by contents?
+            page.add(table);
+        }
+
         //Now a list of games
         //Ideally, we list game -> avg. speed -> ranking among successful engines
         {
