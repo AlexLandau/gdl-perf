@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.gdl.grammar.Gdl;
-import org.ggp.base.util.statemachine.Role;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
@@ -82,7 +81,6 @@ public class RekkuraRunnables {
                         .collect(Collectors.toList());
                 List<Rule> rules = KifFormat.genericStringsToRules(ruleStrings.toArray(new String[0]));
 
-                List<Role> kifRoles = Role.computeRoles(game.getRules());
                 List<Dob> roles = rekkura.ggp.milleu.Game.getRoles(rules);
                 return GgpStateMachine2.create(factory.create(rules), roles);
             }
