@@ -27,9 +27,9 @@ public class MissingEntriesPerfTestRunner {
 
             Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
             if (RETRY_FAILURES) {
-                gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile));
+                gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile, engineToTest.getWithVersion()));
             } else {
-                gameKeysToTest.removeAll(loadAllGameKeys(outputCsvFile));
+                gameKeysToTest.removeAll(loadAllGameKeys(outputCsvFile, engineToTest.getWithVersion()));
             }
 
             if (gameKeysToTest.isEmpty()) {
@@ -56,22 +56,24 @@ public class MissingEntriesPerfTestRunner {
         }
     }
 
-    private static Collection<GameKey> loadAllGameKeys(File outputCsvFile) throws IOException {
+    private static Collection<GameKey> loadAllGameKeys(File outputCsvFile, EngineVersion engineVersion) throws IOException {
         Set<GameKey> gameKeys = Sets.newHashSet();
         List<PerfTestResult> resultsSoFar = CsvFiles.load(outputCsvFile, PerfTestResult.getCsvLoader());
 
         for (PerfTestResult result : resultsSoFar) {
-            gameKeys.add(result.getGameKey());
+            if (result.getEngineVersion().equals(engineVersion)) {
+                gameKeys.add(result.getGameKey());
+            }
         }
         return gameKeys;
     }
 
-    private static Collection<GameKey> loadNonfailedGameKeys(File outputCsvFile) throws IOException {
+    private static Collection<GameKey> loadNonfailedGameKeys(File outputCsvFile, EngineVersion engineVersion) throws IOException {
         Set<GameKey> nonfailed = Sets.newHashSet();
         List<PerfTestResult> resultsSoFar = CsvFiles.load(outputCsvFile, PerfTestResult.getCsvLoader());
 
         for (PerfTestResult result : resultsSoFar) {
-            if (result.wasSuccessful()) {
+            if (result.wasSuccessful() && result.getEngineVersion().equals(engineVersion)) {
                 nonfailed.add(result.getGameKey());
             }
         }
