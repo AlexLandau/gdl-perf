@@ -8,13 +8,13 @@ import java.util.concurrent.BlockingQueue;
 import org.eclipse.palamedes.gdl.core.model.GameFactory;
 import org.ggp.base.util.concurrency.ConcurrencyUtils;
 import org.ggp.base.util.game.Game;
+import org.ggp.base.util.ruleengine.tupleprover.TupleProverRuleEngine;
+import org.ggp.base.util.ruleengine.tupleprover.TupleProverRuleEngineFactory;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
 import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachineFactory;
-import org.ggp.base.util.statemachine.implementation.tupleprover.TupleProverStateMachine;
-import org.ggp.base.util.statemachine.implementation.tupleprover.TupleProverStateMachineFactory;
 import org.ggp.base.util.statemachine.superprover2.CompiledProverRuleEngine;
 import org.ggp.base.util.statemachine.superprover2.CompiledProverRuleEngineFactory;
 
@@ -37,8 +37,8 @@ import rekkura.ggp.machina.GgpStateMachine;
 public enum JavaEngineType {
     GGP_BASE_PROVER("2015-04-26",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createNormal())),
-    ALLOY_TUPLE_PROVER(TupleProverStateMachine.VERSION,
-            StateMachineRunnables.getWrapper(TupleProverStateMachineFactory.create())),
+    ALLOY_TUPLE_PROVER(TupleProverRuleEngine.VERSION,
+            RuleEngineRunnables.getWrapper(TupleProverRuleEngineFactory.create())),
     ALLOY_COMPILED_PROVER_CACHING(CompiledProverRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createCachingEverything())),
     //NOTE: The 0.6.1 version is taken from Palamedes, which includes this version.
