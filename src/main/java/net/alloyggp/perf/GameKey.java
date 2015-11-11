@@ -1,6 +1,7 @@
 package net.alloyggp.perf;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Set;
 
@@ -128,6 +129,10 @@ public class GameKey {
     }
 
     public static ImmutableSet<GameKey> createSet(RepoId repoId, String... gameNames) {
+        return createSet(repoId, Arrays.asList(gameNames));
+    }
+
+    public static ImmutableSet<GameKey> createSet(RepoId repoId, Iterable<String> gameNames) {
         ImmutableSet.Builder<GameKey> result = ImmutableSet.builder();
         for (String gameName : gameNames) {
             result.add(create(repoId, gameName));

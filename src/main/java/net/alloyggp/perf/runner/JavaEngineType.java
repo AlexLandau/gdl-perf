@@ -8,6 +8,7 @@ import java.util.concurrent.BlockingQueue;
 import org.eclipse.palamedes.gdl.core.model.GameFactory;
 import org.ggp.base.util.concurrency.ConcurrencyUtils;
 import org.ggp.base.util.game.Game;
+import org.ggp.base.util.ruleengine.diffpropnet.DiffPropNetRuleEngineFactory;
 import org.ggp.base.util.ruleengine.tupleprover.TupleProverRuleEngine;
 import org.ggp.base.util.ruleengine.tupleprover.TupleProverRuleEngineFactory;
 import org.ggp.base.util.statemachine.MachineState;
@@ -41,6 +42,8 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(TupleProverRuleEngineFactory.create())),
     ALLOY_COMPILED_PROVER_CACHING(CompiledProverRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createCachingEverything())),
+    ALLOY_DIFF_PROP_NET("1",
+            RuleEngineRunnables.getWrapper(DiffPropNetRuleEngineFactory.createStandardOpnf())),
     //NOTE: The 0.6.1 version is taken from Palamedes, which includes this version.
     PALAMEDES_JAVA_PROVER_USEOPT_FALSE("0.6.1",
             GameSimulatorRunnables.getWrapper(false)),
