@@ -11,6 +11,7 @@ repositories {
 dependencies {
 //    compile 'org.slf4j:slf4j-api:1.7.5'
 //    testCompile "junit:junit:4.11"
+    compile 'junit:junit:4.11' //Sancho uses this in non-test code =(
     compile 'com.google.guava:guava:14.0.1'
     compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile files(
@@ -24,6 +25,9 @@ dependencies {
         'lib/palamedes/org.eclipse.palamedes.kif.core_0.6.1.jar',
         'lib/jocular/jocular-0.2.jar',
         'lib/eclipseProlog/eclipse.jar',
+        'lib/sancho/sancho.jar',
+        'lib/sancho/log4j-api-2.0-rc1.jar', //TODO: Make this a Maven dep?
+        'lib/sancho/lucene-core-4.8.1.jar',
         //TODO: Clean up this jar before committing
         //ALSO export the sources
         //dependent jars should go in lib/rekkura (when applicable)
