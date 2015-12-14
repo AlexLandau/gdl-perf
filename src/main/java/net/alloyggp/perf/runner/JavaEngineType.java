@@ -66,6 +66,8 @@ public enum JavaEngineType {
     REKKURA_BACKWARD_PROVER("1.0.0",
             RekkuraRunnables.getWrapper(GgpStateMachine.BACKWARD_PROVER)),
 
+    SANCHO_DEAD_RECKONING_PROPNET("1.61c",
+            SanchoRunnables.getWrapper()),
     ;
     private final String version;
     private final PerfTestRunnable perfRunnable;

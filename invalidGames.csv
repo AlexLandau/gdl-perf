@@ -54,6 +54,7 @@ STANFORD/pilgrimage/Yc4KGg;Validator: ( move_conflict ) is written as a zero-ari
 STANFORD/hamilton/JGwv-A;Validator: ( <= ( base ( score 0 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
 STANFORD/chinesecheckers/3YPwkQ;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
 STANFORD/kono/oLqaXg;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
+STANFORD/kono/HI7CHA;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
 STANFORD/multiplehamilton/SiUpTw;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
 STANFORD/chinesecheckers4/9KJCmw;Validator: ( <= ( base ( step 1 ) ) ) is written as a zero-arity rule, if it's always supposed to be true, it should be written as a relation instead. Otherwise, check your parentheses.
 STANFORD/farmingquandries/gJ3-cg;Validator: ( year_transition ) is written as a zero-arity relation, it should be written as a proposition instead. (Try dropping the parentheses.)
@@ -83,3 +84,6 @@ DRESDEN/othello-fourway-teamswitchB/ye2KBQ;Got goal results of size: 3 when expe
 DRESDEN/othello2/5wxZ8g;Got goal results of size: 3 when expecting size one. Results were: [( goal white 50 ), ( goal white 100 ), ( goal white 0 )]
 BASE/racer4/07wxZA;Invalid goal definitions when 2 or 3 players finish on the same turn
 DRESDEN/racer4/t3B5-Q;Invalid goal definitions when 2 or 3 players finish on the same turn
+STANFORD/breakthroughsmall/HM0s5w;Capitalization issue: whitewin vs. whiteWin, blackwin vs. blackWin
+BASE/snakeAssemblit/sOydSg;Goal definitions don't account for case where snake and assemblit subgames end simultaneously
+BASE/racetrackcorridor/k1OQRg;When players reach 'e' simultaneously and the number of walls differs by player, only one player has a defined goal value
