@@ -44,8 +44,12 @@ public class GameKey {
     public static Set<GameKey> loadAllGameKeys() {
         Set<GameKey> keys = Sets.newHashSet();
         for (RepoId repo : RepoId.values()) {
-            for (String gameKey : repo.getRepo().getGameKeys()) {
-                keys.add(create(repo, gameKey));
+            try {
+                for (String gameKey : repo.getRepo().getGameKeys()) {
+                    keys.add(create(repo, gameKey));
+                }
+            } catch (Exception e) {
+                // continue if a repo fails
             }
         }
         return keys;
