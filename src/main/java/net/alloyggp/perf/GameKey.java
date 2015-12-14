@@ -134,4 +134,16 @@ public class GameKey {
         }
         return result.build();
     }
+
+    /**
+     * TODO: This implementation is silly...
+     */
+    public boolean isValid() {
+        try {
+            loadGame();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
