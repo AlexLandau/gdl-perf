@@ -45,8 +45,12 @@ public class GameKey {
     public static Set<GameKey> loadAllGameKeys() {
         Set<GameKey> keys = Sets.newHashSet();
         for (RepoId repo : RepoId.values()) {
-            for (String gameKey : repo.getRepo().getGameKeys()) {
-                keys.add(create(repo, gameKey));
+            try {
+                for (String gameKey : repo.getRepo().getGameKeys()) {
+                    keys.add(create(repo, gameKey));
+                }
+            } catch (Exception e) {
+                // continue if a repo fails
             }
         }
         return keys;
@@ -138,5 +142,17 @@ public class GameKey {
             result.add(create(repoId, gameName));
         }
         return result.build();
+    }
+
+    /**
+     * TODO: This implementation is silly...
+     */
+    public boolean isValid() {
+        try {
+            loadGame();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

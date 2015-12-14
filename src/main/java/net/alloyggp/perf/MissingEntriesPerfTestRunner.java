@@ -48,10 +48,12 @@ public class MissingEntriesPerfTestRunner {
             for (GameKey gameKey : gameKeysToTest) {
                 System.out.println("Running perf test for game key: " + gameKey);
 
-                final PerfTestResult result = PerfTest.runTest(gameKey, engineToTest,
-                        TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
+                if (gameKey.isValid()) {
+                    final PerfTestResult result = PerfTest.runTest(gameKey, engineToTest,
+                            TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
 
-                CsvFiles.append(result, outputCsvFile);
+                    CsvFiles.append(result, outputCsvFile);
+                }
             }
         }
     }

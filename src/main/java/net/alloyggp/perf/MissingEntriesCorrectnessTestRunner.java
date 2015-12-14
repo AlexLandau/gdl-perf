@@ -56,6 +56,9 @@ public class MissingEntriesCorrectnessTestRunner {
                 if (alreadyTestedGames.contains(gameKey)) {
                     continue;
                 }
+                if (!gameKey.isValid()) {
+                    continue;
+                }
                 System.out.println("Testing game " + gameKey);
                 int numStateChangesToTest = INITIAL_NUM_STATE_CHANGES_TO_TEST;
                 long overallStartTime = System.currentTimeMillis();
