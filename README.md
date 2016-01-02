@@ -1,6 +1,8 @@
 This isn't ready for primetime yet! Check back later.
 
-TODO: Fix GGP-Base dependency to not be user-provided
+Currently, before using the framework, you must provide a ggp-base.jar file. Check out a recent version of the
+ggp-base repository, run "./gradlew assemble" in the ggp-base folder, and copy ggp-base/build/libs/ggp-base.jar
+into gdl-perf/lib. (In the future this can be converted into a different kind of dependency.)
 
 TODO: Store game versions
 
