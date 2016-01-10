@@ -44,6 +44,12 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createCachingEverything())),
     ALLOY_DIFF_PROP_NET("1",
             RuleEngineRunnables.getWrapper(DiffPropNetRuleEngineFactory.createStandardOpnf())),
+    ALLOY_DUALIZED_PROVER("2016-01-08",
+            StateMachineRunnables.getWrapper(ProverStateMachineFactory.createDualized())),
+    ALLOY_DUALIZED_COMPILED_PROVER("2016-01-08",
+            RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createDualized())),
+    ALLOY_DUALIZED_DIFF_PROP_NET("2016-01-08",
+            RuleEngineRunnables.getWrapper(DiffPropNetRuleEngineFactory.createDualizedOpnf())),
     //NOTE: The 0.6.1 version is taken from Palamedes, which includes this version.
     PALAMEDES_JAVA_PROVER_USEOPT_FALSE("0.6.1",
             GameSimulatorRunnables.getWrapper(false)),
