@@ -17,11 +17,14 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
@@ -43,13 +46,15 @@ public class InterlinkedAnalysisWriter {
     private final ImmutableList<CorrectnessTestResult> allCorrectnessResults;
     private final ImmutableSet<EngineVersion> allEngines;
     private final ImmutableMap<EngineVersion, String> engineFilenames;
+    private final ImmutableMap<Set<EngineVersion>, String> enginePairFilenames;
 
     private InterlinkedAnalysisWriter(ImmutableSet<GameKey> allGameKeys, ImmutableSet<GameKey> validGameKeys,
             ImmutableMap<GameKey, String> gameFilenames, ImmutableList<PerfTestResult> allPerfResults,
             Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame,
             Map<GameKey, List<EngineVersion>> rankingsByGame,
             ImmutableList<CorrectnessTestResult> allCorrectnessResults, ImmutableSet<EngineVersion> allEngines,
-            ImmutableMap<EngineVersion, String> engineFilenames) {
+            ImmutableMap<EngineVersion, String> engineFilenames,
+            ImmutableMap<Set<EngineVersion>, String> enginePairFilenames) {
         this.allGameKeys = allGameKeys;
         this.validGameKeys = validGameKeys;
         this.gameFilenames = gameFilenames;
@@ -59,6 +64,7 @@ public class InterlinkedAnalysisWriter {
         this.allCorrectnessResults = allCorrectnessResults;
         this.allEngines = allEngines;
         this.engineFilenames = engineFilenames;
+        this.enginePairFilenames = enginePairFilenames;
     }
 
     private static InterlinkedAnalysisWriter create(Collection<GameKey> allGameKeys, Set<GameKey> validGameKeys,
@@ -66,6 +72,7 @@ public class InterlinkedAnalysisWriter {
             List<CorrectnessTestResult> allCorrectnessResults, Set<EngineVersion> allEngines) {
         BiMap<GameKey, String> gameFilenames = getGameFilenames(allGameKeys);
         BiMap<EngineVersion, String> engineFilenames = getEngineFilenames(allEngines);
+        BiMap<Set<EngineVersion>, String> enginePairFilenames = getEnginePairFilenames(allEngines);
         return new InterlinkedAnalysisWriter(
                 ImmutableSet.copyOf(allGameKeys),
                 ImmutableSet.copyOf(validGameKeys),
@@ -75,7 +82,8 @@ public class InterlinkedAnalysisWriter {
                 getEngineRankingsByGame(resultsByGame),
                 ImmutableList.copyOf(allCorrectnessResults),
                 ImmutableSet.copyOf(allEngines),
-                ImmutableMap.copyOf(engineFilenames));
+                ImmutableMap.copyOf(engineFilenames),
+                ImmutableMap.copyOf(enginePairFilenames));
     }
 
     private static Map<GameKey, List<EngineVersion>> getEngineRankingsByGame(Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame) {
@@ -102,6 +110,14 @@ public class InterlinkedAnalysisWriter {
         return rankings;
     }
 
+    private static BiMap<GameKey, String> getGameFilenames(Collection<GameKey> gameKeys) {
+        BiMap<GameKey, String> results = HashBiMap.create();
+        for (GameKey game : gameKeys) {
+            //TODO: Add to escaping logic
+            results.put(game, game.toString().replace('/', '_') + ".html");
+        }
+        return results;
+    }
 
     private static BiMap<EngineVersion, String> getEngineFilenames(Set<EngineVersion> engines) {
         BiMap<EngineVersion, String> results = HashBiMap.create();
@@ -112,11 +128,17 @@ public class InterlinkedAnalysisWriter {
         return results;
     }
 
-    private static BiMap<GameKey, String> getGameFilenames(Collection<GameKey> gameKeys) {
-        BiMap<GameKey, String> results = HashBiMap.create();
-        for (GameKey game : gameKeys) {
-            //TODO: Add to escaping logic
-            results.put(game, game.toString().replace('/', '_') + ".html");
+    private static BiMap<Set<EngineVersion>, String> getEnginePairFilenames(Set<EngineVersion> allEngines) {
+        BiMap<Set<EngineVersion>, String> results = HashBiMap.create();
+        for (EngineVersion engine1 : allEngines) {
+            for (EngineVersion engine2 : allEngines) {
+                //Only do one page per pair
+                if (engine1.toString().compareTo(engine2.toString()) < 0) {
+                    Set<EngineVersion> key = ImmutableSet.of(engine1, engine2);
+                    String value = engine1 + "_vs_" + engine2;
+                    results.put(key, value.replace(':', '_') + ".html");
+                }
+            }
         }
         return results;
     }
@@ -158,6 +180,16 @@ public class InterlinkedAnalysisWriter {
         for (EngineVersion engine : allEngines) {
             String htmlFilename = engineFilenames.get(engine);
             writeHtmlPage(htmlFilename, getEnginePage(engine));
+        }
+
+        for (EngineVersion engine1 : allEngines) {
+            for (EngineVersion engine2 : allEngines) {
+                //Only do one page per pair
+                if (engine1.toString().compareTo(engine2.toString()) < 0) {
+                    String htmlFilename = enginePairFilenames.get(ImmutableSet.of(engine1, engine2));
+                    writeHtmlPage(htmlFilename, getEnginePairPage(engine1, engine2));
+                }
+            }
         }
     }
 
@@ -221,12 +253,21 @@ public class InterlinkedAnalysisWriter {
 
     private String link(EngineVersion engine) {
         String filename = engineFilenames.get(engine);
-        return "<a href=\""+filename+"\">"+engine.toString()+"</a>";
+        return link(engine.toString(), filename);
     }
 
     private String link(GameKey game) {
         String filename = gameFilenames.get(game);
-        return "<a href=\""+filename+"\">"+game.toString()+"</a>";
+        return link(game.toString(), filename);
+    }
+
+    private String linkComparison(String text, EngineVersion engine1, EngineVersion engine2) {
+        String filename = enginePairFilenames.get(ImmutableSet.of(engine1, engine2));
+        return link(text, filename);
+    }
+
+    private String link(String text, String filename) {
+        return "<a href=\""+filename+"\">"+text+"</a>";
     }
 
     private HtmlPage getEnginePage(EngineVersion engine) throws IOException {
@@ -275,7 +316,8 @@ public class InterlinkedAnalysisWriter {
                         onlyWeFail++;
                     }
                 }
-                table.addRow(link(otherEngine), thisIsFasterCount+"", onlyTheyFail+"",
+                table.addRow(link(otherEngine) + " ("+linkComparison("comparison", engine, otherEngine)+")",
+                        thisIsFasterCount+"", onlyTheyFail+"",
                         otherIsFasterCount+"", onlyWeFail+"");
             }
             //TODO: Sort table by contents?
@@ -320,6 +362,90 @@ public class InterlinkedAnalysisWriter {
         }
 
         return page;
+    }
+
+    private HtmlPage getEnginePairPage(EngineVersion engine1, EngineVersion engine2) {
+        HtmlPage page = HtmlPage.create("Comparison of " + engine1.toString() + " and " + engine2);
+        page.addHeader(link(engine1) + " vs. " + link(engine2));
+
+        {
+            HtmlAdHocTable table = HtmlAdHocTable.create();
+            table.addRow("Game", "Perf ratio", engine1 + " states per second", engine2 + " states per second");
+
+            HtmlAdHocTable errorsTable = HtmlAdHocTable.create();
+            errorsTable.addRow("Game", engine1 + " error message", engine2 + " error message");
+
+            //Collect rows to sort and put in the tables
+            Multimap<Double, List<String>> perfRows = HashMultimap.create();
+            Multimap<Integer, List<String>> errorRows = HashMultimap.create();
+
+            for (GameKey game : validGameKeys) {
+                Map<EngineVersion, PerfTestResult> resultsByEngine = resultsByGame.get(game);
+                if (resultsByEngine != null) {
+                    PerfTestResult result1 = resultsByEngine.get(engine1);
+                    PerfTestResult result2 = resultsByEngine.get(engine2);
+                    if (result1 != null && result2 != null) {
+                        int errorOrdering = 0;
+                        if (!result1.wasSuccessful()) {
+                            errorOrdering += 1;
+                        }
+                        if (!result2.wasSuccessful()) {
+                            errorOrdering += 2;
+                        }
+                        if (errorOrdering == 0) {
+                            //Success
+                            long avg1 = getAvgNum(result1);
+                            long avg2 = getAvgNum(result2);
+                            double perfRatio = avg1 / (double) avg2;
+                            List<String> row = ImmutableList.of(link(game),
+                                    Double.toString(perfRatio),
+                                    Long.toString(avg1), Long.toString(avg2));
+                            perfRows.put(perfRatio, row);
+                        } else {
+                            //At least one error
+                            List<String> row = Lists.newArrayList();
+                            row.add(link(game));
+                            addErrorMessageForResult(row, result1);
+                            addErrorMessageForResult(row, result2);
+
+                            errorRows.put(errorOrdering, row);
+                        }
+                    }
+                }
+            }
+
+            //Put rows in their tables in sorted order
+            for (double key : ImmutableSortedSet.copyOf(perfRows.keySet())) {
+                for (List<String> row : perfRows.get(key)) {
+                    table.addRow(row);
+                }
+            }
+            for (int key : ImmutableSortedSet.copyOf(errorRows.keySet())) {
+                //TODO: Sort by game key here?
+                for (List<String> row : errorRows.get(key)) {
+                    errorsTable.addRow(row);
+                }
+            }
+
+
+            page.addText("Game-by-game performance:");
+            page.add(table);
+            page.addText("Games with errors:");
+            page.add(errorsTable);
+        }
+        return page;
+    }
+
+    private void addErrorMessageForResult(List<String> row, PerfTestResult result1) {
+        if (result1.wasSuccessful()) {
+            row.add("");
+        } else {
+            if (result1.getErrorMessage().isEmpty()) {
+                row.add("unknown error");
+            } else {
+                row.add(result1.getErrorMessage());
+            }
+        }
     }
 
 }
