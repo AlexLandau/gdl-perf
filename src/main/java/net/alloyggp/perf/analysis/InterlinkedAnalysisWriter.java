@@ -18,8 +18,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
@@ -34,6 +36,8 @@ import net.alloyggp.perf.GameKey;
 import net.alloyggp.perf.PerfTestResult;
 import net.alloyggp.perf.analysis.html.HtmlAdHocTable;
 import net.alloyggp.perf.analysis.html.HtmlPage;
+import net.alloyggp.perf.game.GameAnalysisResult;
+import net.alloyggp.perf.game.GameAnalysisResultLoader;
 
 public class InterlinkedAnalysisWriter {
     private final ImmutableSet<GameKey> allGameKeys;
@@ -44,6 +48,7 @@ public class InterlinkedAnalysisWriter {
     private final Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame;
     private final Map<GameKey, List<EngineVersion>> rankingsByGame;
     private final ImmutableList<CorrectnessTestResult> allCorrectnessResults;
+    private final ImmutableMultimap<GameKey, GameAnalysisResult> perGameAnalysisResults;
     private final ImmutableSet<EngineVersion> allEngines;
     private final ImmutableMap<EngineVersion, String> engineFilenames;
     private final ImmutableMap<Set<EngineVersion>, String> enginePairFilenames;
@@ -52,7 +57,8 @@ public class InterlinkedAnalysisWriter {
             ImmutableMap<GameKey, String> gameFilenames, ImmutableList<PerfTestResult> allPerfResults,
             Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame,
             Map<GameKey, List<EngineVersion>> rankingsByGame,
-            ImmutableList<CorrectnessTestResult> allCorrectnessResults, ImmutableSet<EngineVersion> allEngines,
+            ImmutableList<CorrectnessTestResult> allCorrectnessResults,
+            ImmutableMultimap<GameKey, GameAnalysisResult> perGameAnalysisResults, ImmutableSet<EngineVersion> allEngines,
             ImmutableMap<EngineVersion, String> engineFilenames,
             ImmutableMap<Set<EngineVersion>, String> enginePairFilenames) {
         this.allGameKeys = allGameKeys;
@@ -62,6 +68,7 @@ public class InterlinkedAnalysisWriter {
         this.resultsByGame = resultsByGame;
         this.rankingsByGame = rankingsByGame;
         this.allCorrectnessResults = allCorrectnessResults;
+        this.perGameAnalysisResults = perGameAnalysisResults;
         this.allEngines = allEngines;
         this.engineFilenames = engineFilenames;
         this.enginePairFilenames = enginePairFilenames;
@@ -69,7 +76,8 @@ public class InterlinkedAnalysisWriter {
 
     private static InterlinkedAnalysisWriter create(Collection<GameKey> allGameKeys, Set<GameKey> validGameKeys,
             List<PerfTestResult> allPerfResults, Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame,
-            List<CorrectnessTestResult> allCorrectnessResults, Set<EngineVersion> allEngines) {
+            List<CorrectnessTestResult> allCorrectnessResults, Multimap<GameKey, GameAnalysisResult> perGameAnalysisResults,
+            Set<EngineVersion> allEngines) {
         BiMap<GameKey, String> gameFilenames = getGameFilenames(allGameKeys);
         BiMap<EngineVersion, String> engineFilenames = getEngineFilenames(allEngines);
         BiMap<Set<EngineVersion>, String> enginePairFilenames = getEnginePairFilenames(allEngines);
@@ -81,6 +89,7 @@ public class InterlinkedAnalysisWriter {
                 resultsByGame,
                 getEngineRankingsByGame(resultsByGame),
                 ImmutableList.copyOf(allCorrectnessResults),
+                ImmutableMultimap.copyOf(perGameAnalysisResults),
                 ImmutableSet.copyOf(allEngines),
                 ImmutableMap.copyOf(engineFilenames),
                 ImmutableMap.copyOf(enginePairFilenames));
@@ -150,12 +159,15 @@ public class InterlinkedAnalysisWriter {
         List<CorrectnessTestResult> allCorrectnessResults = CorrectnessResultLoader.loadAllResults();
         Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame = PerfTestResult.groupByGameAndEngine(allPerfResults);
         Set<EngineVersion> allEngines = getAllEngines(allPerfResults, allCorrectnessResults);
+        List<GameAnalysisResult> allGameAnalysisResults = GameAnalysisResultLoader.loadAllResults();
+        Multimap<GameKey, GameAnalysisResult> perGameAnalysisResults = GameAnalysisResult.groupByGame(allGameAnalysisResults);
 
         InterlinkedAnalysisWriter.create(allGameKeys,
                 validGameKeys,
                 allPerfResults,
                 resultsByGame,
                 allCorrectnessResults,
+                perGameAnalysisResults,
                 allEngines).writeAnalyses();
     }
 
@@ -203,7 +215,17 @@ public class InterlinkedAnalysisWriter {
         HtmlPage page = HtmlPage.create("Game " + game);
         page.addHeader(game.toString());
         if (validGameKeys.contains(game)) {
-            //Add results relating to game
+            //Add game statistics
+            ImmutableCollection<GameAnalysisResult> analysisResults = perGameAnalysisResults.get(game);
+            if (!analysisResults.isEmpty()) {
+                HtmlAdHocTable statsTable = HtmlAdHocTable.create();
+                for (GameAnalysisResult result : analysisResults) {
+                    statsTable.addRow(result.getKey(), result.getValue());
+                }
+                page.add(statsTable);
+            }
+
+            //Add perf results relating to game
             Map<EngineVersion, PerfTestResult> resultsByEngine = resultsByGame.get(game);
             if (resultsByEngine == null) {
                 page.addText("No perf results found for game.");

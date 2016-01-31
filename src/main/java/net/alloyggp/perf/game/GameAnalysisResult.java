@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 
 import net.alloyggp.perf.Csvable;
 import net.alloyggp.perf.GameKey;
@@ -37,6 +39,14 @@ public class GameAnalysisResult implements Csvable {
         return gameKey;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
     public static CsvLoadFunction<GameAnalysisResult> getCsvLoader() {
         return new CsvLoadFunction<GameAnalysisResult>() {
             @Override
@@ -54,6 +64,14 @@ public class GameAnalysisResult implements Csvable {
 
     public static GameAnalysisResult create(GameKey gameKey, String key, String value) {
         return new GameAnalysisResult(gameKey, key, value);
+    }
+
+    public static Multimap<GameKey, GameAnalysisResult> groupByGame(List<GameAnalysisResult> allResults) {
+        Multimap<GameKey, GameAnalysisResult> results = ArrayListMultimap.create();
+        for (GameAnalysisResult result : allResults) {
+            results.put(result.getGameKey(), result);
+        }
+        return results;
     }
 
 }
