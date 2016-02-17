@@ -124,17 +124,23 @@ public enum EngineType {
      * Runs a compatibility test that checks if the engine is configured
      * sufficiently correctly on this computer to give results for a
      * simple game.
+     *
+     * If this fails, it often means needed components or libraries need to
+     * be installed on the computer in order for this engine to run (e.g.
+     * a Prolog environment).
      */
-    public boolean runCompatibilityTest() throws IOException, InterruptedException {
+    public CompatibilityResult runCompatibilityTest() throws IOException, InterruptedException {
         PerfTestResult result = PerfTest.runTest(
                 GameKey.create(RepoId.BASE, "ticTacToe"),
                 this,
+                "unknownVersion",
                 5, //test length in seconds
                 60); //seconds before cancelling
 
         if (!result.wasSuccessful()) {
             System.out.println("Error from compatibility test: " + result.getErrorMessage());
+            return CompatibilityResult.createFailure();
         }
-        return result.wasSuccessful();
+        return CompatibilityResult.createSuccess(result.getEngineVersion().getVersion());
     }
 }

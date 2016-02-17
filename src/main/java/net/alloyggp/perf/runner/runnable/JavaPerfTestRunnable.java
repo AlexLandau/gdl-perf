@@ -20,7 +20,7 @@ public class JavaPerfTestRunnable<Simulator, State, Role, Move> implements PerfT
     }
 
     @Override
-    public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
+    public PerfTestReport runPerfTest(String gameRules, int secondsToRun, String version) throws Exception {
         Game game = Game.createEphemeralGame(Game.preprocessRulesheet(gameRules));
         Simulator sm = wrapper.createSimulator(gameRules, game);
 
@@ -44,7 +44,7 @@ public class JavaPerfTestRunnable<Simulator, State, Role, Move> implements PerfT
         }
         long millisecondsTaken = timer.stop().elapsed(TimeUnit.MILLISECONDS);
 
-        return new PerfTestReport(millisecondsTaken, numStateChanges, numRollouts);
+        return new PerfTestReport(version, millisecondsTaken, numStateChanges, numRollouts);
     }
 
 }

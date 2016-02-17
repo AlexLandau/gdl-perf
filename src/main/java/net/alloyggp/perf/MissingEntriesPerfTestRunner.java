@@ -37,8 +37,8 @@ public class MissingEntriesPerfTestRunner {
                 continue;
             }
             System.out.println("Checking if engine can run on this computer...");
-            boolean success = engineToTest.runCompatibilityTest();
-            if (success) {
+            CompatibilityResult compatible = engineToTest.runCompatibilityTest();
+            if (compatible.isCompatible()) {
                 System.out.println("Compatibility test successful");
             } else {
                 System.out.println("Compatibility test failed, skipping engine");
@@ -50,7 +50,7 @@ public class MissingEntriesPerfTestRunner {
 
                 if (gameKey.isValid()) {
                     final PerfTestResult result = PerfTest.runTest(gameKey, engineToTest,
-                            TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
+                            compatible.getVersion(), TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
 
                     CsvFiles.append(result, outputCsvFile);
                 }
