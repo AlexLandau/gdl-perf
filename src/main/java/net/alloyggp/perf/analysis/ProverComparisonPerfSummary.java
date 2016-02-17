@@ -20,6 +20,7 @@ import net.alloyggp.perf.EngineType;
 import net.alloyggp.perf.EngineVersion;
 import net.alloyggp.perf.GameKey;
 import net.alloyggp.perf.PerfTestResult;
+import net.alloyggp.perf.runner.JavaEngineType;
 
 public class ProverComparisonPerfSummary {
     private final int numGamesInResults;
@@ -71,22 +72,8 @@ public class ProverComparisonPerfSummary {
         return speedupGeometricMean;
     }
 
-    public static void main(String[] args) throws IOException {
-        for (EngineType engine : EngineType.values()) {
-            if (engine == EngineType.GGP_BASE_PROVER) {
-                continue;
-            }
-
-            //Calculate a few relative values
-            ProverComparisonPerfSummary summary = ProverComparisonPerfSummary.create(engine.getWithVersion());
-            System.out.println("For engine " + engine + ":");
-            System.out.println(summary);
-            System.out.println();
-        }
-    }
-
     public static ProverComparisonPerfSummary create(EngineVersion engineVersion) throws IOException {
-        EngineVersion proverVersion = EngineType.GGP_BASE_PROVER.getWithVersion();
+        EngineVersion proverVersion = EngineType.GGP_BASE_PROVER.getWithVersion(JavaEngineType.GGP_BASE_PROVER.getVersion());
         //Load results, find set of games where neither have errors
         //TODO: Filter by version
         List<PerfTestResult> allProverResults = PerfResultLoader.loadAllResults(proverVersion);

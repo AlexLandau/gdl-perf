@@ -31,18 +31,15 @@ public enum EngineType {
     REKKURA_BACKWARD_PROVER(JavaEngineType.REKKURA_BACKWARD_PROVER),
     SANCHO_DEAD_RECKONING_PROPNET(JavaEngineType.SANCHO_DEAD_RECKONING_PROPNET),
     ;
-    private final String version;
     private final ImmutableList<String> commandsForPerfTest;
     private final ImmutableList<String> commandsForCorrectnessTest;
 
-    private EngineType(String version, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
-        this.version = version;
+    private EngineType(List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
         this.commandsForPerfTest = ImmutableList.copyOf(commandsForPerfTest);
         this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
     }
 
     private EngineType(JavaEngineType engineType) {
-        this.version = engineType.getVersion();
         this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
         this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
     }
@@ -110,17 +107,6 @@ public enum EngineType {
     }
 
     /**
-     * Returns an EngineVersion with this engine's current version.
-     */
-    public EngineVersion getWithVersion() {
-        return EngineVersion.create(this, version);
-    }
-
-    public String getCurrentVersion() {
-        return version;
-    }
-
-    /**
      * Runs a compatibility test that checks if the engine is configured
      * sufficiently correctly on this computer to give results for a
      * simple game.
@@ -134,7 +120,7 @@ public enum EngineType {
                 GameKey.create(RepoId.BASE, "ticTacToe"),
                 this,
                 "unknownVersion",
-                5, //test length in seconds
+                3, //test length in seconds
                 60); //seconds before cancelling
 
         if (!result.wasSuccessful()) {
@@ -142,5 +128,9 @@ public enum EngineType {
             return CompatibilityResult.createFailure();
         }
         return CompatibilityResult.createSuccess(result.getEngineVersion().getVersion());
+    }
+
+    public EngineVersion getWithVersion(String version) {
+        return EngineVersion.create(this, version);
     }
 }

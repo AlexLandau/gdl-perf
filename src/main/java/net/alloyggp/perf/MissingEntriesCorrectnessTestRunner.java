@@ -50,6 +50,15 @@ public class MissingEntriesCorrectnessTestRunner {
             System.out.println("Testing engine " + engineToTest);
             File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
 
+            System.out.println("Checking if engine can run on this computer...");
+            CompatibilityResult compatible = engineToTest.runCompatibilityTest();
+            if (compatible.isCompatible()) {
+                System.out.println("Compatibility test successful");
+            } else {
+                System.out.println("Compatibility test failed, skipping engine");
+                continue;
+            }
+
             Set<GameKey> alreadyTestedGames = loadAlreadyTestedGames(outputCsvFile);
             for (GameKey gameKey : GameKey.loadAllValidGameKeys()) {
                 if (alreadyTestedGames.contains(gameKey)) {
@@ -65,7 +74,7 @@ public class MissingEntriesCorrectnessTestRunner {
                 try {
                     while (true) {
                         iterationStartTime = System.currentTimeMillis();
-                        CorrectnessTestResult result = runTest(numStateChangesToTest, engineToTest, VALIDATION_ENGINE, gameKey);
+                        CorrectnessTestResult result = runTest(numStateChangesToTest, engineToTest, compatible.getVersion(), VALIDATION_ENGINE, gameKey);
                         if (result != null) {
                             CsvFiles.append(result, outputCsvFile);
                         }
@@ -81,7 +90,7 @@ public class MissingEntriesCorrectnessTestRunner {
                 } catch (Exception e) {
                     ObservedError error = ObservedError.create(e.getMessage(), 0);
                     long iterationTimeTaken = System.currentTimeMillis() - iterationStartTime;
-                    CorrectnessTestResult result = CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(),
+                    CorrectnessTestResult result = CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(compatible.getVersion()),
                             VALIDATION_ENGINE, VALIDATION_ENGINE.getVersion(), iterationTimeTaken, 0, Optional.of(error));
                     CsvFiles.append(result, outputCsvFile);
                 }
@@ -102,7 +111,7 @@ public class MissingEntriesCorrectnessTestRunner {
     //TODO: Wrap all this in a big try block
     private static @Nullable CorrectnessTestResult runTest(int numStateChangesToTest,
             EngineType engineToTest,
-            JavaEngineType validationEngine, GameKey gameKey) throws Exception {
+            String version, JavaEngineType validationEngine, GameKey gameKey) throws Exception {
         Game game = gameKey.loadGame();
         File gameFile = File.createTempFile("game", ".kif");
         GameFiles.write(game, gameFile);
@@ -143,7 +152,7 @@ public class MissingEntriesCorrectnessTestRunner {
         long timeTaken = System.currentTimeMillis() - startTime;
         if (timedOut.get()) {
             error = Optional.of(ObservedError.create("Timed out after " + MAX_SECONDS_PER_TEST + " seconds", 0));
-            return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(), validationEngine,
+            return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(version), validationEngine,
                     validationEngine.getVersion(), timeTaken, numStateChangesToTest, error);
         } else if (error == null) {
             System.out.println("No results; validation failed");
@@ -152,7 +161,7 @@ public class MissingEntriesCorrectnessTestRunner {
             if (error.isPresent()) {
                 numStateChangesToTest = error.get().getNumStateChangesBeforeFinding();
             }
-            return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(), validationEngine,
+            return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(version), validationEngine,
                     validationEngine.getVersion(), timeTaken, numStateChangesToTest, error);
         }
     }

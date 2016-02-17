@@ -23,25 +23,26 @@ public class MissingEntriesPerfTestRunner {
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             System.out.println("Testing engine " + engineToTest);
 
-            File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engineToTest);
-
-            Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
-            if (RETRY_FAILURES) {
-                gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile, engineToTest.getWithVersion()));
-            } else {
-                gameKeysToTest.removeAll(loadAllGameKeys(outputCsvFile, engineToTest.getWithVersion()));
-            }
-
-            if (gameKeysToTest.isEmpty()) {
-                // Skip the engine test
-                continue;
-            }
             System.out.println("Checking if engine can run on this computer...");
             CompatibilityResult compatible = engineToTest.runCompatibilityTest();
             if (compatible.isCompatible()) {
                 System.out.println("Compatibility test successful");
             } else {
                 System.out.println("Compatibility test failed, skipping engine");
+                continue;
+            }
+
+            File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engineToTest);
+
+            Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
+            if (RETRY_FAILURES) {
+                gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile, engineToTest.getWithVersion(compatible.getVersion())));
+            } else {
+                gameKeysToTest.removeAll(loadAllGameKeys(outputCsvFile, engineToTest.getWithVersion(compatible.getVersion())));
+            }
+
+            if (gameKeysToTest.isEmpty()) {
+                // Skip the engine test
                 continue;
             }
 
