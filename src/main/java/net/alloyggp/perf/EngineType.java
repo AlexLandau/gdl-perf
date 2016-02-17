@@ -1,6 +1,5 @@
 package net.alloyggp.perf;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
@@ -22,7 +21,9 @@ public enum EngineType {
     PALAMEDES_JOCULAR(JavaEngineType.PALAMEDES_JOCULAR),
     PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
     //Fluxplayer Prolog engine
-    FLUXPLAYER_PROLOG(new File("../fluxplayer-prolog-engine/"),
+    FLUXPLAYER_PROLOG(FluxplayerEngineEnvironment.create(),
+            //new File("../fluxplayer-prolog-engine/"),
+            //TODO: If we're changing the working directory, do we still need the directory change here? Check
             ImmutableList.of("../fluxplayer-prolog-engine/start_perf_test.sh"),
             ImmutableList.of()), // no support for correctness testing
     //From Peter Pham's Rekkura codebase
@@ -36,18 +37,18 @@ public enum EngineType {
     REKKURA_BACKWARD_PROVER(JavaEngineType.REKKURA_BACKWARD_PROVER),
     SANCHO_DEAD_RECKONING_PROPNET(JavaEngineType.SANCHO_DEAD_RECKONING_PROPNET),
     ;
-    private final File workingDirectory;
+    private final EngineEnvironment environment;
     private final ImmutableList<String> commandsForPerfTest;
     private final ImmutableList<String> commandsForCorrectnessTest;
 
-    private EngineType(File workingDirectory, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
-        this.workingDirectory = workingDirectory;
+    private EngineType(EngineEnvironment environment, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
+        this.environment = environment;
         this.commandsForPerfTest = ImmutableList.copyOf(commandsForPerfTest);
         this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
     }
 
     private EngineType(JavaEngineType engineType) {
-        this.workingDirectory = new File("."); //Java engines just run from this directory
+        this.environment = BasicEngineEnvironment.INSTANCE; //Java engines just run from this directory
         this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
         this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
     }
@@ -83,14 +84,19 @@ public enum EngineType {
     }
 
     public TestCompleted runPerfTest(PerfTestConfig perfTestConfig) throws IOException, InterruptedException {
+        if (!environment.getUnconfiguredKeys().isEmpty()) {
+            throw new RuntimeException("You need to configure _____\n"
+                    + "TODO: Add instructions here");
+        }
+
         List<String> commands = Lists.newArrayList();
         commands.addAll(getCommandsForPerfTest());
         commands.add(perfTestConfig.getGameFile().getAbsolutePath());
         commands.add(perfTestConfig.getOutputFile().getAbsolutePath());
         commands.add(Integer.toString(perfTestConfig.getNumSeconds()));
         ProcessBuilder pb = new ProcessBuilder(commands);
-        pb.directory(workingDirectory);
-        pb.environment().put("ECLIPSE", "/home/alex/prologEclipse/bin/x86_64_linux/eclipse");
+        pb.directory(environment.getWorkingDirectory());
+        pb.environment().putAll(environment.getEnvironmentAdditions());
 
         //These cause output from the test process to be displayed on the console of the
         //test runner process.
@@ -109,7 +115,7 @@ public enum EngineType {
     }
 
     private List<String> getCommandsForPerfTest() {
-        return this.commandsForPerfTest;
+        return commandsForPerfTest;
     }
 
     public List<String> getCommandsForCorrectnessTest() {
