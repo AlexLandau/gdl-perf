@@ -22,7 +22,7 @@ public enum EngineType {
     PALAMEDES_JOCULAR(JavaEngineType.PALAMEDES_JOCULAR),
     PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
     //Fluxplayer Prolog engine
-    FLUXPLAYER_PROLOG(ConfiguredEngineEnvironment.createFluxplayer(),
+    FLUXPLAYER_PROLOG(EngineEnvironment.createFluxplayer(),
             //new File("../fluxplayer-prolog-engine/"),
             //TODO: If we're changing the working directory, do we still need the directory change here? Check
             ImmutableList.of("../fluxplayer-prolog-engine/start_perf_test.sh"),
@@ -49,7 +49,7 @@ public enum EngineType {
     }
 
     private EngineType(JavaEngineType engineType) {
-        this.environment = ConfiguredEngineEnvironment.createEmpty();
+        this.environment = EngineEnvironment.createEmpty();
         this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
         this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
     }
