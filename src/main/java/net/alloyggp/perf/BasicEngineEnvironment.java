@@ -7,6 +7,8 @@ import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import net.alloyggp.perf.io.LocalConfiguration.ConfigurationKey;
+
 /**
  * An engine environment that runs from the current working directory
  * and requires no environment variables.
@@ -24,7 +26,7 @@ public class BasicEngineEnvironment implements EngineEnvironment {
     }
 
     @Override
-    public Set<String> getUnconfiguredKeys() {
+    public Set<ConfigurationKey> getUnconfiguredKeys() {
         return ImmutableSet.of();
     }
 

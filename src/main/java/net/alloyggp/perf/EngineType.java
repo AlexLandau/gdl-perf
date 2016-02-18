@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import net.alloyggp.perf.io.LocalConfiguration.ConfigurationKey;
 import net.alloyggp.perf.runner.CorrectnessTestProcess;
 import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.PerfTestProcess;
@@ -21,7 +22,7 @@ public enum EngineType {
     PALAMEDES_JOCULAR(JavaEngineType.PALAMEDES_JOCULAR),
     PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
     //Fluxplayer Prolog engine
-    FLUXPLAYER_PROLOG(FluxplayerEngineEnvironment.create(),
+    FLUXPLAYER_PROLOG(ConfiguredEngineEnvironment.createFluxplayer(),
             //new File("../fluxplayer-prolog-engine/"),
             //TODO: If we're changing the working directory, do we still need the directory change here? Check
             ImmutableList.of("../fluxplayer-prolog-engine/start_perf_test.sh"),
@@ -85,8 +86,7 @@ public enum EngineType {
 
     public TestCompleted runPerfTest(PerfTestConfig perfTestConfig) throws IOException, InterruptedException {
         if (!environment.getUnconfiguredKeys().isEmpty()) {
-            throw new RuntimeException("You need to configure _____\n"
-                    + "TODO: Add instructions here");
+            throw new RuntimeException(getUnconfiguredKeysExplanation());
         }
 
         List<String> commands = Lists.newArrayList();
@@ -132,6 +132,10 @@ public enum EngineType {
      * a Prolog environment).
      */
     public CompatibilityResult runCompatibilityTest() throws IOException, InterruptedException {
+        if (!environment.getUnconfiguredKeys().isEmpty()) {
+            System.out.println(getUnconfiguredKeysExplanation());
+            return CompatibilityResult.createFailure();
+        }
         PerfTestResult result = PerfTest.runTest(
                 GameKey.create(RepoId.BASE, "ticTacToe"),
                 this,
@@ -144,6 +148,16 @@ public enum EngineType {
             return CompatibilityResult.createFailure();
         }
         return CompatibilityResult.createSuccess(result.getEngineVersion().getVersion());
+    }
+
+    private String getUnconfiguredKeysExplanation() {
+        StringBuilder message = new StringBuilder();
+        message.append("Engine " + toString() + " requires the following values to be set in localConfig.prefs:\n");
+        message.append("(Values are set in 'KEY = value' format, with one entry per line.)\n");
+        for (ConfigurationKey key : environment.getUnconfiguredKeys()) {
+            message.append(key.toString() + ": " + key.getDescription() + "\n");
+        }
+        return message.toString();
     }
 
     public EngineVersion getWithVersion(String version) {
