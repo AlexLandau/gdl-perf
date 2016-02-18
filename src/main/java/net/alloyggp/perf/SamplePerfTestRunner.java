@@ -3,6 +3,7 @@ package net.alloyggp.perf;
 import java.io.File;
 import java.io.IOException;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
 import net.alloyggp.perf.io.CsvFiles;
@@ -38,12 +39,15 @@ public class SamplePerfTestRunner {
             System.out.println("Testing engine " + engineToTest);
             File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engineToTest);
 
+            CompatibilityResult compatible = engineToTest.runCompatibilityTest();
+            Preconditions.checkState(compatible.isCompatible(), "Somehow the simple compatibility test failed");
+
             for (GameKey gameKey : gamesToTest) {
                 System.out.println("Running perf test for game key: " + gameKey);
 
                 if (gameKey.isValid()) {
                     final PerfTestResult result = PerfTest.runTest(gameKey, engineToTest,
-                            TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
+                            compatible.getVersion(), TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
 
                     CsvFiles.append(result, outputCsvFile);
                 }

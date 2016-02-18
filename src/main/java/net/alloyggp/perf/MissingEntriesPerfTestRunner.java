@@ -23,25 +23,26 @@ public class MissingEntriesPerfTestRunner {
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             System.out.println("Testing engine " + engineToTest);
 
+            System.out.println("Checking if engine can run on this computer...");
+            CompatibilityResult compatible = engineToTest.runCompatibilityTest();
+            if (compatible.isCompatible()) {
+                System.out.println("Compatibility test successful");
+            } else {
+                System.out.println("Compatibility test failed, skipping engine");
+                continue;
+            }
+
             File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engineToTest);
 
             Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
             if (RETRY_FAILURES) {
-                gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile, engineToTest.getWithVersion()));
+                gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile, engineToTest.getWithVersion(compatible.getVersion())));
             } else {
-                gameKeysToTest.removeAll(loadAllGameKeys(outputCsvFile, engineToTest.getWithVersion()));
+                gameKeysToTest.removeAll(loadAllGameKeys(outputCsvFile, engineToTest.getWithVersion(compatible.getVersion())));
             }
 
             if (gameKeysToTest.isEmpty()) {
                 // Skip the engine test
-                continue;
-            }
-            System.out.println("Checking if engine can run on this computer...");
-            boolean success = engineToTest.runCompatibilityTest();
-            if (success) {
-                System.out.println("Compatibility test successful");
-            } else {
-                System.out.println("Compatibility test failed, skipping engine");
                 continue;
             }
 
@@ -50,7 +51,7 @@ public class MissingEntriesPerfTestRunner {
 
                 if (gameKey.isValid()) {
                     final PerfTestResult result = PerfTest.runTest(gameKey, engineToTest,
-                            TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
+                            compatible.getVersion(), TEST_LENGTH_SECONDS, SECONDS_BEFORE_CANCELLING);
 
                     CsvFiles.append(result, outputCsvFile);
                 }

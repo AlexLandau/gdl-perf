@@ -99,7 +99,7 @@ public enum JavaEngineType {
     }
 
     public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
-        return perfRunnable.runPerfTest(gameRules, secondsToRun);
+        return perfRunnable.runPerfTest(gameRules, secondsToRun, version);
     }
 
     public void runCorrectnessTest(String gameRules, int stateChangesToRun, GameActionRecorder recorder) throws Exception {

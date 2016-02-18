@@ -13,4 +13,7 @@ public class CsvKeys {
     public static final String NUM_STATE_CHANGES = "numStateChanges";
     public static final String NUM_ROLLOUTS = "numRollouts";
 
+    //Used by both success and failure
+    public static final String VERSION = "version";
+
 }

@@ -16,7 +16,7 @@ import net.alloyggp.perf.io.ResultFiles;
 public class PerfTest {
 
     public static PerfTestResult runTest(GameKey gameKey, EngineType engineType,
-            int testLengthSeconds, int secondsBeforeCancelling) throws IOException,
+            String defaultVersion, int testLengthSeconds, int secondsBeforeCancelling) throws IOException,
             InterruptedException {
         File gameFile = File.createTempFile("game", ".kif");
         Game game = gameKey.loadGame();
@@ -30,39 +30,49 @@ public class PerfTest {
 
         Map<String, String> results = ResultFiles.read(outputFile);
         //TODO: Store results...
-        final PerfTestResult result = interpretResults(engineType, gameKey, completed,
+        final PerfTestResult result = interpretResults(engineType, defaultVersion, gameKey, completed,
                 results, secondsBeforeCancelling);
         return result;
     }
 
 
-    private static PerfTestResult interpretResults(EngineType engineToTest, GameKey gameKey,
+    private static PerfTestResult interpretResults(EngineType engineToTest, String defaultVersion, GameKey gameKey,
             TestCompleted completed, Map<String, String> results, int secondsBeforeCancelling) {
+
         final PerfTestResult result;
         if (results.containsKey(CsvKeys.MILLISECONDS_TAKEN)
                 && results.containsKey(CsvKeys.NUM_STATE_CHANGES)
                 && results.containsKey(CsvKeys.NUM_ROLLOUTS)) {
-            result = PerfTestResult.createSuccess(gameKey, engineToTest.getWithVersion(),
+            if (!results.containsKey(CsvKeys.VERSION)) {
+                throw new RuntimeException("The perf test implementation needs to provide a 'version' in its result file");
+            }
+            result = PerfTestResult.createSuccess(gameKey, engineToTest,
+                    results.get(CsvKeys.VERSION),
                     Long.parseLong(results.get(CsvKeys.MILLISECONDS_TAKEN)),
                     Long.parseLong(results.get(CsvKeys.NUM_STATE_CHANGES)),
                     Long.parseLong(results.get(CsvKeys.NUM_ROLLOUTS)));
         } else {
             //Error case
             if (results.isEmpty()) {
+                EngineVersion withVersion = EngineVersion.create(engineToTest, defaultVersion);
                 if (completed == TestCompleted.NO) {
-                    result = PerfTestResult.createFailure(gameKey, engineToTest.getWithVersion(),
+                    result = PerfTestResult.createFailure(gameKey, withVersion,
                             "Test process timed out after " + secondsBeforeCancelling + " seconds");
                 } else {
-                    result = PerfTestResult.createFailure(gameKey, engineToTest.getWithVersion(),
+                    result = PerfTestResult.createFailure(gameKey, withVersion,
                             "Test process failed to output results for unknown reason");
                 }
             } else {
+                if (!results.containsKey(CsvKeys.VERSION)) {
+                    throw new RuntimeException("The perf test implementation needs to provide a 'version' in its result file");
+                }
+                EngineVersion withVersion = EngineVersion.create(engineToTest, results.get(CsvKeys.VERSION));
                 String errorMessage = results.get(CsvKeys.ERROR_MESSAGE);
                 if (errorMessage != null) {
-                    result = PerfTestResult.createFailure(gameKey, engineToTest.getWithVersion(),
+                    result = PerfTestResult.createFailure(gameKey, withVersion,
                             errorMessage);
                 } else {
-                    result = PerfTestResult.createFailure(gameKey, engineToTest.getWithVersion(),
+                    result = PerfTestResult.createFailure(gameKey, withVersion,
                             "Test process failed to output error message for unknown reason");
                 }
             }

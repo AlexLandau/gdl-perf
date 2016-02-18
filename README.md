@@ -52,12 +52,14 @@ Results are expected to be written by the test process in the following format:
 
 The variable types used in the results for a successful performance test are as follows:
 
+* version: The version of the engine being tested. This may be an arbitrary string.
 * millisecondsTaken: The actual length, in milliseconds, of the testing that was performed.
 * numStateChanges: The total number of transitions from one state to a following state that were computed.
 * numRollouts: The total number of times that the test process reached a terminal state.
 
-An unsuccessful performance test may leave one variable to indicate the nature of the error:
+An unsuccessful performance test may leave these variables to indicate the nature of the error:
 
+* version: The version of the engine being tested. This may be an arbitrary string.
 * errorMessage: A message indicating the nature of the test error.
 
 ## Results format

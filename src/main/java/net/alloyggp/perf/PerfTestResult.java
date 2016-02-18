@@ -33,6 +33,13 @@ public class PerfTestResult implements Csvable {
     }
 
     public static PerfTestResult createSuccess(GameKey gameKey,
+            EngineType type, String version, long millisecondsTaken, long numStateChanges,
+            long numRollouts) {
+        return createSuccess(gameKey, EngineVersion.create(type, version),
+                millisecondsTaken, numStateChanges, numRollouts);
+    }
+
+    public static PerfTestResult createSuccess(GameKey gameKey,
             EngineVersion engine, long millisecondsTaken, long numStateChanges,
             long numRollouts) {
         return new PerfTestResult(gameKey, engine, true, "",

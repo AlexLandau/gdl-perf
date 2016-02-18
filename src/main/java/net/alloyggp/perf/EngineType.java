@@ -1,5 +1,6 @@
 package net.alloyggp.perf;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import net.alloyggp.perf.io.LocalConfiguration.ConfigurationKey;
 import net.alloyggp.perf.runner.CorrectnessTestProcess;
 import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.PerfTestProcess;
@@ -26,6 +28,11 @@ public enum EngineType {
     //And others in Palamedes Core
     PALAMEDES_JOCULAR(JavaEngineType.PALAMEDES_JOCULAR),
     PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
+    //Fluxplayer Prolog engine
+    FLUXPLAYER_PROLOG(EngineEnvironment.createFluxplayer(),
+            ExecutableType.RELATIVE_PATH,
+            ImmutableList.of("start_perf_test.sh"),
+            ImmutableList.of()), // no support for correctness testing
     //From Peter Pham's Rekkura codebase
     REKKURA_GENERIC_FORWARD_PROVER_OSTD(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER_OSTD),
     REKKURA_GENERIC_FORWARD_PROVER(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER),
@@ -37,18 +44,22 @@ public enum EngineType {
     REKKURA_BACKWARD_PROVER(JavaEngineType.REKKURA_BACKWARD_PROVER),
     SANCHO_DEAD_RECKONING_PROPNET(JavaEngineType.SANCHO_DEAD_RECKONING_PROPNET),
     ;
-    private final String version;
+    private final EngineEnvironment environment;
+    private final ExecutableType executableType;
     private final ImmutableList<String> commandsForPerfTest;
     private final ImmutableList<String> commandsForCorrectnessTest;
 
-    private EngineType(String version, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
-        this.version = version;
-        this.commandsForPerfTest = ImmutableList.copyOf(commandsForPerfTest);
-        this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
+    private EngineType(EngineEnvironment environment, ExecutableType executableType,
+            ImmutableList<String> commandsForPerfTest, ImmutableList<String> commandsForCorrectnessTest) {
+        this.environment = environment;
+        this.executableType = executableType;
+        this.commandsForPerfTest = commandsForPerfTest;
+        this.commandsForCorrectnessTest = commandsForCorrectnessTest;
     }
 
     private EngineType(JavaEngineType engineType) {
-        this.version = engineType.getVersion();
+        this.environment = EngineEnvironment.createEmpty();
+        this.executableType = ExecutableType.ABSOLUTE_PATH;
         this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
         this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
     }
@@ -84,12 +95,26 @@ public enum EngineType {
     }
 
     public TestCompleted runPerfTest(PerfTestConfig perfTestConfig) throws IOException, InterruptedException {
+        if (!environment.getUnconfiguredKeys().isEmpty()) {
+            throw new RuntimeException(getUnconfiguredKeysExplanation());
+        }
+
         List<String> commands = Lists.newArrayList();
         commands.addAll(getCommandsForPerfTest());
         commands.add(perfTestConfig.getGameFile().getAbsolutePath());
         commands.add(perfTestConfig.getOutputFile().getAbsolutePath());
         commands.add(Integer.toString(perfTestConfig.getNumSeconds()));
+
+        if (executableType == ExecutableType.RELATIVE_PATH) {
+            //The first command in the list should be made relative to the working directory
+            File workingDirectory = environment.getWorkingDirectory();
+            File executable = new File(workingDirectory, commands.get(0));
+            commands.set(0, executable.getAbsolutePath());
+        }
+
         ProcessBuilder pb = new ProcessBuilder(commands);
+        pb.directory(environment.getWorkingDirectory());
+        pb.environment().putAll(environment.getEnvironmentAdditions());
 
         //These cause output from the test process to be displayed on the console of the
         //test runner process.
@@ -108,7 +133,7 @@ public enum EngineType {
     }
 
     private List<String> getCommandsForPerfTest() {
-        return this.commandsForPerfTest;
+        return commandsForPerfTest;
     }
 
     public List<String> getCommandsForCorrectnessTest() {
@@ -116,31 +141,49 @@ public enum EngineType {
     }
 
     /**
-     * Returns an EngineVersion with this engine's current version.
-     */
-    public EngineVersion getWithVersion() {
-        return EngineVersion.create(this, version);
-    }
-
-    public String getCurrentVersion() {
-        return version;
-    }
-
-    /**
      * Runs a compatibility test that checks if the engine is configured
      * sufficiently correctly on this computer to give results for a
      * simple game.
+     *
+     * If this fails, it often means needed components or libraries need to
+     * be installed on the computer in order for this engine to run (e.g.
+     * a Prolog environment).
      */
-    public boolean runCompatibilityTest() throws IOException, InterruptedException {
+    public CompatibilityResult runCompatibilityTest() throws IOException, InterruptedException {
+        if (!environment.getUnconfiguredKeys().isEmpty()) {
+            System.out.println(getUnconfiguredKeysExplanation());
+            return CompatibilityResult.createFailure();
+        }
         PerfTestResult result = PerfTest.runTest(
                 GameKey.create(RepoId.BASE, "ticTacToe"),
                 this,
-                5, //test length in seconds
+                "unknownVersion",
+                3, //test length in seconds
                 60); //seconds before cancelling
 
         if (!result.wasSuccessful()) {
             System.out.println("Error from compatibility test: " + result.getErrorMessage());
+            return CompatibilityResult.createFailure();
         }
-        return result.wasSuccessful();
+        return CompatibilityResult.createSuccess(result.getEngineVersion().getVersion());
+    }
+
+    private String getUnconfiguredKeysExplanation() {
+        StringBuilder message = new StringBuilder();
+        message.append("Engine " + toString() + " requires the following values to be set in localConfig.prefs:\n");
+        message.append("(Values are set in 'KEY = value' format, with one entry per line.)\n");
+        for (ConfigurationKey key : environment.getUnconfiguredKeys()) {
+            message.append(key.toString() + ": " + key.getDescription() + "\n");
+        }
+        return message.toString();
+    }
+
+    public EngineVersion getWithVersion(String version) {
+        return EngineVersion.create(this, version);
+    }
+
+    private static enum ExecutableType {
+        RELATIVE_PATH,
+        ABSOLUTE_PATH
     }
 }

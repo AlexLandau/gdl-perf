@@ -21,53 +21,6 @@ public class GameSimulatorRunnables {
 
     public static PerfTestRunnable getPerfTestRunnable(boolean useOpt) {
         return JavaPerfTestRunnable.create(getWrapper(useOpt));
-
-//        return new PerfTestRunnable() {
-//            @Override
-//            public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
-//                GameSimulator simulator = new GameSimulator(false, useOpt);
-//                simulator.ParseDescIntoTheory(gameRules);
-//
-//                ExpList roles = simulator.GetRoles();
-//                Random rand = new Random();
-//
-//                long numStateChanges = 0;
-//                long numRollouts = 0;
-//                Stopwatch timer = new Stopwatch().start();
-//                outer : while (true) {
-//                    if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
-//                        break outer;
-//                    }
-//                    simulator.SimulateStart();
-//                    while (!simulator.IsTerminal()) {
-//                        if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
-//                            break outer;
-//                        }
-//
-//                        ExpList moves = new ExpList();
-//                        for (int r = 0; r < roles.size(); r++) {
-//                            Expression role = roles.get(r);
-//                            ExpList legalMoves = simulator.GetLegalMoves(role);
-//                            int chosenIndex = rand.nextInt(legalMoves.size());
-//                            Expression chosenMove = legalMoves.get(chosenIndex);
-//                            moves.add(chosenMove);
-//                        }
-//                        simulator.SimulateStep(moves);
-//
-//                        numStateChanges++;
-//                    }
-//                    for (int r = 0; r < roles.size(); r++) {
-//                        Expression role = roles.get(r);
-//                        simulator.GetGoalValue(role);
-//                    }
-//
-//                    numRollouts++;
-//                }
-//                long millisecondsTaken = timer.stop().elapsed(TimeUnit.MILLISECONDS);
-//
-//                return new PerfTestReport(millisecondsTaken, numStateChanges, numRollouts);
-//            }
-//        };
     }
 
     public static JavaSimulatorWrapper<GameSimulator, Void, Expression, Expression> getWrapper(boolean useOpt) {
@@ -151,57 +104,6 @@ public class GameSimulatorRunnables {
 
     public static CorrectnessTestRunnable getCorrectnessTestRunnable(boolean useOpt) {
         return JavaCorrectnessTestRunnable.create(getWrapper(useOpt));
-//        return new CorrectnessTestRunnable() {
-//            @Override
-//            public void runCorrectnessTest(String gameRules,
-//                    int stateChangesToRun, GameActionRecorder recorder) throws Exception {
-//                GameSimulator simulator = new GameSimulator(false, useOpt);
-//                simulator.ParseDescIntoTheory(gameRules);
-//
-//                runTest(simulator, stateChangesToRun, recorder);
-//            }
-//
-//            private void runTest(GameSimulator simulator, int stateChangesToRun,
-//                    GameActionRecorder recorder) throws Exception {
-//                ExpList roles = simulator.GetRoles();
-//                recorder.writeRoles(toRoles(roles));
-//                int stateChangesSoFar = 0;
-//                simulator.SimulateStart();
-//                if (simulator.IsTerminal()) {
-//                    recorder.recordTerminality(true);
-//                    return; //otherwise stateChangesSoFar will never increase
-//                }
-//                while (true) {
-//                    simulator.SimulateStart();
-//                    while (!simulator.IsTerminal()) {
-//                        recorder.recordTerminality(false);
-//                        ExpList jointMove = new ExpList();
-//                        for (int r = 0; r < roles.size(); r++) {
-//                            ExpList legalMoves = simulator.GetLegalMoves(roles.get(r));
-//                            List<Move> translatedMoves = translatePalamedesMoves(legalMoves);
-//                            recorder.recordLegalMoves(translatedMoves);
-//                            jointMove.add(pickOneAtRandom(legalMoves));
-//                        }
-//                        List<Move> translatedJointMove = translatePalamedesMoves(jointMove);
-//                        recorder.recordChosenJointMove(translatedJointMove);
-//                        simulator.SimulateStep(jointMove);
-//                        stateChangesSoFar++;
-//                    }
-//                    recorder.recordTerminality(true);
-//                    List<Integer> goalValues = Lists.newArrayList();
-//                    for (int r = 0; r < roles.size(); r++) {
-//                        Expression role = roles.get(r);
-//                        goalValues.add(simulator.GetGoalValue(role));
-//                    }
-//                    recorder.recordGoalValues(goalValues);
-//                    //Do we end here?
-//                    if (stateChangesSoFar > stateChangesToRun) {
-//                        return;
-//                    }
-//                }
-//            }
-//
-//        };
     }
 
 }
