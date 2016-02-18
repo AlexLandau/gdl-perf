@@ -49,7 +49,7 @@ public enum EngineType {
     }
 
     private EngineType(JavaEngineType engineType) {
-        this.environment = BasicEngineEnvironment.INSTANCE; //Java engines just run from this directory
+        this.environment = ConfiguredEngineEnvironment.createEmpty();
         this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
         this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
     }

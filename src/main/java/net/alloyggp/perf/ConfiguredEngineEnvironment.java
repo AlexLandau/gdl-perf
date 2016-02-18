@@ -26,6 +26,15 @@ public class ConfiguredEngineEnvironment implements EngineEnvironment {
         this.environmentVariablesToSet = environmentVariablesToSet;
     }
 
+    /**
+     * Creates an engine environment that uses the current working directory and
+     * does not set any environment variables.
+     */
+    public static ConfiguredEngineEnvironment createEmpty() {
+        return new ConfiguredEngineEnvironment(Optional.empty(),
+                ImmutableMap.of());
+    }
+
     public static ConfiguredEngineEnvironment createFluxplayer() {
         return new ConfiguredEngineEnvironment(Optional.of(ConfigurationKey.FLUXPLAYER_PROLOG_ENGINE),
                 ImmutableMap.of(ConfigurationKey.ECLIPSE_PROLOG, "ECLIPSE"));
