@@ -48,6 +48,10 @@ public class MissingEntriesCorrectnessTestRunner {
         GdlPool.caseSensitive = false;
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             System.out.println("Testing engine " + engineToTest);
+            if (engineToTest.getCommandsForCorrectnessTest().isEmpty()) {
+                System.out.println(engineToTest + " does not support correctness tests, skipping.");
+                continue;
+            }
             File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
 
             System.out.println("Checking if engine can run on this computer...");

@@ -1,5 +1,6 @@
 package net.alloyggp.perf;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
@@ -23,9 +24,8 @@ public enum EngineType {
     PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
     //Fluxplayer Prolog engine
     FLUXPLAYER_PROLOG(EngineEnvironment.createFluxplayer(),
-            //new File("../fluxplayer-prolog-engine/"),
-            //TODO: If we're changing the working directory, do we still need the directory change here? Check
-            ImmutableList.of("../fluxplayer-prolog-engine/start_perf_test.sh"),
+            ExecutableType.RELATIVE_PATH,
+            ImmutableList.of("start_perf_test.sh"),
             ImmutableList.of()), // no support for correctness testing
     //From Peter Pham's Rekkura codebase
     REKKURA_GENERIC_FORWARD_PROVER_OSTD(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER_OSTD),
@@ -39,17 +39,21 @@ public enum EngineType {
     SANCHO_DEAD_RECKONING_PROPNET(JavaEngineType.SANCHO_DEAD_RECKONING_PROPNET),
     ;
     private final EngineEnvironment environment;
+    private final ExecutableType executableType;
     private final ImmutableList<String> commandsForPerfTest;
     private final ImmutableList<String> commandsForCorrectnessTest;
 
-    private EngineType(EngineEnvironment environment, List<String> commandsForPerfTest, List<String> commandsForCorrectnessTest) {
+    private EngineType(EngineEnvironment environment, ExecutableType executableType,
+            ImmutableList<String> commandsForPerfTest, ImmutableList<String> commandsForCorrectnessTest) {
         this.environment = environment;
-        this.commandsForPerfTest = ImmutableList.copyOf(commandsForPerfTest);
-        this.commandsForCorrectnessTest = ImmutableList.copyOf(commandsForCorrectnessTest);
+        this.executableType = executableType;
+        this.commandsForPerfTest = commandsForPerfTest;
+        this.commandsForCorrectnessTest = commandsForCorrectnessTest;
     }
 
     private EngineType(JavaEngineType engineType) {
         this.environment = EngineEnvironment.createEmpty();
+        this.executableType = ExecutableType.ABSOLUTE_PATH;
         this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
         this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
     }
@@ -94,6 +98,14 @@ public enum EngineType {
         commands.add(perfTestConfig.getGameFile().getAbsolutePath());
         commands.add(perfTestConfig.getOutputFile().getAbsolutePath());
         commands.add(Integer.toString(perfTestConfig.getNumSeconds()));
+
+        if (executableType == ExecutableType.RELATIVE_PATH) {
+            //The first command in the list should be made relative to the working directory
+            File workingDirectory = environment.getWorkingDirectory();
+            File executable = new File(workingDirectory, commands.get(0));
+            commands.set(0, executable.getAbsolutePath());
+        }
+
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.directory(environment.getWorkingDirectory());
         pb.environment().putAll(environment.getEnvironmentAdditions());
@@ -162,5 +174,10 @@ public enum EngineType {
 
     public EngineVersion getWithVersion(String version) {
         return EngineVersion.create(this, version);
+    }
+
+    private static enum ExecutableType {
+        RELATIVE_PATH,
+        ABSOLUTE_PATH
     }
 }
