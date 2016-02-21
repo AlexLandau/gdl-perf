@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -19,6 +20,7 @@ import com.google.common.collect.Sets;
 import net.alloyggp.perf.EngineType;
 import net.alloyggp.perf.EngineVersion;
 import net.alloyggp.perf.GameKey;
+import net.alloyggp.perf.InvalidGames;
 import net.alloyggp.perf.PerfTestResult;
 import net.alloyggp.perf.runner.JavaEngineType;
 
@@ -75,11 +77,10 @@ public class ProverComparisonPerfSummary {
     public static ProverComparisonPerfSummary create(EngineVersion engineVersion) throws IOException {
         EngineVersion proverVersion = EngineType.GGP_BASE_PROVER.getWithVersion(JavaEngineType.GGP_BASE_PROVER.getVersion());
         //Load results, find set of games where neither have errors
-        //TODO: Filter by version
-        List<PerfTestResult> allProverResults = PerfResultLoader.loadAllResults(proverVersion);
-        Map<GameKey, PerfTestResult> proverResultsMap = PerfTestResult.groupByGameSingleEngineVersion(allProverResults);
-        List<PerfTestResult> allEngineResults = PerfResultLoader.loadAllResults(engineVersion);
-        Map<GameKey, PerfTestResult> engineResultsMap = PerfTestResult.groupByGameSingleEngineVersion(allEngineResults);
+
+        Set<GameKey> invalidGames = InvalidGames.loadInvalidGames().keySet();
+        Map<GameKey, PerfTestResult> proverResultsMap = loadValidGamePerfResults(proverVersion, invalidGames);
+        Map<GameKey, PerfTestResult> engineResultsMap = loadValidGamePerfResults(engineVersion, invalidGames);
 
         Set<GameKey> gamesWithoutErrors = Sets.newHashSet();
         gamesWithoutErrors.addAll(Sets.intersection(proverResultsMap.keySet(), engineResultsMap.keySet()));
@@ -90,8 +91,8 @@ public class ProverComparisonPerfSummary {
             }
         }
 
-        SingleEnginePerfSummary proverSummary = SingleEnginePerfSummary.create(gamesWithoutErrors, proverVersion, allProverResults);
-        SingleEnginePerfSummary engineSummary = SingleEnginePerfSummary.create(gamesWithoutErrors, engineVersion, allEngineResults);
+        SingleEnginePerfSummary proverSummary = SingleEnginePerfSummary.create(gamesWithoutErrors, proverVersion, proverResultsMap.values());
+        SingleEnginePerfSummary engineSummary = SingleEnginePerfSummary.create(gamesWithoutErrors, engineVersion, engineResultsMap.values());
         Preconditions.checkState(gamesWithoutErrors.equals(proverSummary.getGamesInvolved()));
         Preconditions.checkState(gamesWithoutErrors.equals(engineSummary.getGamesInvolved()));
 
@@ -111,6 +112,14 @@ public class ProverComparisonPerfSummary {
                 speedupStatistics.getMean(),
                 speedupStatistics.getPercentile(50),
                 speedupStatistics.getGeometricMean());
+    }
+
+    public static Map<GameKey, PerfTestResult> loadValidGamePerfResults(EngineVersion proverVersion, Set<GameKey> invalidGames)
+            throws IOException {
+        List<PerfTestResult> allProverResults = PerfResultLoader.loadAllResults(proverVersion);
+        Map<GameKey, PerfTestResult> proverResultsMap = PerfTestResult.groupByGameSingleEngineVersion(allProverResults);
+        proverResultsMap = Maps.filterKeys(proverResultsMap, Predicates.not(invalidGames::contains));
+        return proverResultsMap;
     }
 
     public static class SingleEnginePerfSummary {
