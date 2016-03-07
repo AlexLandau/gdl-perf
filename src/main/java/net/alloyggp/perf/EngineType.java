@@ -33,6 +33,11 @@ public enum EngineType {
             ExecutableType.RELATIVE_PATH,
             ImmutableList.of("start_perf_test.sh"),
             ImmutableList.of()), // no support for correctness testing
+    //CadiaPlayer Prolog engine
+    CADIAPLAYER_PROLOG(EngineEnvironment.createCadiaplayer(),
+            ExecutableType.RELATIVE_PATH,
+            ImmutableList.of("start_perf_test.sh"),
+            ImmutableList.of()), // no support for correctness testing
     //From Peter Pham's Rekkura codebase
     REKKURA_GENERIC_FORWARD_PROVER_OSTD(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER_OSTD),
     REKKURA_GENERIC_FORWARD_PROVER(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER),

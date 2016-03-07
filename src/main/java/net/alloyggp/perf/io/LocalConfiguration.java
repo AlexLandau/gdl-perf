@@ -12,6 +12,10 @@ import com.google.common.collect.Maps;
 
 public class LocalConfiguration {
     public static enum ConfigurationKey {
+        CADIAPLAYER_PROLOG_ENGINE("The base directory of the cadiaplayer-prolog-engine repository, "
+                + "available at https://github.com/AlexLandau/cadiaplayer-prolog-engine. "
+                + "The perftest branch must be checked out, and the repository must have been "
+                + "prepared for use with 'configure' and 'make install'."),
         ECLIPSE_PROLOG("The 'eclipse' executable for this platform from an installation "
                 + "of the ECLiPSe Prolog environment. This is available at http://eclipseclp.org/. "
                 + "(Note that this is unrelated to the commonly-used Eclipse IDE.)"),
