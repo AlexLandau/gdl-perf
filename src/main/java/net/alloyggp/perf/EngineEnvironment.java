@@ -40,6 +40,11 @@ public class EngineEnvironment {
                 ImmutableMap.of(ConfigurationKey.ECLIPSE_PROLOG, "ECLIPSE"));
     }
 
+    public static EngineEnvironment createCadiaplayer() {
+        return new EngineEnvironment(Optional.of(ConfigurationKey.CADIAPLAYER_PROLOG_ENGINE),
+                ImmutableMap.of());
+    }
+
     public File getWorkingDirectory() {
         if (workingDirectoryKey.isPresent()) {
             Optional<String> setWorkingDirectory = LocalConfiguration.loadValue(workingDirectoryKey.get());
