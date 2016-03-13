@@ -2,10 +2,10 @@ package net.alloyggp.perf.io;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -25,7 +25,7 @@ public class ResultFiles {
                     results.put(key, value);
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (NoSuchFileException e) {
             //Treat this like an empty file
             return results;
         } catch (IOException e) {
