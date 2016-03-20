@@ -37,7 +37,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.5'
+    gradleVersion = '2.12'
 }
 
 // Run perf tests with all games and all working engine types.
@@ -75,4 +75,3 @@ task zipAnalysis(type: Zip) {
     from 'analyses'
     baseName = 'perfAnalysis'
 }
-
