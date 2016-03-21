@@ -157,7 +157,9 @@ public class InterlinkedAnalysisWriter {
         Set<GameKey> validGameKeys = GameKey.loadAllValidGameKeys();
         List<PerfTestResult> allPerfResults = PerfResultLoader.loadAllResults();
         List<CorrectnessTestResult> allCorrectnessResults = CorrectnessResultLoader.loadAllResults();
-        Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame = PerfTestResult.groupByGameAndEngine(allPerfResults);
+        Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame = ImmutableMap.copyOf(Maps.filterKeys(
+                PerfTestResult.groupByGameAndEngine(allPerfResults),
+                GameKey.loadAllValidGameKeys()::contains));
         Set<EngineVersion> allEngines = getAllEngines(allPerfResults, allCorrectnessResults);
         List<GameAnalysisResult> allGameAnalysisResults = GameAnalysisResultLoader.loadAllResults();
         Multimap<GameKey, GameAnalysisResult> perGameAnalysisResults = GameAnalysisResult.groupByGame(allGameAnalysisResults);
