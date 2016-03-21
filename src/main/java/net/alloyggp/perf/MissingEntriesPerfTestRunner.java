@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import net.alloyggp.perf.io.CsvFiles;
@@ -20,8 +21,15 @@ public class MissingEntriesPerfTestRunner {
     private static final int SECONDS_BEFORE_CANCELLING = 240;
 
     public static void main(String[] args) throws Exception {
+
         for (EngineType engineToTest : ENGINES_TO_TEST) {
+            File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engineToTest);
+            Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
             System.out.println("Testing engine " + engineToTest);
+            if (isTestingUnnecessary(engineToTest, outputCsvFile, gameKeysToTest)) {
+                System.out.println("Testing already done, skipping engine");
+                continue;
+            }
 
             System.out.println("Checking if engine can run on this computer...");
             CompatibilityResult compatible = engineToTest.runCompatibilityTest();
@@ -32,9 +40,7 @@ public class MissingEntriesPerfTestRunner {
                 continue;
             }
 
-            File outputCsvFile = PerfTest.getCsvOutputFileForEngine(engineToTest);
 
-            Set<GameKey> gameKeysToTest = Sets.newHashSet(GameKey.loadAllValidGameKeys());
             if (RETRY_FAILURES) {
                 gameKeysToTest.removeAll(loadNonfailedGameKeys(outputCsvFile, engineToTest.getWithVersion(compatible.getVersion())));
             } else {
@@ -57,6 +63,20 @@ public class MissingEntriesPerfTestRunner {
                 }
             }
         }
+    }
+
+    /**
+     * If the engine is Java-based, then we already know its version and can check
+     * whether it has any more work to do before running a compatibility test.
+     */
+    private static boolean isTestingUnnecessary(EngineType engineToTest, File outputCsvFile, Set<GameKey> gameKeysToTest) throws IOException {
+        if (engineToTest.getJavaEngineType().isPresent()) {
+            String version = engineToTest.getJavaEngineType().get().getVersion();
+            EngineVersion engineVersion = engineToTest.getWithVersion(version);
+            Set<GameKey> alreadyPlayedGames = ImmutableSet.copyOf(loadAllGameKeys(outputCsvFile, engineVersion));
+            return alreadyPlayedGames.containsAll(gameKeysToTest);
+        }
+        return false;
     }
 
     private static Collection<GameKey> loadAllGameKeys(File outputCsvFile, EngineVersion engineVersion) throws IOException {

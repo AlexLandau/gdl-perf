@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.collect.ImmutableList;
@@ -53,6 +54,7 @@ public enum EngineType {
     private final ExecutableType executableType;
     private final ImmutableList<String> commandsForPerfTest;
     private final ImmutableList<String> commandsForCorrectnessTest;
+    private final Optional<JavaEngineType> javaEngineType;
 
     private EngineType(EngineEnvironment environment, ExecutableType executableType,
             ImmutableList<String> commandsForPerfTest, ImmutableList<String> commandsForCorrectnessTest) {
@@ -60,6 +62,7 @@ public enum EngineType {
         this.executableType = executableType;
         this.commandsForPerfTest = commandsForPerfTest;
         this.commandsForCorrectnessTest = commandsForCorrectnessTest;
+        this.javaEngineType = Optional.empty();
     }
 
     private EngineType(JavaEngineType engineType) {
@@ -67,6 +70,7 @@ public enum EngineType {
         this.executableType = ExecutableType.ABSOLUTE_PATH;
         this.commandsForPerfTest = getJavaPerfTestCommands(engineType);
         this.commandsForCorrectnessTest = getJavaCorrectnessTestCommands(engineType);
+        this.javaEngineType = Optional.of(engineType);
     }
 
     private static ImmutableList<String> getJavaPerfTestCommands(JavaEngineType engineType) {
@@ -132,6 +136,7 @@ public enum EngineType {
             return TestCompleted.YES;
         }
         //Kill the process, and wait until it dies before continuing
+        //TODO: When possible, switch to Java 9 and kill the process subtree.
         process.destroyForcibly();
         process.waitFor();
         return TestCompleted.NO;
@@ -185,6 +190,10 @@ public enum EngineType {
 
     public EngineVersion getWithVersion(String version) {
         return EngineVersion.create(this, version);
+    }
+
+    public Optional<JavaEngineType> getJavaEngineType() {
+        return javaEngineType;
     }
 
     private static enum ExecutableType {

@@ -8,6 +8,17 @@ This currently only contains instructions for setup on Ubuntu.
 
 Players not listed do not need any additional setup.
 
+CADIAPLAYER_PROLOG
+==================
+
+This engine lives in a separate repository. This framework expects the following repository to be cloned somewhere on your machine, *with the perftest branch checked out*: https://github.com/AlexLandau/cadiaplayer-prolog-engine
+
+The process to get that code compiled and working is somewhat long and complicated, and it is not likely to work on Windows machines. See the README in that repository for details; in particular, after switching to the correct branch, you will need to run "./configure", "make", and "make install" and have all three succeed.
+
+Then set the following value in localConfig.prefs:
+
+CADIAPLAYER_PROLOG_ENGINE = <the location of the cadiaplayer-prolog-engine repository on your machine>
+
 PALAMEDES_JAVA_ECLIPSE
 ======================
 
