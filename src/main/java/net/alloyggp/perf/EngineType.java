@@ -126,6 +126,7 @@ public enum EngineType {
             return TestCompleted.YES;
         }
         //Kill the process, and wait until it dies before continuing
+        //TODO: When possible, switch to Java 9 and kill the process subtree.
         process.destroyForcibly();
         process.waitFor();
         return TestCompleted.NO;
