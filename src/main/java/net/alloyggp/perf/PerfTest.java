@@ -80,8 +80,7 @@ public class PerfTest {
         return result;
     }
 
-
-    public static File getCsvOutputFileForEngine(EngineType engineToTest) throws IOException {
+    public static File getCsvOutputFileForEngine(EngineType engineToTest) {
         File outputDir = PerfTest.getOutputDir("results");
         File outputCsvFile = new File(outputDir, engineToTest.toString() + ".csv");
         return outputCsvFile;
