@@ -100,9 +100,7 @@ public class InterlinkedAnalysisWriter {
         for (GameKey game : resultsByGame.keySet()) {
             List<PerfTestResult> successfulResultsToSort = Lists.newArrayList();
             Map<EngineVersion, PerfTestResult> resultsByEngine = resultsByGame.get(game);
-            for (Entry<EngineVersion, PerfTestResult> entry : resultsByEngine.entrySet()) {
-                EngineVersion engine = entry.getKey();
-                PerfTestResult result = entry.getValue();
+            for (PerfTestResult result : resultsByEngine.values()) {
                 if (result.wasSuccessful()) {
                     successfulResultsToSort.add(result);
                 }
@@ -268,11 +266,11 @@ public class InterlinkedAnalysisWriter {
     	if (result.getMillisecondsTaken() == 0) {
     		return "error";
     	}
-        return Long.toString(getAvgNum(result));
+        return Double.toString(getAvgNum(result));
     }
 
-    private long getAvgNum(PerfTestResult result) {
-        return (result.getNumStateChanges() * 1000L) / result.getMillisecondsTaken();
+    private double getAvgNum(PerfTestResult result) {
+        return (result.getNumStateChanges() * 1000.0) / result.getMillisecondsTaken();
     }
 
     private String link(EngineVersion engine) {
@@ -418,12 +416,12 @@ public class InterlinkedAnalysisWriter {
                         }
                         if (errorOrdering == 0) {
                             //Success
-                            long avg1 = getAvgNum(result1);
-                            long avg2 = getAvgNum(result2);
-                            double perfRatio = avg1 / (double) avg2;
+                            double avg1 = getAvgNum(result1);
+                            double avg2 = getAvgNum(result2);
+                            double perfRatio = avg1 / avg2;
                             List<String> row = ImmutableList.of(link(game),
                                     Double.toString(perfRatio),
-                                    Long.toString(avg1), Long.toString(avg2));
+                                    Double.toString(avg1), Double.toString(avg2));
                             perfRows.put(perfRatio, row);
                         } else {
                             //At least one error
