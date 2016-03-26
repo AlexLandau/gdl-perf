@@ -2,6 +2,7 @@ package net.alloyggp.perf.analysis;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -35,6 +36,7 @@ import net.alloyggp.perf.EngineVersion;
 import net.alloyggp.perf.GameKey;
 import net.alloyggp.perf.PerfTestResult;
 import net.alloyggp.perf.analysis.html.HtmlAdHocTable;
+import net.alloyggp.perf.analysis.html.HtmlList;
 import net.alloyggp.perf.analysis.html.HtmlPage;
 import net.alloyggp.perf.game.GameAnalysisResult;
 import net.alloyggp.perf.game.GameAnalysisResultLoader;
@@ -184,6 +186,8 @@ public class InterlinkedAnalysisWriter {
     }
 
     private void writeAnalyses() throws IOException {
+        writeHtmlPage("index.html", getIndexPage());
+
         for (GameKey game : allGameKeys) {
             String htmlFilename = gameFilenames.get(game);
             writeHtmlPage(htmlFilename, getGamePage(game));
@@ -211,8 +215,30 @@ public class InterlinkedAnalysisWriter {
         Files.write(gamePage.toHtml(), new File(outputDir, htmlFilename), Charsets.UTF_8);
     }
 
+    private HtmlPage getIndexPage() {
+        HtmlPage page = HtmlPage.create("Gdl-perf analysis");
+        page.addHeader("Gdl-perf analysis");
+        page.addText("Analysis generated " + LocalDateTime.now());
+
+        //Engines
+        page.addHeader("Engines (" + allEngines.size() + ")");
+        page.add(HtmlList.unnumbered(allEngines.stream()
+                .map(this::link)
+                .sorted()
+                .collect(Collectors.toList())));
+
+        page.addHeader("Games (" + resultsByGame.keySet().size() + ")");
+        page.add(HtmlList.unnumbered(resultsByGame.keySet().stream()
+                .map(this::link)
+                .sorted()
+                .collect(Collectors.toList())));
+
+        return page;
+    }
+
     private HtmlPage getGamePage(GameKey game) {
         HtmlPage page = HtmlPage.create("Game " + game);
+        page.addText(linkToIndex() + "<br/>");
         page.addHeader(game.toString());
         if (validGameKeys.contains(game)) {
             //Add game statistics
@@ -242,6 +268,7 @@ public class InterlinkedAnalysisWriter {
                         resultPairs.add(Pair.from(entry));
                     }
                     HtmlAdHocTable engineTable = HtmlAdHocTable.create();
+                    engineTable.addRow("Engine", "Average state changes per second");
                     for (Pair<EngineVersion, PerfTestResult> resultPair : resultPairs) {
                         engineTable.addRow(link(resultPair.left), getAvg(resultPair.right));
                     }
@@ -259,6 +286,8 @@ public class InterlinkedAnalysisWriter {
         } else {
             page.addText("Game is considered invalid.");
         }
+
+        page.addText(linkToIndex());
         return page;
     }
 
@@ -271,6 +300,10 @@ public class InterlinkedAnalysisWriter {
 
     private double getAvgNum(PerfTestResult result) {
         return (result.getNumStateChanges() * 1000.0) / result.getMillisecondsTaken();
+    }
+
+    private String linkToIndex() {
+        return link("index", "index.html");
     }
 
     private String link(EngineVersion engine) {
@@ -294,6 +327,7 @@ public class InterlinkedAnalysisWriter {
 
     private HtmlPage getEnginePage(EngineVersion engine) throws IOException {
         HtmlPage page = HtmlPage.create("Perf results for " + engine.toString());
+        page.addText(linkToIndex() + "<br/>");
         page.addHeader(engine.toString());
         //Add results...
         { //TODO: Factor into method
@@ -383,11 +417,13 @@ public class InterlinkedAnalysisWriter {
             }
         }
 
+        page.addText(linkToIndex());
         return page;
     }
 
     private HtmlPage getEnginePairPage(EngineVersion engine1, EngineVersion engine2) {
         HtmlPage page = HtmlPage.create("Comparison of " + engine1.toString() + " and " + engine2);
+        page.addText(linkToIndex() + "<br/>");
         page.addHeader(link(engine1) + " vs. " + link(engine2));
 
         {
@@ -455,6 +491,7 @@ public class InterlinkedAnalysisWriter {
             page.addText("Games with errors:");
             page.add(errorsTable);
         }
+        page.addText(linkToIndex());
         return page;
     }
 
