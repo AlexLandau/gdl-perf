@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.engine;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,12 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import net.alloyggp.perf.CompatibilityResult;
+import net.alloyggp.perf.PerfTest;
+import net.alloyggp.perf.PerfTestConfig;
+import net.alloyggp.perf.PerfTestResult;
+import net.alloyggp.perf.game.GameKey;
+import net.alloyggp.perf.game.RepoId;
 import net.alloyggp.perf.io.LocalConfiguration.ConfigurationKey;
 import net.alloyggp.perf.runner.CorrectnessTestProcess;
 import net.alloyggp.perf.runner.JavaEngineType;

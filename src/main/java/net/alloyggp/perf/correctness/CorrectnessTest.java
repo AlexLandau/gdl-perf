@@ -1,7 +1,10 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.correctness;
 
 import java.io.File;
 import java.io.IOException;
+
+import net.alloyggp.perf.PerfTest;
+import net.alloyggp.perf.engine.EngineType;
 
 public class CorrectnessTest {
 

@@ -11,9 +11,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import net.alloyggp.perf.Csvable;
 import net.alloyggp.perf.PerfTest;
-import net.alloyggp.perf.game.GameAnalysisTask;
+import net.alloyggp.perf.gameanalysis.GameAnalysisTask;
 
 public class CsvFiles {
     public static void append(Csvable result, File outputCsvFile) {

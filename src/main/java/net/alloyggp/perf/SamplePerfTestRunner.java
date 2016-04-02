@@ -6,6 +6,9 @@ import java.io.IOException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
+import net.alloyggp.perf.engine.EngineType;
+import net.alloyggp.perf.game.GameKey;
+import net.alloyggp.perf.game.RepoId;
 import net.alloyggp.perf.io.CsvFiles;
 
 //TODO: Merge better with MissingEntriesPerfTestRunner

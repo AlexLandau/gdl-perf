@@ -61,7 +61,7 @@ task runPerfSample(type: JavaExec) {
 //TODO: Align naming scheme with perf test vs. analysis
 task gameAnalysis(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'net.alloyggp.perf.game.MissingEntriesGameAnalysisRunner'
+    main = 'net.alloyggp.perf.gameanalysis.MissingEntriesGameAnalysisRunner'
 }
 
 // Runs an analysis of performance test results that produces HTML
@@ -69,10 +69,4 @@ task gameAnalysis(type: JavaExec) {
 task perfAnalysis(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'net.alloyggp.perf.analysis.InterlinkedAnalysisWriter'
-}
-
-task zipAnalysis(type: Zip) {
-    dependsOn perfAnalysis
-    from 'analyses'
-    baseName = 'perfAnalysis'
 }

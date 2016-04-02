@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.game;
 
 import java.io.IOException;
 import java.util.Base64;

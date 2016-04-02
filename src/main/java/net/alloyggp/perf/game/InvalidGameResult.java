@@ -1,7 +1,8 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.game;
 
 import java.util.List;
 
+import net.alloyggp.perf.io.Csvable;
 import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
 
 import com.google.common.collect.ImmutableList;

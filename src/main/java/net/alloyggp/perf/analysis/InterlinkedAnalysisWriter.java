@@ -31,15 +31,15 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
-import net.alloyggp.perf.CorrectnessTestResult;
-import net.alloyggp.perf.EngineVersion;
-import net.alloyggp.perf.GameKey;
 import net.alloyggp.perf.PerfTestResult;
 import net.alloyggp.perf.analysis.html.HtmlAdHocTable;
 import net.alloyggp.perf.analysis.html.HtmlList;
 import net.alloyggp.perf.analysis.html.HtmlPage;
-import net.alloyggp.perf.game.GameAnalysisResult;
-import net.alloyggp.perf.game.GameAnalysisResultLoader;
+import net.alloyggp.perf.correctness.CorrectnessTestResult;
+import net.alloyggp.perf.engine.EngineVersion;
+import net.alloyggp.perf.game.GameKey;
+import net.alloyggp.perf.gameanalysis.GameAnalysisResult;
+import net.alloyggp.perf.gameanalysis.GameAnalysisResultLoader;
 
 public class InterlinkedAnalysisWriter {
     private final ImmutableSet<GameKey> allGameKeys;

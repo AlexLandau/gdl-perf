@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.correctness;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +24,11 @@ import org.ggp.base.util.gdl.grammar.GdlPool;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import net.alloyggp.perf.CompatibilityResult;
+import net.alloyggp.perf.Immutables;
+import net.alloyggp.perf.ObservedError;
+import net.alloyggp.perf.engine.EngineType;
+import net.alloyggp.perf.game.GameKey;
 import net.alloyggp.perf.io.CsvFiles;
 import net.alloyggp.perf.io.GameFiles;
 import net.alloyggp.perf.runner.GameActionMessage;

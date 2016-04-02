@@ -8,10 +8,10 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 
-import net.alloyggp.perf.CorrectnessTest;
-import net.alloyggp.perf.CorrectnessTestResult;
-import net.alloyggp.perf.EngineType;
-import net.alloyggp.perf.EngineVersion;
+import net.alloyggp.perf.correctness.CorrectnessTest;
+import net.alloyggp.perf.correctness.CorrectnessTestResult;
+import net.alloyggp.perf.engine.EngineType;
+import net.alloyggp.perf.engine.EngineVersion;
 import net.alloyggp.perf.io.CsvFiles;
 
 public class CorrectnessResultLoader {

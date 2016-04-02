@@ -9,7 +9,10 @@ import org.ggp.base.util.game.Game;
 
 import com.google.common.io.Files;
 
-import net.alloyggp.perf.EngineType.TestCompleted;
+import net.alloyggp.perf.engine.EngineType;
+import net.alloyggp.perf.engine.EngineVersion;
+import net.alloyggp.perf.engine.EngineType.TestCompleted;
+import net.alloyggp.perf.game.GameKey;
 import net.alloyggp.perf.io.GameFiles;
 import net.alloyggp.perf.io.ResultFiles;
 

@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.game;
 
 import org.ggp.base.util.game.CloudGameRepository;
 import org.ggp.base.util.game.GameRepository;
