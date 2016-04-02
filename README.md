@@ -15,6 +15,8 @@ Currently, before using the framework, you must provide a ggp-base.jar file. Che
 
 Before running tests, you must create a file named "computerName.txt" in the root of the repository. This should contain a name to indicate your computer; a recommended format is your GitHub username followed by a numeral identifying the specific computer. This makes it possible to commit results from your hardware without conflicting with other users' results. (This in turn makes it possible to commit raw results of testing without making the engine public, which some GGP competitors would like to avoid.)
 
+Some engines require additional setup or configuration that is specific to your system (e.g. installing libraries or specifying program locations). These are explained in the SETUP.md file.
+
 ## Gradle commands
 
 The following commands can be run via the Gradle wrapper script (replace 'gradlew' with 'gradlew.bat' if running on Windows):
