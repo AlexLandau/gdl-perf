@@ -1,4 +1,4 @@
-package net.alloyggp.perf.runner;
+package net.alloyggp.perf.runner.runnable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,8 +12,6 @@ import org.repackage.sancho_v1_61c.org.ggp.base.util.statemachine.Role;
 import org.repackage.sancho_v1_61c.org.ggp.base.util.statemachine.implementation.propnet.forwardDeadReckon.ForwardDeadReckonPropnetStateMachine;
 
 import com.google.common.collect.Lists;
-
-import net.alloyggp.perf.runner.runnable.JavaSimulatorWrapper;
 
 public class SanchoRunnables {
 

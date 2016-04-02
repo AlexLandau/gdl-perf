@@ -16,7 +16,7 @@ import org.ggp.base.util.statemachine.StateMachine;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import net.alloyggp.perf.ObservedError;
+import net.alloyggp.perf.correctness.ObservedError;
 import net.alloyggp.perf.runner.ggpbase.ProverStateMachineFactory;
 import net.alloyggp.perf.runner.runnable.CorrectnessTestRunnable;
 import net.alloyggp.perf.runner.runnable.GameSimulatorRunnables;
@@ -26,6 +26,7 @@ import net.alloyggp.perf.runner.runnable.JavaSimulatorWrapper;
 import net.alloyggp.perf.runner.runnable.PalamedesCoreRunnables;
 import net.alloyggp.perf.runner.runnable.PerfTestRunnable;
 import net.alloyggp.perf.runner.runnable.RekkuraRunnables;
+import net.alloyggp.perf.runner.runnable.SanchoRunnables;
 import net.alloyggp.perf.runner.runnable.StateMachineRunnables;
 import rekkura.ggp.machina.GgpStateMachine;
 

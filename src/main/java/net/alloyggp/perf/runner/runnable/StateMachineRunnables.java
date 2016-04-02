@@ -16,35 +16,6 @@ import net.alloyggp.perf.runner.ggpbase.StateMachineFactory;
 public class StateMachineRunnables {
     public static PerfTestRunnable getPerfTestRunnable(
             StateMachineFactory smf) {
-//        return new PerfTestRunnable() {
-//            @Override
-//            public PerfTestReport runPerfTest(String gameRules, int secondsToRun) throws Exception {
-//                Game game = Game.createEphemeralGame(Game.preprocessRulesheet(gameRules));
-//                StateMachine sm = smf.buildInitializedForGame(game);
-//
-//                long numStateChanges = 0;
-//                long numRollouts = 0;
-//                Stopwatch timer = new Stopwatch().start();
-//                outer : while (true) {
-//                    if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
-//                        break outer;
-//                    }
-//                    MachineState state = sm.getInitialState();
-//                    while (!sm.isTerminal(state)) {
-//                        if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
-//                            break outer;
-//                        }
-//                        state = sm.getRandomNextState(state);
-//                        numStateChanges++;
-//                    }
-//                    sm.getGoals(state);
-//                    numRollouts++;
-//                }
-//                long millisecondsTaken = timer.stop().elapsed(TimeUnit.MILLISECONDS);
-//
-//                return new PerfTestReport(millisecondsTaken, numStateChanges, numRollouts);
-//            }
-//        };
         return JavaPerfTestRunnable.create(getWrapper(smf));
     }
 
@@ -106,40 +77,6 @@ public class StateMachineRunnables {
     public static CorrectnessTestRunnable getCorrectnessTestRunnable(
             StateMachineFactory smf) {
         return JavaCorrectnessTestRunnable.create(getWrapper(smf));
-//        return (gameRules, stateChangesToRun, recorder) -> {
-//            Game game = Game.createEphemeralGame(Game.preprocessRulesheet(gameRules));
-//            StateMachine sm = smf.buildInitializedForGame(game);
-//
-//            List<Role> roles = sm.getRoles();
-//            recorder.writeRoles(roles);
-//            int stateChangesSoFar = 0;
-//            MachineState initialState = sm.getInitialState();
-//            if (sm.isTerminal(initialState)) {
-//                recorder.recordTerminality(true);
-//                return; //otherwise stateChangesSoFar will never increase
-//            }
-//            while (true) {
-//                MachineState curState = initialState;
-//                while (!sm.isTerminal(curState)) {
-//                    recorder.recordTerminality(false);
-//                    List<Move> jointMove = Lists.newArrayList();
-//                    for (Role role : roles) {
-//                        List<Move> legalMoves = sm.getLegalMoves(curState, role);
-//                        recorder.recordLegalMoves(legalMoves);
-//                        jointMove.add(pickOneAtRandom(legalMoves));
-//                    }
-//                    recorder.recordChosenJointMove(jointMove);
-//                    curState = sm.getNextState(curState, jointMove);
-//                    stateChangesSoFar++;
-//                }
-//                recorder.recordTerminality(true);
-//                recorder.recordGoalValues(sm.getGoals(curState));
-//                //Do we end here?
-//                if (stateChangesSoFar > stateChangesToRun) {
-//                    return;
-//                }
-//            }
-//        };
     }
 
 }

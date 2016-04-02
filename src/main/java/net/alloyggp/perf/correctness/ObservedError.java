@@ -1,10 +1,12 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.correctness;
 
 import java.util.List;
 
 import org.ggp.base.util.statemachine.Move;
 
 import com.google.common.collect.ImmutableList;
+
+import net.alloyggp.perf.Immutables;
 
 public class ObservedError {
     private final String errorString;

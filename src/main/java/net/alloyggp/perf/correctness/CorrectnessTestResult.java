@@ -7,7 +7,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 
-import net.alloyggp.perf.ObservedError;
 import net.alloyggp.perf.engine.EngineVersion;
 import net.alloyggp.perf.game.GameKey;
 import net.alloyggp.perf.io.Csvable;

@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 
 import net.alloyggp.perf.CompatibilityResult;
 import net.alloyggp.perf.Immutables;
-import net.alloyggp.perf.ObservedError;
 import net.alloyggp.perf.engine.EngineType;
 import net.alloyggp.perf.game.GameKey;
 import net.alloyggp.perf.io.CsvFiles;
