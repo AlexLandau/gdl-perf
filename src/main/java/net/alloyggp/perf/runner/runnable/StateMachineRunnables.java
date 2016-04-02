@@ -14,11 +14,6 @@ import net.alloyggp.perf.runner.ggpbase.StateMachineFactory;
  * Deals with implementations of the GGP-Base StateMachine.
  */
 public class StateMachineRunnables {
-    public static PerfTestRunnable getPerfTestRunnable(
-            StateMachineFactory smf) {
-        return JavaPerfTestRunnable.create(getWrapper(smf));
-    }
-
     public static JavaSimulatorWrapper<StateMachine, MachineState, Role, Move>
             getWrapper(final StateMachineFactory smf) {
         return new JavaSimulatorWrapper<StateMachine, MachineState, Role, Move>() {
@@ -73,10 +68,4 @@ public class StateMachineRunnables {
             }
         };
     }
-
-    public static CorrectnessTestRunnable getCorrectnessTestRunnable(
-            StateMachineFactory smf) {
-        return JavaCorrectnessTestRunnable.create(getWrapper(smf));
-    }
-
 }

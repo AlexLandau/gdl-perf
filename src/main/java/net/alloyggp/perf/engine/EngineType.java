@@ -197,7 +197,16 @@ public enum EngineType {
     }
 
     private static enum ExecutableType {
+        /**
+         * Specifies that the command should be treated as a relative path with
+         * respect to the working directory that the EngineEnvironment specifies.
+         */
         RELATIVE_PATH,
+        /**
+         * Specifies that the command should be treated as an absolute path.
+         *
+         * <p>This may be more convenient when working locally on a new engine type.
+         */
         ABSOLUTE_PATH
     }
 }

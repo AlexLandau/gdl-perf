@@ -18,11 +18,6 @@ import cs227b.teamIago.resolver.Predicate;
  * This is used by the Palamedes BasicPlayer.
  */
 public class GameSimulatorRunnables {
-
-    public static PerfTestRunnable getPerfTestRunnable(boolean useOpt) {
-        return JavaPerfTestRunnable.create(getWrapper(useOpt));
-    }
-
     public static JavaSimulatorWrapper<GameSimulator, Void, Expression, Expression> getWrapper(boolean useOpt) {
         return new JavaSimulatorWrapper<GameSimulator, Void, Expression, Expression>() {
             private final Random rand = new Random();
@@ -101,9 +96,4 @@ public class GameSimulatorRunnables {
 
         };
     }
-
-    public static CorrectnessTestRunnable getCorrectnessTestRunnable(boolean useOpt) {
-        return JavaCorrectnessTestRunnable.create(getWrapper(useOpt));
-    }
-
 }
