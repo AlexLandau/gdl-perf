@@ -32,6 +32,9 @@ public class GameActionParser {
                         queue.put(RolesMessage.parse(line));
                     } else if (line.startsWith(GameActionFormat.TERMINAL_PREFIX)) {
                         queue.put(TerminalityMessage.parse(line));
+                    } else if (line.startsWith(GameActionFormat.TEST_FINISHED_PREFIX)) {
+                        queue.put(GameActionMessage.endOfMessages());
+                        return;
                     }
                 }
             } catch (Exception e) {
@@ -50,6 +53,11 @@ public class GameActionParser {
         });
 
         return queue;
+    }
+
+    public static GameActionMessage convertLine(String line) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
