@@ -1,6 +1,7 @@
 package net.alloyggp.perf.runner;
 
 import java.io.BufferedReader;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +23,14 @@ public class GameActionParser {
                         return;
                     }
 
+                    Optional<GameActionMessage> message = convertLine(line);
+                    if (message.isPresent()) {
+                        queue.put(message.get());
+                        if (message.get().isEndOfMessages()) {
+                            return;
+                        }
+                    }
+
                     if (line.startsWith(GameActionFormat.CHOSEN_MOVES_PREFIX)) {
                         queue.put(ChosenMovesMessage.parse(line));
                     } else if (line.startsWith(GameActionFormat.GOALS_PREFIX)) {
@@ -32,6 +41,9 @@ public class GameActionParser {
                         queue.put(RolesMessage.parse(line));
                     } else if (line.startsWith(GameActionFormat.TERMINAL_PREFIX)) {
                         queue.put(TerminalityMessage.parse(line));
+                    } else if (line.startsWith(GameActionFormat.TEST_FINISHED_PREFIX)) {
+                        queue.put(GameActionMessage.endOfMessages());
+                        return;
                     }
                 }
             } catch (Exception e) {
@@ -50,6 +62,23 @@ public class GameActionParser {
         });
 
         return queue;
+    }
+
+    public static Optional<GameActionMessage> convertLine(String line) {
+        if (line.startsWith(GameActionFormat.CHOSEN_MOVES_PREFIX)) {
+            return Optional.of(ChosenMovesMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.GOALS_PREFIX)) {
+            return Optional.of(GoalsMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.LEGAL_MOVES_PREFIX)) {
+            return Optional.of(LegalMovesMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.ROLES_PREFIX)) {
+            return Optional.of(RolesMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.TERMINAL_PREFIX)) {
+            return Optional.of(TerminalityMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.TEST_FINISHED_PREFIX)) {
+            return Optional.of(GameActionMessage.endOfMessages());
+        }
+        return Optional.empty();
     }
 
 }

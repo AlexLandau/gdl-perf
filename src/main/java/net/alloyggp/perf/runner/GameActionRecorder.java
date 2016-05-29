@@ -14,4 +14,6 @@ public interface GameActionRecorder {
 
     void recordGoalValues(List<Integer> goals);
 
+    void recordTestFinished();
+
 }

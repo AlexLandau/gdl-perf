@@ -35,6 +35,7 @@ public class JavaCorrectnessTestRunnable<Simulator, State, Role, Move> implement
         State initialState = wrapper.getInitialState(sm);
         if (wrapper.isTerminal(sm, initialState)) {
             recorder.recordTerminality(true);
+            recorder.recordTestFinished();
             return; //otherwise stateChangesSoFar will never increase
         }
         while (true) {
@@ -55,6 +56,7 @@ public class JavaCorrectnessTestRunnable<Simulator, State, Role, Move> implement
             recorder.recordGoalValues(wrapper.getGoals(sm, curState));
             //Do we end here?
             if (stateChangesSoFar > stateChangesToRun) {
+                recorder.recordTestFinished();
                 return;
             }
         }

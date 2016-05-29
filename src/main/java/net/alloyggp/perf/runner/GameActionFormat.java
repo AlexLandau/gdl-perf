@@ -7,5 +7,6 @@ public class GameActionFormat {
     public static final String LEGAL_MOVES_PREFIX = "!L!";
     public static final String CHOSEN_MOVES_PREFIX = "!C!";
     public static final String GOALS_PREFIX = "!G!";
+    public static final String TEST_FINISHED_PREFIX = "!F!";
 
 }

@@ -1,9 +1,8 @@
 package net.alloyggp.perf.correctness;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,11 +17,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.input.Tailer;
+import org.apache.commons.io.input.TailerListenerAdapter;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.gdl.grammar.GdlPool;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Queues;
+import com.google.common.io.Files;
 
 import net.alloyggp.perf.CompatibilityResult;
 import net.alloyggp.perf.Immutables;
@@ -45,12 +48,17 @@ public class MissingEntriesCorrectnessTestRunner {
     private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.GGP_BASE_PROVER;
 //    private static final int MIN_NUM_STATE_CHANGES_TO_TEST = 1000;
     private static final int INITIAL_NUM_STATE_CHANGES_TO_TEST = 5;
-    private static final int MIN_SECONDS_PER_TEST = 30; //Should be under 1/3rd of max
+    private static final int MIN_SECONDS_PER_GAME = 30; //Should be under 1/3rd of max
     private static final int MAX_SECONDS_PER_TEST = 240;
 
     public static void main(String[] args) throws Exception {
         GdlPool.caseSensitive = false;
         for (EngineType engineToTest : ENGINES_TO_TEST) {
+            if (engineToTest.getJavaEngineType().isPresent()
+                    && engineToTest.getJavaEngineType().get() == VALIDATION_ENGINE) {
+                System.out.println("Skipping " + engineToTest + ", as it is the validation engine.");
+                continue;
+            }
             System.out.println("Testing engine " + engineToTest);
             if (engineToTest.getCommandsForCorrectnessTest().isEmpty()) {
                 System.out.println(engineToTest + " does not support correctness tests, skipping.");
@@ -89,7 +97,7 @@ public class MissingEntriesCorrectnessTestRunner {
                         long overallTimeTaken = System.currentTimeMillis() - overallStartTime;
                         if (result == null
                                 || result.getError().isPresent()
-                                || overallTimeTaken >= MIN_SECONDS_PER_TEST * 1000) {
+                                || overallTimeTaken >= MIN_SECONDS_PER_GAME * 1000) {
                             break;
                         }
                         //Keep going...
@@ -123,13 +131,18 @@ public class MissingEntriesCorrectnessTestRunner {
         Game game = gameKey.loadGame();
         File gameFile = File.createTempFile("game", ".kif");
         GameFiles.write(game, gameFile);
+        File outputFile = File.createTempFile("history", ".log");
+        Files.touch(outputFile);
 
         //TODO: Add right set of commands
         List<String> commands = Lists.newArrayList(engineToTest.getCommandsForCorrectnessTest());
         commands.add(gameFile.getAbsolutePath());
+        commands.add(outputFile.getAbsolutePath());
         commands.add(Integer.toString(numStateChangesToTest));
 
         ProcessBuilder pb = new ProcessBuilder(commands);
+        pb.redirectOutput(Redirect.INHERIT);
+        pb.redirectError(Redirect.INHERIT);
         Process process = pb.start();
         AtomicBoolean timedOut = new AtomicBoolean(false);
 
@@ -137,16 +150,26 @@ public class MissingEntriesCorrectnessTestRunner {
         timeoutSignaler.onTimeoutDestroyForcibly(process);
 
         long startTime = System.currentTimeMillis();
-        Callable<Optional<ObservedError>> validationCallable = () -> {
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                //TODO: This creates another thread we need to ___...
-                BlockingQueue<GameActionMessage> queue = GameActionParser.convert(in, timeoutSignaler);
-                return validationEngine.validateCorrectnessTestOutput(game, queue);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            } finally {
-                process.destroyForcibly();
+
+        BlockingQueue<GameActionMessage> queue = Queues.newLinkedBlockingDeque(1000);
+        Tailer tailer = Tailer.create(outputFile, new TailerListenerAdapter() {
+            @Override
+            public void handle(String line) {
+                try {
+                    Optional<GameActionMessage> action = GameActionParser.convertLine(line);
+                    if (action.isPresent()) {
+                        queue.put(action.get());
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
             }
+        }, 100);
+        timeoutSignaler.onTimeout(tailer::stop);
+
+        Callable<Optional<ObservedError>> validationCallable = () -> {
+            return validationEngine.validateCorrectnessTestOutput(game, queue);
         };
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Optional<ObservedError>> errorFuture = executor.submit(validationCallable);
@@ -154,23 +177,27 @@ public class MissingEntriesCorrectnessTestRunner {
 
         CountDownLatch finishedSignal = new CountDownLatch(1);
         startTimeoutThread(timedOut, finishedSignal, timeoutSignaler, MAX_SECONDS_PER_TEST);
-        process.waitFor();
-        Optional<ObservedError> error = errorFuture.get();
-        finishedSignal.countDown(); //cleans up stuff
-        long timeTaken = System.currentTimeMillis() - startTime;
-        if (timedOut.get()) {
-            error = Optional.of(ObservedError.create("Timed out after " + MAX_SECONDS_PER_TEST + " seconds", 0));
-            return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(version), validationEngine,
-                    validationEngine.getVersion(), timeTaken, numStateChangesToTest, error);
-        } else if (error == null) {
-            System.out.println("No results; validation failed");
-            return null;
-        } else {
-            if (error.isPresent()) {
-                numStateChangesToTest = error.get().getNumStateChangesBeforeFinding();
+        try {
+            process.waitFor();
+            Optional<ObservedError> error = errorFuture.get();
+            finishedSignal.countDown(); //cleans up stuff
+            long timeTaken = System.currentTimeMillis() - startTime;
+            if (timedOut.get()) {
+                error = Optional.of(ObservedError.create("Timed out after " + MAX_SECONDS_PER_TEST + " seconds", 0));
+                return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(version), validationEngine,
+                        validationEngine.getVersion(), timeTaken, numStateChangesToTest, error);
+            } else if (error == null) {
+                System.out.println("No results; validation failed");
+                return null;
+            } else {
+                if (error.isPresent()) {
+                    numStateChangesToTest = error.get().getNumStateChangesBeforeFinding();
+                }
+                return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(version), validationEngine,
+                        validationEngine.getVersion(), timeTaken, numStateChangesToTest, error);
             }
-            return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(version), validationEngine,
-                    validationEngine.getVersion(), timeTaken, numStateChangesToTest, error);
+        } finally {
+            outputFile.delete();
         }
     }
 
