@@ -1,6 +1,7 @@
 package net.alloyggp.perf.runner;
 
 import java.io.BufferedReader;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,6 +21,14 @@ public class GameActionParser {
                         //Insert "done" indicator in queue
                         queue.put(GameActionMessage.endOfMessages());
                         return;
+                    }
+
+                    Optional<GameActionMessage> message = convertLine(line);
+                    if (message.isPresent()) {
+                        queue.put(message.get());
+                        if (message.get().isEndOfMessages()) {
+                            return;
+                        }
                     }
 
                     if (line.startsWith(GameActionFormat.CHOSEN_MOVES_PREFIX)) {
@@ -55,9 +64,21 @@ public class GameActionParser {
         return queue;
     }
 
-    public static GameActionMessage convertLine(String line) {
-        // TODO Auto-generated method stub
-        return null;
+    public static Optional<GameActionMessage> convertLine(String line) {
+        if (line.startsWith(GameActionFormat.CHOSEN_MOVES_PREFIX)) {
+            return Optional.of(ChosenMovesMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.GOALS_PREFIX)) {
+            return Optional.of(GoalsMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.LEGAL_MOVES_PREFIX)) {
+            return Optional.of(LegalMovesMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.ROLES_PREFIX)) {
+            return Optional.of(RolesMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.TERMINAL_PREFIX)) {
+            return Optional.of(TerminalityMessage.parse(line));
+        } else if (line.startsWith(GameActionFormat.TEST_FINISHED_PREFIX)) {
+            return Optional.of(GameActionMessage.endOfMessages());
+        }
+        return Optional.empty();
     }
 
 }

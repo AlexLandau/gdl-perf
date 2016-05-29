@@ -156,7 +156,10 @@ public class MissingEntriesCorrectnessTestRunner {
             @Override
             public void handle(String line) {
                 try {
-                    queue.put(GameActionParser.convertLine(line));
+                    Optional<GameActionMessage> action = GameActionParser.convertLine(line);
+                    if (action.isPresent()) {
+                        queue.put(action.get());
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
