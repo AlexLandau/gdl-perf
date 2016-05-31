@@ -50,6 +50,7 @@ task runPerfAll(type: JavaExec) {
     main = 'net.alloyggp.perf.MissingEntriesPerfTestRunner'
 }
 
+
 // Run perf tests with a few games and a few engine types.
 // This takes a few minutes.
 // This is recommended for generating a small sample set of data when
@@ -71,3 +72,9 @@ task perfAnalysis(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'net.alloyggp.perf.analysis.InterlinkedAnalysisWriter'
 }
+
+task runCorrectnessAll(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.correctness.MissingEntriesCorrectnessTestRunner'
+}
+
