@@ -89,58 +89,61 @@ public enum JavaEngineType {
         correctnessRunnable.runCorrectnessTest(gameRules, stateChangesToRun, recorder);
     }
 
-    //TODO: Limit number of errors we find?
     public Optional<ObservedError> validateCorrectnessTestOutput(
             Game game, BlockingQueue<GameActionMessage> messages) throws Exception {
         StateMachine sm = getStateMachine(this, game);
 
         int numStateChanges = 0;
-        List<Role> ourRoles = sm.getRoles();
-        List<Role> theirRoles = messages.take().expectRolesMessage().getRoles();
-        if (!ourRoles.equals(theirRoles)) {
-            return Optional.of(ObservedError.create("Role mismatch", ourRoles, theirRoles, numStateChanges));
-        }
+        try {
+            List<Role> ourRoles = sm.getRoles();
+            List<Role> theirRoles = messages.take().expectRolesMessage().getRoles();
+            if (!ourRoles.equals(theirRoles)) {
+                return Optional.of(ObservedError.create("Role mismatch", ourRoles, theirRoles, numStateChanges));
+            }
 
-        MachineState initialState = sm.getInitialState();
-        while (true) {
-            MachineState curState = initialState;
-            List<List<Move>> moveHistory = Lists.newArrayList();
-
+            MachineState initialState = sm.getInitialState();
             while (true) {
-                ConcurrencyUtils.checkForInterruption();
-                boolean ourTerminal = sm.isTerminal(curState);
-                GameActionMessage message = messages.take();
-                if (message.isEndOfMessages()) {
-                    return Optional.empty();
-                }
-                boolean theirTerminal = message.expectTerminalityMessage().isTerminal();
-                if (ourTerminal != theirTerminal) {
-                    return Optional.of(ObservedError.create("Terminality mismatch", ourTerminal, theirTerminal, numStateChanges, moveHistory));
-                }
-                if (ourTerminal) {
-                    break;
-                }
+                MachineState curState = initialState;
+                List<List<Move>> moveHistory = Lists.newArrayList();
 
-                //Check legal moves
-                for (Role role : ourRoles) {
-                    Set<Move> ourMoves = Sets.newHashSet(sm.getLegalMoves(curState, role));
-                    Set<Move> theirMoves = Sets.newHashSet(messages.take().expectLegalMovesMessage().getMoves());
-                    if (!ourMoves.equals(theirMoves)) {
-                        return Optional.of(ObservedError.create("Legal move mismatch for role " + role, ourMoves, theirMoves, numStateChanges, moveHistory));
+                while (true) {
+                    ConcurrencyUtils.checkForInterruption();
+                    boolean ourTerminal = sm.isTerminal(curState);
+                    GameActionMessage message = messages.take();
+                    if (message.isEndOfMessages()) {
+                        return Optional.empty();
                     }
-                }
-                List<Move> jointMove = messages.take().expectChosenMovesMessage().getJointMove();
-                //Nothing to check
-                moveHistory.add(jointMove);
-                curState = sm.getNextState(curState, jointMove);
-                numStateChanges++;
-            }
+                    boolean theirTerminal = message.expectTerminalityMessage().isTerminal();
+                    if (ourTerminal != theirTerminal) {
+                        return Optional.of(ObservedError.create("Terminality mismatch", ourTerminal, theirTerminal, numStateChanges, moveHistory));
+                    }
+                    if (ourTerminal) {
+                        break;
+                    }
 
-            List<Integer> ourGoals = sm.getGoals(curState);
-            List<Integer> theirGoals = messages.take().expectGoalsMessage().getGoals();
-            if (!ourGoals.equals(theirGoals)) {
-                return Optional.of(ObservedError.create("Goal values mismatch", ourGoals, theirGoals, numStateChanges, moveHistory));
+                    //Check legal moves
+                    for (Role role : ourRoles) {
+                        Set<Move> ourMoves = Sets.newHashSet(sm.getLegalMoves(curState, role));
+                        Set<Move> theirMoves = Sets.newHashSet(messages.take().expectLegalMovesMessage().getMoves());
+                        if (!ourMoves.equals(theirMoves)) {
+                            return Optional.of(ObservedError.create("Legal move mismatch for role " + role, ourMoves, theirMoves, numStateChanges, moveHistory));
+                        }
+                    }
+                    List<Move> jointMove = messages.take().expectChosenMovesMessage().getJointMove();
+                    //Nothing to check
+                    moveHistory.add(jointMove);
+                    curState = sm.getNextState(curState, jointMove);
+                    numStateChanges++;
+                }
+
+                List<Integer> ourGoals = sm.getGoals(curState);
+                List<Integer> theirGoals = messages.take().expectGoalsMessage().getGoals();
+                if (!ourGoals.equals(theirGoals)) {
+                    return Optional.of(ObservedError.create("Goal values mismatch", ourGoals, theirGoals, numStateChanges, moveHistory));
+                }
             }
+        } catch (ErrorMessageException e) {
+            return Optional.of(ObservedError.create(e.getErrorMessage().getError(), numStateChanges));
         }
     }
 

@@ -1,16 +1,20 @@
 package net.alloyggp.perf.correctness;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 
 import net.alloyggp.perf.engine.EngineVersion;
 import net.alloyggp.perf.game.GameKey;
-import net.alloyggp.perf.io.Csvable;
 import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
+import net.alloyggp.perf.io.Csvable;
 import net.alloyggp.perf.runner.JavaEngineType;
 
 //TODO: Explicitly treat timeouts differently, record time allotted length
@@ -117,5 +121,19 @@ public class CorrectnessTestResult implements Csvable {
             return new CorrectnessTestResult(gameKey, testedEngine, referenceEngine,
                     referenceEngineVersion, millisecondsTaken, numStateChanges, error);
         };
+    }
+
+    public static Map<GameKey, Multimap<EngineVersion, CorrectnessTestResult>> groupByGameAndEngine(
+            List<CorrectnessTestResult> allCorrectnessResults) {
+        Map<GameKey, Multimap<EngineVersion, CorrectnessTestResult>> map = Maps.newHashMap();
+
+        for (CorrectnessTestResult result : allCorrectnessResults) {
+            if (!map.containsKey(result.getGameKey())) {
+                map.put(result.getGameKey(), HashMultimap.create());
+            }
+            map.get(result.getGameKey()).put(result.getTestedEngine(), result);
+        }
+
+        return map;
     }
 }

@@ -16,4 +16,6 @@ public interface GameActionRecorder {
 
     void recordTestFinished();
 
+    void recordError(Exception e);
+
 }

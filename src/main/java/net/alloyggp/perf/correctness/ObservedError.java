@@ -53,6 +53,14 @@ public class ObservedError {
         return numStateChangesBeforeFinding;
     }
 
+    public String getErrorString() {
+        return errorString;
+    }
+
+    public ImmutableList<ImmutableList<Move>> getMoveHistory() {
+        return moveHistory;
+    }
+
     @Override
     public String toString() {
         if (moveHistory.isEmpty()) {

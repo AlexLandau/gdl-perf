@@ -8,5 +8,6 @@ public class GameActionFormat {
     public static final String CHOSEN_MOVES_PREFIX = "!C!";
     public static final String GOALS_PREFIX = "!G!";
     public static final String TEST_FINISHED_PREFIX = "!F!";
+    public static final String ERROR_PREFIX = "!E!";
 
 }

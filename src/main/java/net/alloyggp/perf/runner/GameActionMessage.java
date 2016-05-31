@@ -21,23 +21,23 @@ public interface GameActionMessage {
                 .collect(Immutables.collectList());
     }
 
-    default RolesMessage expectRolesMessage() {
+    default RolesMessage expectRolesMessage() throws ErrorMessageException {
         throw new IllegalStateException("Expected a RolesMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
-    default TerminalityMessage expectTerminalityMessage() {
+    default TerminalityMessage expectTerminalityMessage() throws ErrorMessageException {
         throw new IllegalStateException("Expected a TerminalityMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
-    default LegalMovesMessage expectLegalMovesMessage() {
+    default LegalMovesMessage expectLegalMovesMessage() throws ErrorMessageException {
         throw new IllegalStateException("Expected a LegalMovesMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
-    default ChosenMovesMessage expectChosenMovesMessage() {
+    default ChosenMovesMessage expectChosenMovesMessage() throws ErrorMessageException {
         throw new IllegalStateException("Expected a ChosenMovesMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 
-    default GoalsMessage expectGoalsMessage() {
+    default GoalsMessage expectGoalsMessage() throws ErrorMessageException {
         throw new IllegalStateException("Expected a GoalsMessage, but was a " + getClass().getSimpleName() + ": " + toString());
     }
 

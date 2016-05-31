@@ -41,7 +41,7 @@ import net.alloyggp.perf.runner.TimeoutSignaler;
 //TODO: Supplement with a model of "bring each game's testing up to a certain amount"
 public class MissingEntriesCorrectnessTestRunner {
     private static final List<EngineType> ENGINES_TO_TEST =
-//            ImmutableList.of(EngineType.REKKURA_BACKWARD_PROVER);
+//            ImmutableList.of(EngineType.PALAMEDES_JOCULAR);
             ImmutableList.copyOf(EngineType.values());
     //To make things simpler, restrict validation to the Java engine types
     //TODO: Find a faster known-good reference engine for testing
@@ -184,6 +184,7 @@ public class MissingEntriesCorrectnessTestRunner {
             long timeTaken = System.currentTimeMillis() - startTime;
             if (timedOut.get()) {
                 error = Optional.of(ObservedError.create("Timed out after " + MAX_SECONDS_PER_TEST + " seconds", 0));
+                System.out.println("Recording timeout");
                 return CorrectnessTestResult.create(gameKey, engineToTest.getWithVersion(version), validationEngine,
                         validationEngine.getVersion(), timeTaken, numStateChangesToTest, error);
             } else if (error == null) {

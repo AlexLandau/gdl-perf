@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Throwables;
 
 public class PrintStreamGameActionRecorder implements GameActionRecorder {
     private final PrintStream out;
@@ -61,6 +62,18 @@ public class PrintStreamGameActionRecorder implements GameActionRecorder {
     @Override
     public void recordTestFinished() {
         out.println(GameActionFormat.TEST_FINISHED_PREFIX);
+    }
+
+    @Override
+    public void recordError(Exception e) {
+        out.println(GameActionFormat.ERROR_PREFIX + escapeStacktrace(e));
+    }
+
+    private String escapeStacktrace(Exception e) {
+        return Throwables.getStackTraceAsString(e)
+                .replace("\n", "<br/>")
+                .replace("\r", "")
+                .replace(";", ":");
     }
 
 }

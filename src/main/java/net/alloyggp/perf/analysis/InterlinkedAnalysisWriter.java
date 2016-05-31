@@ -36,6 +36,7 @@ import net.alloyggp.perf.analysis.html.HtmlAdHocTable;
 import net.alloyggp.perf.analysis.html.HtmlList;
 import net.alloyggp.perf.analysis.html.HtmlPage;
 import net.alloyggp.perf.correctness.CorrectnessTestResult;
+import net.alloyggp.perf.correctness.ObservedError;
 import net.alloyggp.perf.engine.EngineVersion;
 import net.alloyggp.perf.game.GameKey;
 import net.alloyggp.perf.gameanalysis.GameAnalysisResult;
@@ -50,6 +51,7 @@ public class InterlinkedAnalysisWriter {
     private final Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame;
     private final Map<GameKey, List<EngineVersion>> rankingsByGame;
     private final ImmutableList<CorrectnessTestResult> allCorrectnessResults;
+    private final Map<GameKey, Multimap<EngineVersion, CorrectnessTestResult>> correctnessResultsByGame;
     private final ImmutableMultimap<GameKey, GameAnalysisResult> perGameAnalysisResults;
     private final ImmutableSet<EngineVersion> allEngines;
     private final ImmutableMap<EngineVersion, String> engineFilenames;
@@ -60,6 +62,7 @@ public class InterlinkedAnalysisWriter {
             Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame,
             Map<GameKey, List<EngineVersion>> rankingsByGame,
             ImmutableList<CorrectnessTestResult> allCorrectnessResults,
+            Map<GameKey, Multimap<EngineVersion, CorrectnessTestResult>> correctnessResultsByGame,
             ImmutableMultimap<GameKey, GameAnalysisResult> perGameAnalysisResults, ImmutableSet<EngineVersion> allEngines,
             ImmutableMap<EngineVersion, String> engineFilenames,
             ImmutableMap<Set<EngineVersion>, String> enginePairFilenames) {
@@ -70,6 +73,7 @@ public class InterlinkedAnalysisWriter {
         this.resultsByGame = resultsByGame;
         this.rankingsByGame = rankingsByGame;
         this.allCorrectnessResults = allCorrectnessResults;
+        this.correctnessResultsByGame = correctnessResultsByGame;
         this.perGameAnalysisResults = perGameAnalysisResults;
         this.allEngines = allEngines;
         this.engineFilenames = engineFilenames;
@@ -78,7 +82,9 @@ public class InterlinkedAnalysisWriter {
 
     private static InterlinkedAnalysisWriter create(Collection<GameKey> allGameKeys, Set<GameKey> validGameKeys,
             List<PerfTestResult> allPerfResults, Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame,
-            List<CorrectnessTestResult> allCorrectnessResults, Multimap<GameKey, GameAnalysisResult> perGameAnalysisResults,
+            List<CorrectnessTestResult> allCorrectnessResults,
+            Map<GameKey, Multimap<EngineVersion, CorrectnessTestResult>> correctnessResultsByGame,
+            Multimap<GameKey, GameAnalysisResult> perGameAnalysisResults,
             Set<EngineVersion> allEngines) {
         BiMap<GameKey, String> gameFilenames = getGameFilenames(allGameKeys);
         BiMap<EngineVersion, String> engineFilenames = getEngineFilenames(allEngines);
@@ -91,6 +97,7 @@ public class InterlinkedAnalysisWriter {
                 resultsByGame,
                 getEngineRankingsByGame(resultsByGame),
                 ImmutableList.copyOf(allCorrectnessResults),
+                correctnessResultsByGame,
                 ImmutableMultimap.copyOf(perGameAnalysisResults),
                 ImmutableSet.copyOf(allEngines),
                 ImmutableMap.copyOf(engineFilenames),
@@ -156,10 +163,12 @@ public class InterlinkedAnalysisWriter {
         Collection<GameKey> allGameKeys = GameKey.loadAllGameKeys();
         Set<GameKey> validGameKeys = GameKey.loadAllValidGameKeys();
         List<PerfTestResult> allPerfResults = PerfResultLoader.loadAllResults();
-        List<CorrectnessTestResult> allCorrectnessResults = CorrectnessResultLoader.loadAllResults();
         Map<GameKey, Map<EngineVersion, PerfTestResult>> resultsByGame = ImmutableMap.copyOf(Maps.filterKeys(
                 PerfTestResult.groupByGameAndEngine(allPerfResults),
                 GameKey.loadAllValidGameKeys()::contains));
+        List<CorrectnessTestResult> allCorrectnessResults = CorrectnessResultLoader.loadAllResults();
+        Map<GameKey, Multimap<EngineVersion, CorrectnessTestResult>> correctnessResultsByGame =
+                CorrectnessTestResult.groupByGameAndEngine(allCorrectnessResults);
         Set<EngineVersion> allEngines = getAllEngines(allPerfResults, allCorrectnessResults);
         List<GameAnalysisResult> allGameAnalysisResults = GameAnalysisResultLoader.loadAllResults();
         Multimap<GameKey, GameAnalysisResult> perGameAnalysisResults = GameAnalysisResult.groupByGame(allGameAnalysisResults);
@@ -169,6 +178,7 @@ public class InterlinkedAnalysisWriter {
                 allPerfResults,
                 resultsByGame,
                 allCorrectnessResults,
+                correctnessResultsByGame,
                 perGameAnalysisResults,
                 allEngines).writeAnalyses();
     }
@@ -398,6 +408,18 @@ public class InterlinkedAnalysisWriter {
                             resultsToSort.add(result);
                         } else {
                             errorsTable.addRow(link(game), result.getErrorMessage());
+                            anyErrorsFound = true;
+                        }
+                    }
+                }
+                Multimap<EngineVersion, CorrectnessTestResult> correctnessResultsByEngine = correctnessResultsByGame.get(game);
+                if (correctnessResultsByEngine != null) {
+                    for (CorrectnessTestResult result : correctnessResultsByEngine.get(engine)) {
+                        if (result.getError().isPresent()) {
+                            ObservedError error = result.getError().get();
+                            String explanation = "Correctness test error: " + error.getErrorString().replace("\n", "<br/>") + "<br/>" + error.getMoveHistory();
+                            System.out.println("Explanation is " + explanation);
+                            errorsTable.addRow(link(game), explanation);
                             anyErrorsFound = true;
                         }
                     }

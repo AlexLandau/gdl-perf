@@ -25,40 +25,45 @@ public class JavaCorrectnessTestRunnable<Simulator, State, Role, Move> implement
     @Override
     public void runCorrectnessTest(String gameRules, int stateChangesToRun, GameActionRecorder recorder)
             throws Exception {
-        Game game = Game.createEphemeralGame(Game.preprocessRulesheet(gameRules));
-        Simulator sm = wrapper.createSimulator(gameRules, game);
+        try {
+            Game game = Game.createEphemeralGame(Game.preprocessRulesheet(gameRules));
+            Simulator sm = wrapper.createSimulator(gameRules, game);
 
-        List<Role> roles = wrapper.getRoles(sm);
-        List<String> roleNames = wrapper.getRoleNames(sm);
-        recorder.writeRoles(roleNames);
-        int stateChangesSoFar = 0;
-        State initialState = wrapper.getInitialState(sm);
-        if (wrapper.isTerminal(sm, initialState)) {
-            recorder.recordTerminality(true);
-            recorder.recordTestFinished();
-            return; //otherwise stateChangesSoFar will never increase
-        }
-        while (true) {
-            State curState = wrapper.getInitialState(sm);
-            while (!wrapper.isTerminal(sm, curState)) {
-                recorder.recordTerminality(false);
-                List<Move> jointMove = Lists.newArrayList();
-                for (Role role : roles) {
-                    List<Move> legalMoves = wrapper.getLegalMoves(sm, curState, role);
-                    recorder.recordLegalMoves(wrapper.getMoveNames(sm, legalMoves));
-                    jointMove.add(pickOneAtRandom(legalMoves));
-                }
-                recorder.recordChosenJointMove(wrapper.getMoveNames(sm, jointMove));
-                curState = wrapper.getNextState(sm, curState, jointMove);
-                stateChangesSoFar++;
-            }
-            recorder.recordTerminality(true);
-            recorder.recordGoalValues(wrapper.getGoals(sm, curState));
-            //Do we end here?
-            if (stateChangesSoFar > stateChangesToRun) {
+            List<Role> roles = wrapper.getRoles(sm);
+            List<String> roleNames = wrapper.getRoleNames(sm);
+            recorder.writeRoles(roleNames);
+            int stateChangesSoFar = 0;
+            State initialState = wrapper.getInitialState(sm);
+            if (wrapper.isTerminal(sm, initialState)) {
+                recorder.recordTerminality(true);
                 recorder.recordTestFinished();
-                return;
+                return; //otherwise stateChangesSoFar will never increase
             }
+            while (true) {
+                State curState = wrapper.getInitialState(sm);
+                while (!wrapper.isTerminal(sm, curState)) {
+                    recorder.recordTerminality(false);
+                    List<Move> jointMove = Lists.newArrayList();
+                    for (Role role : roles) {
+                        List<Move> legalMoves = wrapper.getLegalMoves(sm, curState, role);
+                        recorder.recordLegalMoves(wrapper.getMoveNames(sm, legalMoves));
+                        jointMove.add(pickOneAtRandom(legalMoves));
+                    }
+                    recorder.recordChosenJointMove(wrapper.getMoveNames(sm, jointMove));
+                    curState = wrapper.getNextState(sm, curState, jointMove);
+                    stateChangesSoFar++;
+                }
+                recorder.recordTerminality(true);
+                recorder.recordGoalValues(wrapper.getGoals(sm, curState));
+                //Do we end here?
+                if (stateChangesSoFar > stateChangesToRun) {
+                    recorder.recordTestFinished();
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            recorder.recordError(e);
+            recorder.recordTestFinished();
         }
     }
 
