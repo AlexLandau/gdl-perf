@@ -15,9 +15,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Table;
 
-import net.alloyggp.perf.EngineVersion;
-import net.alloyggp.perf.GameKey;
 import net.alloyggp.perf.PerfTestResult;
+import net.alloyggp.perf.engine.EngineVersion;
+import net.alloyggp.perf.game.GameKey;
 
 public class PlaceCountTableMaker {
 

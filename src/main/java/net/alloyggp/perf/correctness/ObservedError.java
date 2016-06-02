@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.correctness;
 
 import java.util.List;
 
@@ -50,6 +50,14 @@ public class ObservedError {
 
     public int getNumStateChangesBeforeFinding() {
         return numStateChangesBeforeFinding;
+    }
+
+    public String getErrorString() {
+        return errorString;
+    }
+
+    public ImmutableList<ImmutableList<Move>> getMoveHistory() {
+        return moveHistory;
     }
 
     @Override

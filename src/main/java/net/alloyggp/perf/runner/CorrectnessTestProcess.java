@@ -9,21 +9,14 @@ import net.alloyggp.perf.io.GameFiles;
 public class CorrectnessTestProcess {
 
     public static void main(String[] args) throws Exception {
-//        Game game = GameRepository.getDefaultRepository().getGame("ticTacToe");
-//        File gameFile = new File("ticTacToe.kif");
-//        GameFiles.write(game, gameFile);
-//        if (true) {
-//            return;
-//        }
-
-        Preconditions.checkArgument(args.length == 3);
+        Preconditions.checkArgument(args.length == 4);
         JavaEngineType engineType = JavaEngineType.valueOf(args[0]);
         File gameRulesFile = new File(args[1]);
         String gameRules = GameFiles.read(gameRulesFile);
-        int stateChangesToRun = Integer.parseInt(args[2]);
+        File outputFile = new File(args[2]);
+        int stateChangesToRun = Integer.parseInt(args[3]);
 
-        GameActionRecorder recorder = new StandardGameActionRecorder();
-        System.out.println("Game rules: " + gameRules);
+        GameActionRecorder recorder = PrintStreamGameActionRecorder.createWritingToFile(outputFile);
         engineType.runCorrectnessTest(gameRules, stateChangesToRun, recorder);
     }
 

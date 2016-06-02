@@ -1,4 +1,4 @@
-package net.alloyggp.perf.game;
+package net.alloyggp.perf.gameanalysis;
 
 import java.util.Map;
 

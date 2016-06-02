@@ -9,10 +9,10 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 
-import net.alloyggp.perf.EngineType;
-import net.alloyggp.perf.EngineVersion;
 import net.alloyggp.perf.PerfTest;
 import net.alloyggp.perf.PerfTestResult;
+import net.alloyggp.perf.engine.EngineType;
+import net.alloyggp.perf.engine.EngineVersion;
 import net.alloyggp.perf.io.CsvFiles;
 
 public class PerfResultLoader {

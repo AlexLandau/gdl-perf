@@ -21,11 +21,6 @@ import rekkura.logic.model.Dob;
 import rekkura.logic.model.Rule;
 
 public class RekkuraRunnables {
-    public static PerfTestRunnable getPerfTestRunnable(
-            Factory<? extends GgpStateMachine> factory) {
-        return JavaPerfTestRunnable.create(getWrapper(factory));
-    }
-
     //GgpStateMachine doesn't use the concept of an ordered list of roles, but we
     //need that for our interface, so we add a layer that stores that here
     public static class GgpStateMachine2 implements GgpStateMachine {
@@ -155,10 +150,5 @@ public class RekkuraRunnables {
             }
 
         };
-    }
-
-    public static CorrectnessTestRunnable getCorrectnessTestRunnable(
-            Factory<? extends GgpStateMachine> factory) {
-        return JavaCorrectnessTestRunnable.create(getWrapper(factory));
     }
 }

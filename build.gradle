@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 targetCompatibility = '1.8'
@@ -11,6 +12,7 @@ repositories {
 dependencies {
 //    compile 'org.slf4j:slf4j-api:1.7.5'
 //    testCompile "junit:junit:4.11"
+    compile 'commons-io:commons-io:2.5'
     compile 'junit:junit:4.11' //Sancho uses this in non-test code =(
     compile 'com.google.guava:guava:14.0.1'
     compile 'com.google.code.findbugs:jsr305:3.0.0'
@@ -36,6 +38,7 @@ dependencies {
     compile 'org.apache.commons:commons-math3:3.5'
 
     //Alloy-specific dependencies
+    compile 'net.alloyggp:alloy-ggp-base:0.0.2'
     compile 'net.sf.trove4j:trove4j:3.0.3'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'ch.qos.logback:logback-core:1.1.3'
@@ -54,6 +57,7 @@ task runPerfAll(type: JavaExec) {
     main = 'net.alloyggp.perf.MissingEntriesPerfTestRunner'
 }
 
+
 // Run perf tests with a few games and a few engine types.
 // This takes a few minutes.
 // This is recommended for generating a small sample set of data when
@@ -66,7 +70,7 @@ task runPerfSample(type: JavaExec) {
 //TODO: Align naming scheme with perf test vs. analysis
 task gameAnalysis(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'net.alloyggp.perf.game.MissingEntriesGameAnalysisRunner'
+    main = 'net.alloyggp.perf.gameanalysis.MissingEntriesGameAnalysisRunner'
 }
 
 // Runs an analysis of performance test results that produces HTML
@@ -76,8 +80,8 @@ task perfAnalysis(type: JavaExec) {
     main = 'net.alloyggp.perf.analysis.InterlinkedAnalysisWriter'
 }
 
-task zipAnalysis(type: Zip) {
-    dependsOn perfAnalysis
-    from 'analyses'
-    baseName = 'perfAnalysis'
+task runCorrectnessAll(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.correctness.MissingEntriesCorrectnessTestRunner'
 }
+

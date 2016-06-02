@@ -17,11 +17,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import net.alloyggp.perf.EngineType;
-import net.alloyggp.perf.EngineVersion;
-import net.alloyggp.perf.GameKey;
-import net.alloyggp.perf.InvalidGames;
 import net.alloyggp.perf.PerfTestResult;
+import net.alloyggp.perf.engine.EngineType;
+import net.alloyggp.perf.engine.EngineVersion;
+import net.alloyggp.perf.game.GameKey;
+import net.alloyggp.perf.game.InvalidGames;
 import net.alloyggp.perf.runner.JavaEngineType;
 
 public class ProverComparisonPerfSummary {

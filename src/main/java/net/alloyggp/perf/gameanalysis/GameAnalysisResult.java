@@ -1,4 +1,4 @@
-package net.alloyggp.perf.game;
+package net.alloyggp.perf.gameanalysis;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 
-import net.alloyggp.perf.Csvable;
-import net.alloyggp.perf.GameKey;
+import net.alloyggp.perf.game.GameKey;
+import net.alloyggp.perf.io.Csvable;
 import net.alloyggp.perf.io.CsvFiles.CsvLoadFunction;
 
 public class GameAnalysisResult implements Csvable {

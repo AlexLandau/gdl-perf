@@ -1,4 +1,4 @@
-package net.alloyggp.perf;
+package net.alloyggp.perf.engine;
 
 import java.io.File;
 import java.util.Map;

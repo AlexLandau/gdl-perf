@@ -1,4 +1,4 @@
-package net.alloyggp.perf.game;
+package net.alloyggp.perf.gameanalysis;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
-import net.alloyggp.perf.GameKey;
-import net.alloyggp.perf.game.GameAnalysisTask.Outcome;
+import net.alloyggp.perf.game.GameKey;
+import net.alloyggp.perf.gameanalysis.GameAnalysisTask.Outcome;
 import net.alloyggp.perf.io.CsvFiles;
 import net.alloyggp.perf.io.GameFiles;
 import net.alloyggp.perf.io.ResultFiles;
