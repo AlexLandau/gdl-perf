@@ -70,6 +70,10 @@ public class CorrectnessTestResult implements Csvable {
         return millisecondsTaken;
     }
 
+    public int getNumStateChanges() {
+        return numStateChanges;
+    }
+
     @Override
     public String toString() {
         return "CorrectnessTestResult [gameKey=" + gameKey + ", testedEngine="
