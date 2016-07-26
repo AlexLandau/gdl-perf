@@ -18,6 +18,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import formerlybase.util.ruleengine.diffpropnet.DiffPropNetRuleEngineFactory;
+import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngine;
+import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngineFactory;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngine;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngineFactory;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngine;
@@ -45,6 +47,8 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createCachingEverything())),
     ALLOY_DIFF_PROP_NET("1",
             RuleEngineRunnables.getWrapper(DiffPropNetRuleEngineFactory.createStandardOpnf())),
+    ALLOY_FORWARD_PROP_NET(ForwardPropNetRuleEngine.VERSION,
+            RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory.create())),
     ALLOY_DUALIZED_PROVER("2016-01-14",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createDualized())),
     ALLOY_DUALIZED_COMPILED_PROVER("2016-01-14",
