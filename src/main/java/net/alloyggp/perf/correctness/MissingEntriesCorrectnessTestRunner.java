@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -24,11 +25,12 @@ import org.ggp.base.util.gdl.grammar.GdlPool;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
 import net.alloyggp.perf.CompatibilityResult;
-import net.alloyggp.perf.Immutables;
 import net.alloyggp.perf.engine.EngineType;
 import net.alloyggp.perf.game.GameKey;
 import net.alloyggp.perf.io.CsvFiles;
@@ -53,6 +55,19 @@ public class MissingEntriesCorrectnessTestRunner {
 
     public static void main(String[] args) throws Exception {
         GdlPool.caseSensitive = false;
+        while (true) {
+            boolean done = runOneRound();
+            if (done) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * @return true if there's nothing left to run, false otherwise
+     */
+    private static boolean runOneRound() throws IOException, InterruptedException {
+        boolean ranAnyTest = false;
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             if (engineToTest.getJavaEngineType().isPresent()
                     && engineToTest.getJavaEngineType().get() == VALIDATION_ENGINE) {
@@ -75,16 +90,32 @@ public class MissingEntriesCorrectnessTestRunner {
                 continue;
             }
 
-            Set<GameKey> alreadyTestedGames = loadAlreadyTestedGames(outputCsvFile);
-            for (GameKey gameKey : GameKey.loadAllValidGameKeys()) {
-                if (alreadyTestedGames.contains(gameKey)) {
+            Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile);
+            Set<GameKey> allValidGameKeys = GameKey.loadAllValidGameKeys();
+            long minMillisSpentOnAnyGame = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
+
+            long maxMillisToSpend = MIN_SECONDS_PER_GAME * 1000 + minMillisSpentOnAnyGame;
+
+            for (GameKey gameKey : allValidGameKeys) {
+                if (earlierResults.containsKey(gameKey)
+                        && earlierResults.get(gameKey).isFailure()) {
+                    continue;
+                }
+                if (earlierResults.containsKey(gameKey)
+                        && earlierResults.get(gameKey).getMillisSpentSoFar() > maxMillisToSpend) {
                     continue;
                 }
                 if (!gameKey.isValid()) {
                     continue;
                 }
                 System.out.println("Testing game " + gameKey);
+                ranAnyTest = true;
+
                 int numStateChangesToTest = INITIAL_NUM_STATE_CHANGES_TO_TEST;
+                if (earlierResults.containsKey(gameKey)) {
+                    numStateChangesToTest = earlierResults.get(gameKey).getMostStateChangesSoFar();
+                }
+
                 long overallStartTime = System.currentTimeMillis();
                 long iterationStartTime = System.currentTimeMillis();
                 try {
@@ -114,15 +145,74 @@ public class MissingEntriesCorrectnessTestRunner {
                 System.gc();
             }
         }
+        return !ranAnyTest;
     }
 
-    private static Set<GameKey> loadAlreadyTestedGames(File outputCsvFile) throws IOException {
+    private static long getMinMillisSpentOnAnyGame(Map<GameKey, AggregateResult> earlierResults,
+            Set<GameKey> allValidGameKeys) {
+        if (!Sets.difference(allValidGameKeys, earlierResults.keySet()).isEmpty()) {
+            //At least one valid game is untested
+            return 0L;
+        }
+        long minMillisSpent = Long.MAX_VALUE;
+        for (GameKey validGame : allValidGameKeys) {
+            long millisSpent = earlierResults.get(validGame).getMillisSpentSoFar();
+            if (millisSpent < minMillisSpent) {
+                minMillisSpent = millisSpent;
+            }
+        }
+        return minMillisSpent;
+    }
+
+    private static Map<GameKey, AggregateResult> loadAlreadyTestedGames(File outputCsvFile) throws IOException {
         List<CorrectnessTestResult> results = CsvFiles.load(outputCsvFile, CorrectnessTestResult.getCsvLoader());
-        return results.stream()
-                .map(CorrectnessTestResult::getGameKey)
-                .collect(Immutables.collectSet());
+        Map<GameKey, AggregateResult> groupedResults = Maps.newHashMap();
+        for (CorrectnessTestResult result : results) {
+            if (!groupedResults.containsKey(result.getGameKey())) {
+                groupedResults.put(result.getGameKey(), new AggregateResult(result));
+            } else {
+                groupedResults.get(result.getGameKey()).foldIn(result);
+            }
+        }
+        return groupedResults;
     }
 
+    //WARNING: mutable, not thread-safe
+    private static class AggregateResult {
+        private final GameKey gameKey;
+        private long millisSpentSoFar;
+        private int mostStateChangesSoFar;
+        private boolean failure;
+
+        public AggregateResult(CorrectnessTestResult result) {
+            this.gameKey = result.getGameKey();
+            this.millisSpentSoFar = result.getMillisecondsTaken();
+            this.mostStateChangesSoFar = result.getNumStateChanges();
+            this.failure = result.getError().isPresent();
+        }
+
+        public void foldIn(CorrectnessTestResult result) {
+            this.millisSpentSoFar += result.getMillisecondsTaken();
+            this.mostStateChangesSoFar = Math.max(this.mostStateChangesSoFar, result.getNumStateChanges());
+            this.failure |= result.getError().isPresent();
+        }
+
+        public GameKey getGameKey() {
+            return gameKey;
+        }
+
+        public long getMillisSpentSoFar() {
+            return millisSpentSoFar;
+        }
+
+        public int getMostStateChangesSoFar() {
+            return mostStateChangesSoFar;
+        }
+
+        public boolean isFailure() {
+            return failure;
+        }
+    }
 
     //TODO: Wrap all this in a big try block
     private static @Nullable CorrectnessTestResult runTest(int numStateChangesToTest,
