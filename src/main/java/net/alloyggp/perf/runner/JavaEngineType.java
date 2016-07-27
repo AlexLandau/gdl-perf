@@ -20,6 +20,9 @@ import com.google.common.collect.Sets;
 import formerlybase.util.ruleengine.diffpropnet.DiffPropNetRuleEngineFactory;
 import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngine;
 import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngineFactory;
+import formerlybase.util.ruleengine.fwdpropnet.v2.ForwardPropNetRuleEngineFactory2;
+import formerlybase.util.ruleengine.fwdpropnet.v3.ForwardPropNetRuleEngineFactory3;
+import formerlybase.util.ruleengine.fwdpropnet.v4.ForwardPropNetRuleEngineFactory4;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngine;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngineFactory;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngine;
@@ -49,6 +52,12 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(DiffPropNetRuleEngineFactory.createStandardOpnf())),
     ALLOY_FORWARD_PROP_NET(ForwardPropNetRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory.create())),
+    ALLOY_FORWARD_PROP_NET2(ForwardPropNetRuleEngine.VERSION,
+            RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory2.create())),
+    ALLOY_FORWARD_PROP_NET3(ForwardPropNetRuleEngine.VERSION,
+            RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory3.create())),
+    ALLOY_FORWARD_PROP_NET4(ForwardPropNetRuleEngine.VERSION,
+            RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory4.create())),
     ALLOY_DUALIZED_PROVER("2016-01-14",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createDualized())),
     ALLOY_DUALIZED_COMPILED_PROVER("2016-01-14",
