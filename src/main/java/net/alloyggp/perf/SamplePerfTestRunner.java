@@ -16,8 +16,6 @@ public class SamplePerfTestRunner {
     private final ImmutableSet<EngineType> enginesToTest =
             ImmutableSet.of(EngineType.GGP_BASE_PROVER,
                     EngineType.PALAMEDES_JOCULAR,
-                    EngineType.REKKURA_BACKWARD_PROVER,
-                    EngineType.PALAMEDES_JAVA_PROVER_USEOPT_TRUE,
                     EngineType.SANCHO_DEAD_RECKONING_PROPNET);
     private final ImmutableSet<GameKey> gamesToTest =
             GameKey.createSet(RepoId.BASE,
