@@ -357,7 +357,7 @@ public class InterlinkedAnalysisWriter {
         {
             page.addText("Comparison with other engines:");
             HtmlAdHocTable table = HtmlAdHocTable.create();
-            table.addRow("Engine", "We're faster in N games", "Only they fail", "They're faster in N games", "Only we fail");
+            table.addHeadingRow("Engine", "We're faster in N games", "Only they fail", "They're faster in N games", "Only we fail");
             for (EngineVersion otherEngine : allEngines) {
                 if (otherEngine.equals(engine)) {
                     continue;
@@ -386,6 +386,7 @@ public class InterlinkedAnalysisWriter {
                         thisIsFasterCount+"", onlyTheyFail+"",
                         otherIsFasterCount+"", onlyWeFail+"");
             }
+            table.sortAlphabeticallyByColumn(0);
             //TODO: Sort table by contents?
             page.add(table);
         }

@@ -1,6 +1,7 @@
 package net.alloyggp.perf.analysis.html;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -8,6 +9,7 @@ import com.google.common.collect.Lists;
 
 //@NotThreadSafe
 public class HtmlAdHocTable implements Htmlable {
+    private final List<List<String>> headingRows = Lists.newArrayList();
     private final List<List<String>> rows = Lists.newArrayList();
 
     private HtmlAdHocTable() {
@@ -25,9 +27,29 @@ public class HtmlAdHocTable implements Htmlable {
         rows.add(ImmutableList.copyOf(strings));
     }
 
+    /**
+     * Non-obvious behavior note: Heading rows always appear
+     * before non-heading rows, regardless of the order they
+     * are added. However, they are not included in any sorting
+     * that is applied.
+     */
+    public void addHeadingRow(String... strings) {
+        headingRows.add(Arrays.asList(strings));
+    }
+
     @Override
     public void addHtml(StringBuilder sb) {
         sb.append("<table>\n");
+        for (List<String> row : headingRows) {
+            sb.append("<tr>");
+            for (String cell : row) {
+                //TODO: Escape cell contents
+                sb.append("<th>")
+                  .append(cell)
+                  .append("</th>");
+            }
+            sb.append("</tr>\n");
+        }
         for (List<String> row : rows) {
             sb.append("<tr>");
             for (String cell : row) {
@@ -39,5 +61,9 @@ public class HtmlAdHocTable implements Htmlable {
             sb.append("</tr>\n");
         }
         sb.append("</table>\n");
+    }
+
+    public void sortAlphabeticallyByColumn(int column) {
+        rows.sort(Comparator.comparing(row -> row.get(column)));
     }
 }
