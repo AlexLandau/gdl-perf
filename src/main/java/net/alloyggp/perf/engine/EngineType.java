@@ -30,12 +30,8 @@ public enum EngineType {
     ALLOY_FORWARD_PROP_NET2(JavaEngineType.ALLOY_FORWARD_PROP_NET2),
     ALLOY_FORWARD_PROP_NET3(JavaEngineType.ALLOY_FORWARD_PROP_NET3),
     ALLOY_FORWARD_PROP_NET4(JavaEngineType.ALLOY_FORWARD_PROP_NET4),
-    //Palamedes BasicPlayer Java prover (linked from Dresden GGP page)
-    PALAMEDES_JAVA_PROVER_USEOPT_FALSE(JavaEngineType.PALAMEDES_JAVA_PROVER_USEOPT_FALSE),
-    PALAMEDES_JAVA_PROVER_USEOPT_TRUE(JavaEngineType.PALAMEDES_JAVA_PROVER_USEOPT_TRUE),
-    //And others in Palamedes Core
+    //Jocular from Palamedes Core
     PALAMEDES_JOCULAR(JavaEngineType.PALAMEDES_JOCULAR),
-    PALAMEDES_JAVA_ECLIPSE(JavaEngineType.PALAMEDES_JAVA_ECLIPSE),
     //Fluxplayer Prolog engine
     FLUXPLAYER_PROLOG(EngineEnvironment.createFluxplayer(),
             ExecutableType.RELATIVE_PATH,
@@ -46,15 +42,6 @@ public enum EngineType {
             ExecutableType.RELATIVE_PATH,
             ImmutableList.of("start_perf_test.sh"),
             ImmutableList.of()), // no support for correctness testing
-    //From Peter Pham's Rekkura codebase
-    REKKURA_GENERIC_FORWARD_PROVER_OSTD(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER_OSTD),
-    REKKURA_GENERIC_FORWARD_PROVER(JavaEngineType.REKKURA_GENERIC_FORWARD_PROVER),
-    //Note: These two are disabled because they appear to be strictly inferior to
-    //their non-GENERIC versions.
-//    REKKURA_GENERIC_BACKWARD_PROVER_OSTD(JavaEngineType.REKKURA_GENERIC_BACKWARD_PROVER_OSTD),
-//    REKKURA_GENERIC_BACKWARD_PROVER(JavaEngineType.REKKURA_GENERIC_BACKWARD_PROVER),
-    REKKURA_BACKWARD_PROVER_OSTD(JavaEngineType.REKKURA_BACKWARD_PROVER_OSTD),
-    REKKURA_BACKWARD_PROVER(JavaEngineType.REKKURA_BACKWARD_PROVER),
     SANCHO_DEAD_RECKONING_PROPNET(JavaEngineType.SANCHO_DEAD_RECKONING_PROPNET),
     ;
     private final EngineEnvironment environment;
