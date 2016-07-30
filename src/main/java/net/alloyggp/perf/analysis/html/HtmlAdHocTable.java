@@ -63,6 +63,9 @@ public class HtmlAdHocTable implements Htmlable {
         sb.append("</table>\n");
     }
 
+    /**
+     * @param column the column number, zero-indexed
+     */
     public void sortAlphabeticallyByColumn(int column) {
         rows.sort(Comparator.comparing(row -> row.get(column)));
     }
