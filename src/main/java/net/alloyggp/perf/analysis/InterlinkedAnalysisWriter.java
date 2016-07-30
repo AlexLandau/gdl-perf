@@ -395,9 +395,9 @@ public class InterlinkedAnalysisWriter {
         //Ideally, we list game -> avg. speed -> ranking among successful engines
         {
             HtmlAdHocTable gameTable = HtmlAdHocTable.create();
-            gameTable.addRow("Game", "Average state changes per second", "Ranking");
+            gameTable.addHeadingRow("Game", "Average state changes per second", "Ranking");
             HtmlAdHocTable errorsTable = HtmlAdHocTable.create();
-            errorsTable.addRow("Game", "Error message");
+            errorsTable.addHeadingRow("Game", "Error message");
             boolean anyErrorsFound = false;
             List<PerfTestResult> resultsToSort = Lists.newArrayList();
             for (GameKey game : validGameKeys) {
@@ -436,6 +436,7 @@ public class InterlinkedAnalysisWriter {
             page.add(gameTable);
             if (anyErrorsFound) {
                 page.addText("Games with errors:");
+                errorsTable.sortAlphabeticallyByColumn(0);
                 page.add(errorsTable);
             }
         }
@@ -454,7 +455,7 @@ public class InterlinkedAnalysisWriter {
             table.addRow("Game", "Perf ratio", engine1 + " states per second", engine2 + " states per second");
 
             HtmlAdHocTable errorsTable = HtmlAdHocTable.create();
-            errorsTable.addRow("Game", engine1 + " error message", engine2 + " error message");
+            errorsTable.addHeadingRow("Game", engine1 + " error message", engine2 + " error message");
 
             //Collect rows to sort and put in the tables
             Multimap<Double, List<String>> perfRows = HashMultimap.create();
@@ -503,11 +504,12 @@ public class InterlinkedAnalysisWriter {
             }
             for (int key : ImmutableSortedSet.copyOf(errorRows.keySet())) {
                 //TODO: Sort by game key here?
-                for (List<String> row : errorRows.get(key)) {
+                Collection<List<String>> rows = errorRows.get(key);
+                rows = ImmutableSortedSet.copyOf(Comparator.<List<String>, String>comparing(list -> list.get(0)), rows);
+                for (List<String> row : rows) {
                     errorsTable.addRow(row);
                 }
             }
-
 
             page.addText("Game-by-game performance:");
             page.add(table);
