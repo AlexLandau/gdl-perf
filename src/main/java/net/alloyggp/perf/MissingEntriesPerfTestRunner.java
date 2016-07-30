@@ -55,8 +55,10 @@ public class MissingEntriesPerfTestRunner {
                 continue;
             }
 
-            for (GameKey gameKey : gameKeysToTest) {
-                System.out.println("Running perf test for game key: " + gameKey);
+            List<GameKey> gameKeysList = ImmutableList.copyOf(gameKeysToTest);
+            for (int i = 0; i < gameKeysList.size(); i++) {
+                GameKey gameKey = gameKeysList.get(i);
+                System.out.println("Running perf test " + (i+1) + "/" + gameKeysList.size() + " for " + engineToTest + ":" + compatible.getVersion() + ": " + gameKey);
 
                 if (gameKey.isValid()) {
                     final PerfTestResult result = PerfTest.runTest(gameKey, engineToTest,
