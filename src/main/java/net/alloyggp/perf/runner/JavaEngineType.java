@@ -23,6 +23,7 @@ import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngineFactory;
 import formerlybase.util.ruleengine.fwdpropnet.v2.ForwardPropNetRuleEngineFactory2;
 import formerlybase.util.ruleengine.fwdpropnet.v3.ForwardPropNetRuleEngineFactory3;
 import formerlybase.util.ruleengine.fwdpropnet.v4.ForwardPropNetRuleEngineFactory4;
+import formerlybase.util.ruleengine.propnet64.PropNet64RuleEngineFactory;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngine;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngineFactory;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngine;
@@ -50,6 +51,8 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createCachingEverything())),
     ALLOY_DIFF_PROP_NET("1",
             RuleEngineRunnables.getWrapper(DiffPropNetRuleEngineFactory.createStandardOpnf())),
+    ALLOY_PROPNET_64("1",
+            RuleEngineRunnables.getWrapper(PropNet64RuleEngineFactory.createStandard())),
     ALLOY_FORWARD_PROP_NET(ForwardPropNetRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory.create())),
     ALLOY_FORWARD_PROP_NET2(formerlybase.util.ruleengine.fwdpropnet.v2.ForwardPropNetRuleEngine.VERSION,
