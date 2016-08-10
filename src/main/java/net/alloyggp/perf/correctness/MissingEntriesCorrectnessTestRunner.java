@@ -97,6 +97,7 @@ public class MissingEntriesCorrectnessTestRunner {
 
             Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile);
             Set<GameKey> allValidGameKeys = GameKey.loadAllValidGameKeys();
+            //TODO: Calculate this across all engines instead of per-engine
             long minMillisSpentOnAnyGame = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
 
             long maxMillisToSpend = MIN_SECONDS_PER_GAME * 1000 + minMillisSpentOnAnyGame;
@@ -192,12 +193,14 @@ public class MissingEntriesCorrectnessTestRunner {
         public AggregateResult(CorrectnessTestResult result) {
             this.gameKey = result.getGameKey();
             this.millisSpentSoFar = result.getMillisecondsTaken();
+            //TODO: Don't include result if millisSpent is too long?
             this.mostStateChangesSoFar = result.getNumStateChanges();
             this.failure = result.getError().isPresent();
         }
 
         public void foldIn(CorrectnessTestResult result) {
             this.millisSpentSoFar += result.getMillisecondsTaken();
+            //TODO: Don't include result if millisSpent is too long?
             this.mostStateChangesSoFar = Math.max(this.mostStateChangesSoFar, result.getNumStateChanges());
             this.failure |= result.getError().isPresent();
         }
