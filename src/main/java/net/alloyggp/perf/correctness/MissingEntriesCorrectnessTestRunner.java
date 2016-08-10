@@ -103,7 +103,7 @@ public class MissingEntriesCorrectnessTestRunner {
             System.out.println("Min millis spent on any game: " + minMillisSpentOnAnyGame);
 
             long maxMillisToSpend = MIN_SECONDS_PER_GAME * 1000 + minMillisSpentOnAnyGame;
-            System.out.println("Max millis to spend: " + minMillisSpentOnAnyGame);
+            System.out.println("Max millis to spend: " + maxMillisToSpend);
 
             for (GameKey gameKey : allValidGameKeys) {
                 if (earlierResults.containsKey(gameKey)
