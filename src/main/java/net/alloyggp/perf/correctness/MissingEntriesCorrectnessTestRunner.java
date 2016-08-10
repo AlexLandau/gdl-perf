@@ -41,6 +41,7 @@ import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.TimeoutSignaler;
 
 //TODO: Supplement with a model of "bring each game's testing up to a certain amount"
+//TODO: This could use more than one thread
 public class MissingEntriesCorrectnessTestRunner {
     private static final List<EngineType> ENGINES_TO_TEST =
 //            ImmutableList.of(EngineType.PALAMEDES_JOCULAR);
@@ -90,11 +91,13 @@ public class MissingEntriesCorrectnessTestRunner {
                 continue;
             }
 
-            Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile);
+            Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile, compatible.getVersion());
             Set<GameKey> allValidGameKeys = GameKey.loadAllValidGameKeys();
             long minMillisSpentOnAnyGame = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
+            System.out.println("Min millis spent on any game: " + minMillisSpentOnAnyGame);
 
             long maxMillisToSpend = MIN_SECONDS_PER_GAME * 1000 + minMillisSpentOnAnyGame;
+            System.out.println("Max millis to spend: " + minMillisSpentOnAnyGame);
 
             for (GameKey gameKey : allValidGameKeys) {
                 if (earlierResults.containsKey(gameKey)
@@ -156,22 +159,26 @@ public class MissingEntriesCorrectnessTestRunner {
         }
         long minMillisSpent = Long.MAX_VALUE;
         for (GameKey validGame : allValidGameKeys) {
-            long millisSpent = earlierResults.get(validGame).getMillisSpentSoFar();
-            if (millisSpent < minMillisSpent) {
-                minMillisSpent = millisSpent;
+            if (!earlierResults.get(validGame).isFailure()) {
+                long millisSpent = earlierResults.get(validGame).getMillisSpentSoFar();
+                if (millisSpent < minMillisSpent) {
+                    minMillisSpent = millisSpent;
+                }
             }
         }
         return minMillisSpent;
     }
 
-    private static Map<GameKey, AggregateResult> loadAlreadyTestedGames(File outputCsvFile) throws IOException {
+    private static Map<GameKey, AggregateResult> loadAlreadyTestedGames(File outputCsvFile, String version) throws IOException {
         List<CorrectnessTestResult> results = CsvFiles.load(outputCsvFile, CorrectnessTestResult.getCsvLoader());
         Map<GameKey, AggregateResult> groupedResults = Maps.newHashMap();
         for (CorrectnessTestResult result : results) {
-            if (!groupedResults.containsKey(result.getGameKey())) {
-                groupedResults.put(result.getGameKey(), new AggregateResult(result));
-            } else {
-                groupedResults.get(result.getGameKey()).foldIn(result);
+            if (result.getTestedEngine().getVersion().equals(version)) {
+                if (!groupedResults.containsKey(result.getGameKey())) {
+                    groupedResults.put(result.getGameKey(), new AggregateResult(result));
+                } else {
+                    groupedResults.get(result.getGameKey()).foldIn(result);
+                }
             }
         }
         return groupedResults;
