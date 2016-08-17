@@ -44,13 +44,13 @@ import net.alloyggp.perf.runner.TimeoutSignaler;
 //TODO: This could use more than one thread
 public class MissingEntriesCorrectnessTestRunner {
     private static final List<EngineType> ENGINES_TO_TEST =
-            ImmutableList.of(
-                    EngineType.ALLOY_FORWARD_PROP_NET,
-                    EngineType.ALLOY_FORWARD_PROP_NET2,
-                    EngineType.ALLOY_FORWARD_PROP_NET3,
-                    EngineType.ALLOY_FORWARD_PROP_NET4
-                    );
-//            ImmutableList.copyOf(EngineType.values());
+//            ImmutableList.of(
+//                    EngineType.ALLOY_FORWARD_PROP_NET,
+//                    EngineType.ALLOY_FORWARD_PROP_NET2,
+//                    EngineType.ALLOY_FORWARD_PROP_NET3,
+//                    EngineType.ALLOY_FORWARD_PROP_NET4
+//                    );
+            ImmutableList.copyOf(EngineType.values());
     //To make things simpler, restrict validation to the Java engine types
     //TODO: Find a faster known-good reference engine for testing
     private static final JavaEngineType VALIDATION_ENGINE = JavaEngineType.GGP_BASE_PROVER;
