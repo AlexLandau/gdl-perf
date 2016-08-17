@@ -91,10 +91,13 @@ public class MissingEntriesCorrectnessTestRunner {
 
         long minMillisSpentOnAnyGame = Long.MAX_VALUE;
         for (EngineType engineToTest : ENGINES_TO_TEST) {
-            File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
-            Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile, compatibilityResults.get(engineToTest).getVersion());
-            long minMillisForEngine = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
-            minMillisSpentOnAnyGame = Long.min(minMillisForEngine, minMillisSpentOnAnyGame);
+            CompatibilityResult compatibilityResult = compatibilityResults.get(engineToTest);
+            if (compatibilityResult.isCompatible()) {
+                File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
+                Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile, compatibilityResult.getVersion());
+                long minMillisForEngine = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
+                minMillisSpentOnAnyGame = Long.min(minMillisForEngine, minMillisSpentOnAnyGame);
+            }
         }
         System.out.println("Min millis spent on any game/engine combination: " + minMillisSpentOnAnyGame);
         if (minMillisSpentOnAnyGame == Long.MAX_VALUE) {
