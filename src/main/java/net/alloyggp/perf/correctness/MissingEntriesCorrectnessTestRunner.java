@@ -61,8 +61,22 @@ public class MissingEntriesCorrectnessTestRunner {
 
     public static void main(String[] args) throws Exception {
         GdlPool.caseSensitive = false;
+
+        System.out.println("Running compatibility tests before starting correctness testing.");
+        Map<EngineType, CompatibilityResult> compatibilityResults = Maps.newHashMap();
+        for (EngineType engineToTest : ENGINES_TO_TEST) {
+            System.out.println("Checking if " + engineToTest + " can run on this computer...");
+            CompatibilityResult compatible = engineToTest.runCompatibilityTest();
+            if (compatible.isCompatible()) {
+                System.out.println("Compatibility test successful");
+            } else {
+                System.out.println("Compatibility test failed, skipping engine");
+            }
+            compatibilityResults.put(engineToTest, compatible);
+        }
+
         while (true) {
-            boolean done = runOneRound();
+            boolean done = runOneRound(compatibilityResults);
             if (done) {
                 break;
             }
@@ -72,7 +86,24 @@ public class MissingEntriesCorrectnessTestRunner {
     /**
      * @return true if there's nothing left to run, false otherwise
      */
-    private static boolean runOneRound() throws IOException, InterruptedException {
+    private static boolean runOneRound(Map<EngineType, CompatibilityResult> compatibilityResults) throws IOException, InterruptedException {
+        Set<GameKey> allValidGameKeys = GameKey.loadAllValidGameKeys();
+
+        long minMillisSpentOnAnyGame = Long.MAX_VALUE;
+        for (EngineType engineToTest : ENGINES_TO_TEST) {
+            File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
+            Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile, compatibilityResults.get(engineToTest).getVersion());
+            long minMillisForEngine = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
+            minMillisSpentOnAnyGame = Long.min(minMillisForEngine, minMillisSpentOnAnyGame);
+        }
+        System.out.println("Min millis spent on any game/engine combination: " + minMillisSpentOnAnyGame);
+        if (minMillisSpentOnAnyGame == Long.MAX_VALUE) {
+            return true; //nothing left to run
+        }
+
+        long maxMillisToSpend = MIN_SECONDS_PER_GAME * 1000 + minMillisSpentOnAnyGame;
+        System.out.println("Max millis to spend: " + maxMillisToSpend);
+
         boolean ranAnyTest = false;
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             if (engineToTest.getJavaEngineType().isPresent()
@@ -97,13 +128,6 @@ public class MissingEntriesCorrectnessTestRunner {
             }
 
             Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile, compatible.getVersion());
-            Set<GameKey> allValidGameKeys = GameKey.loadAllValidGameKeys();
-            //TODO: Calculate this across all engines instead of per-engine
-            long minMillisSpentOnAnyGame = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
-            System.out.println("Min millis spent on any game: " + minMillisSpentOnAnyGame);
-
-            long maxMillisToSpend = MIN_SECONDS_PER_GAME * 1000 + minMillisSpentOnAnyGame;
-            System.out.println("Max millis to spend: " + maxMillisToSpend);
 
             for (GameKey gameKey : allValidGameKeys) {
                 if (earlierResults.containsKey(gameKey)
