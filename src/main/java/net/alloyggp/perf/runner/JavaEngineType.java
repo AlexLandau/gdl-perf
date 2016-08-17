@@ -8,6 +8,12 @@ import java.util.concurrent.BlockingQueue;
 import org.eclipse.palamedes.gdl.core.model.GameFactory;
 import org.ggp.base.util.concurrency.ConcurrencyUtils;
 import org.ggp.base.util.game.Game;
+import org.ggp.base.util.gdl.transforms.CondensationIsolator;
+import org.ggp.base.util.gdl.transforms.ConjunctDualizer;
+import org.ggp.base.util.gdl.transforms.DeORer;
+import org.ggp.base.util.gdl.transforms.GdlCleaner;
+import org.ggp.base.util.gdl.transforms.Relationizer;
+import org.ggp.base.util.gdl.transforms.VariableConstrainer;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
@@ -17,6 +23,8 @@ import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachineFa
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import formerlybase.util.gdl.transforms.DomainLimiter;
+import formerlybase.util.gdl.transforms.TransformedProverRuleEngineFactory;
 import formerlybase.util.ruleengine.diffpropnet.DiffPropNetRuleEngineFactory;
 import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngine;
 import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngineFactory;
@@ -45,6 +53,20 @@ import rekkura.ggp.machina.GgpStateMachine;
 public enum JavaEngineType {
     GGP_BASE_PROVER("2015-04-26",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createNormal())),
+    GDL_CLEANER_TRANSFORMED_PROVER("2016-08-16",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(GdlCleaner::run))),
+    DEORER_TRANSFORMED_PROVER("2016-08-16",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(DeORer::run))),
+    CONDENSATION_ISOLATOR_TRANSFORMED_PROVER("2016-08-16",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(CondensationIsolator::run))),
+    VARIABLE_CONSTRAINER_TRANSFORMED_PROVER("2016-08-16",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(VariableConstrainer::replaceFunctionValuedVariables))),
+    CONJUNCT_DUALIZER_TRANSFORMED_PROVER("2016-08-16",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(ConjunctDualizer::apply))),
+    RELATIONIZER_TRANSFORMED_PROVER("2016-08-16",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(Relationizer::run))),
+    DOMAIN_LIMITER_TRANSFORMED_PROVER("2016-08-16",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(DomainLimiter::apply))),
     ALLOY_TUPLE_PROVER(TupleProverRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(TupleProverRuleEngineFactory.create())),
     ALLOY_COMPILED_PROVER_CACHING(CompiledProverRuleEngine.VERSION,
@@ -61,8 +83,6 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory3.create())),
     ALLOY_FORWARD_PROP_NET4(formerlybase.util.ruleengine.fwdpropnet.v4.ForwardPropNetRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(ForwardPropNetRuleEngineFactory4.create())),
-    ALLOY_DUALIZED_PROVER("2016-01-14",
-            StateMachineRunnables.getWrapper(ProverStateMachineFactory.createDualized())),
     ALLOY_DUALIZED_COMPILED_PROVER("2016-01-14",
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createDualized())),
     ALLOY_DUALIZED_DIFF_PROP_NET("2016-01-14",
