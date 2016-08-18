@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import formerlybase.util.gdl.transforms.DomainLimiter;
+import formerlybase.util.gdl.transforms.RedundancyRemover;
 import formerlybase.util.gdl.transforms.TransformedProverRuleEngineFactory;
 import formerlybase.util.ruleengine.diffpropnet.DiffPropNetRuleEngineFactory;
 import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngine;
@@ -67,6 +68,8 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(Relationizer::run))),
     DOMAIN_LIMITER_TRANSFORMED_PROVER("2016-08-16",
             RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(DomainLimiter::apply))),
+    REDUNDANCY_REMOVER_TRANSFORMED_PROVER("2016-08-17",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(RedundancyRemover::apply))),
     ALLOY_TUPLE_PROVER(TupleProverRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(TupleProverRuleEngineFactory.create())),
     ALLOY_COMPILED_PROVER_CACHING(CompiledProverRuleEngine.VERSION,
