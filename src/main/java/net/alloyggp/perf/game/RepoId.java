@@ -7,11 +7,14 @@ import org.ggp.base.util.game.SimpleLocalGameRepository;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 
+import formerlybase.util.game.HiddenGameRepository;
+
 public enum RepoId {
     BASE(() -> GameRepository.getDefaultRepository()),
     DRESDEN(() -> new CloudGameRepository("http://games.ggp.org/dresden/")),
     STANFORD(() -> new CloudGameRepository("http://games.ggp.org/stanford/")),
     ALLOY_LOCAL(() -> SimpleLocalGameRepository.getLocalBaseRepo()),
+    ALLOY_HIDDEN(() -> new HiddenGameRepository()),
     ;
     private final Supplier<GameRepository> repoSupplier;
 
