@@ -81,7 +81,7 @@ public class MissingEntriesCorrectnessTestRunner {
     /**
      * @return true if there's nothing left to run, false otherwise
      */
-    private static boolean runOneRound(Map<EngineType, CompatibilityResult> compatibilityResults) throws IOException, InterruptedException {
+    private static boolean runOneRound(Map<EngineType, CompatibilityResult> compatibilityResults) throws IOException {
         Set<GameKey> allValidGameKeys = GameKey.loadAllValidGameKeys();
 
         long minMillisSpentOnAnyGame = Long.MAX_VALUE;
