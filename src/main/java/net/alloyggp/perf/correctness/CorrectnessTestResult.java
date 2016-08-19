@@ -1,5 +1,6 @@
 package net.alloyggp.perf.correctness;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -138,6 +139,15 @@ public class CorrectnessTestResult implements Csvable {
             map.get(result.getGameKey()).put(result.getTestedEngine(), result);
         }
 
+        return map;
+    }
+
+    public static Multimap<GameKey, CorrectnessTestResult> groupByGame(Collection<CorrectnessTestResult> results) {
+        Multimap<GameKey, CorrectnessTestResult> map = HashMultimap.create();
+
+        for (CorrectnessTestResult result : results) {
+            map.put(result.getGameKey(), result);
+        }
         return map;
     }
 }

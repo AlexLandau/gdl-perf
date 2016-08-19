@@ -78,3 +78,8 @@ task runCorrectnessAll(type: JavaExec) {
     main = 'net.alloyggp.perf.correctness.MissingEntriesCorrectnessTestRunner'
 }
 
+task correctnessSkim(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.analysis.CorrectnessSkim'
+}
+
