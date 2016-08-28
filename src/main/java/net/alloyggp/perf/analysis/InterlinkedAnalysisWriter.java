@@ -419,7 +419,6 @@ public class InterlinkedAnalysisWriter {
                         if (result.getError().isPresent()) {
                             ObservedError error = result.getError().get();
                             String explanation = "Correctness test error: " + error.getErrorString().replace("\n", "<br/>") + "<br/>" + error.getMoveHistory();
-                            System.out.println("Explanation is " + explanation);
                             errorsTable.addRow(link(game), explanation);
                             anyErrorsFound = true;
                         }

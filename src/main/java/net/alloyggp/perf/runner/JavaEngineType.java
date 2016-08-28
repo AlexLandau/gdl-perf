@@ -35,8 +35,8 @@ import formerlybase.util.ruleengine.fwdpropnet.v4.ForwardPropNetRuleEngineFactor
 import formerlybase.util.ruleengine.propnet64.PropNet64RuleEngineFactory;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngine;
 import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngineFactory;
-import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngine;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngineFactory;
+import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngineFactory2;
 import net.alloyggp.perf.correctness.ObservedError;
 import net.alloyggp.perf.runner.runnable.CorrectnessTestRunnable;
 import net.alloyggp.perf.runner.runnable.GameSimulatorRunnables;
@@ -72,8 +72,10 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(RedundancyRemover::apply))),
     ALLOY_TUPLE_PROVER(TupleProverRuleEngine.VERSION,
             RuleEngineRunnables.getWrapper(TupleProverRuleEngineFactory.create())),
-    ALLOY_COMPILED_PROVER_CACHING(CompiledProverRuleEngine.VERSION,
+    ALLOY_COMPILED_PROVER_CACHING(CompiledProverRuleEngineFactory.VERSION,
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createCachingEverything())),
+    ALLOY_COMPILED_PROVER_CACHING2(CompiledProverRuleEngineFactory2.VERSION,
+            RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory2.createCachingEverything())),
     ALLOY_DIFF_PROP_NET("1",
             RuleEngineRunnables.getWrapper(DiffPropNetRuleEngineFactory.createStandardOpnf())),
     ALLOY_PROPNET_64("1",
