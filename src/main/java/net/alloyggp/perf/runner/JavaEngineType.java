@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
 import formerlybase.util.gdl.transforms.DomainLimiter;
 import formerlybase.util.gdl.transforms.RedundancyRemover;
 import formerlybase.util.gdl.transforms.TransformedProverRuleEngineFactory;
+import formerlybase.util.ruleengine.ProverWithOrsRuleEngineFactory;
 import formerlybase.util.ruleengine.diffpropnet.DiffPropNetRuleEngineFactory;
 import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngine;
 import formerlybase.util.ruleengine.fwdpropnet.ForwardPropNetRuleEngineFactory;
@@ -54,6 +55,8 @@ import rekkura.ggp.machina.GgpStateMachine;
 public enum JavaEngineType {
     GGP_BASE_PROVER("2015-04-26",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createNormal())),
+    PROVER_WITH_DISJUNCTIONS("2016-09-17",
+            RuleEngineRunnables.getWrapper(ProverWithOrsRuleEngineFactory.create())),
     GDL_CLEANER_TRANSFORMED_PROVER("2016-08-16",
             RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(GdlCleaner::run))),
     DEORER_TRANSFORMED_PROVER("2016-08-16",
