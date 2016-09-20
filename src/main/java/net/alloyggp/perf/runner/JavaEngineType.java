@@ -14,6 +14,7 @@ import org.ggp.base.util.gdl.transforms.DeORer;
 import org.ggp.base.util.gdl.transforms.GdlCleaner;
 import org.ggp.base.util.gdl.transforms.Relationizer;
 import org.ggp.base.util.gdl.transforms.VariableConstrainer;
+import org.ggp.base.util.ruleengine.prover.ProverRuleEngineFactory;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
@@ -55,6 +56,11 @@ import rekkura.ggp.machina.GgpStateMachine;
 public enum JavaEngineType {
     GGP_BASE_PROVER("2015-04-26",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createNormal())),
+    // The goal with these two is to debug why the transformed variants are inexplicably slower...
+    GGP_BASE_PROVER_RULE_ENGINE("2015-04-26",
+            RuleEngineRunnables.getWrapper(ProverRuleEngineFactory.createNormal())),
+    EMPTY_TRANSFORMED_PROVER("2016-09-20",
+            RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(rules -> rules))),
     PROVER_WITH_DISJUNCTIONS("2016-09-17",
             RuleEngineRunnables.getWrapper(ProverWithOrsRuleEngineFactory.create())),
     GDL_CLEANER_TRANSFORMED_PROVER("2016-08-16",
