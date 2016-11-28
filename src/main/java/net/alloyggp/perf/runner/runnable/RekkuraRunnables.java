@@ -2,8 +2,8 @@ package net.alloyggp.perf.runner.runnable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import org.ggp.base.util.game.Game;
@@ -100,9 +100,8 @@ public class RekkuraRunnables {
                 return sm.nextState(state, chosenActions);
             }
 
-            private final Random rand = new Random();
             private <T> T pickOneAtRandom(List<T> legalMoves) {
-                int index = rand.nextInt(legalMoves.size());
+                int index = ThreadLocalRandom.current().nextInt(legalMoves.size());
                 return legalMoves.get(index);
             }
 
