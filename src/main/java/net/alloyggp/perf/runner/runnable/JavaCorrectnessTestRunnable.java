@@ -1,7 +1,7 @@
 package net.alloyggp.perf.runner.runnable;
 
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import org.ggp.base.util.game.Game;
@@ -76,13 +76,8 @@ public class JavaCorrectnessTestRunnable<Simulator, State, Role, Move> implement
         return moveNames;
     }
 
-    private static final Random RANDOM = new Random();
     private static <T> T pickOneAtRandom(List<T> legalMoves) {
-        int index = RANDOM.nextInt(legalMoves.size());
+        int index = ThreadLocalRandom.current().nextInt(legalMoves.size());
         return legalMoves.get(index);
     }
-
-
-
-
 }

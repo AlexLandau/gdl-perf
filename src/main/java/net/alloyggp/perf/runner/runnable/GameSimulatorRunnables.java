@@ -1,7 +1,7 @@
 package net.alloyggp.perf.runner.runnable;
 
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.ggp.base.util.game.Game;
 
@@ -20,8 +20,6 @@ import cs227b.teamIago.resolver.Predicate;
 public class GameSimulatorRunnables {
     public static JavaSimulatorWrapper<GameSimulator, Void, Expression, Expression> getWrapper(boolean useOpt) {
         return new JavaSimulatorWrapper<GameSimulator, Void, Expression, Expression>() {
-            private final Random rand = new Random();
-
             @Override
             public GameSimulator createSimulator(String gameRules, Game game) {
                 GameSimulator simulator = new GameSimulator(false, useOpt);
@@ -47,7 +45,7 @@ public class GameSimulatorRunnables {
                 for (int r = 0; r < roles.size(); r++) {
                     Expression role = roles.get(r);
                     ExpList legalMoves = simulator.GetLegalMoves(role);
-                    int chosenIndex = rand.nextInt(legalMoves.size());
+                    int chosenIndex = ThreadLocalRandom.current().nextInt(legalMoves.size());
                     Expression chosenMove = legalMoves.get(chosenIndex);
                     moves.add(chosenMove);
                 }

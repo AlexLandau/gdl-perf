@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
@@ -45,12 +45,11 @@ public class PlaceCountTableMaker {
         return table;
     }
 
-    private static final Random RAND = new Random();
     private static List<GameKey> getRandomSample(Collection<GameKey> gameKeys) {
         List<GameKey> toReturn = Lists.newArrayList();
         List<GameKey> indexed = Lists.newArrayList(gameKeys);
         while (toReturn.size() < 5 && !indexed.isEmpty()) {
-            int chosenIndex = RAND.nextInt(indexed.size());
+            int chosenIndex = ThreadLocalRandom.current().nextInt(indexed.size());
             toReturn.add(indexed.get(chosenIndex));
             indexed.remove(chosenIndex);
         }
