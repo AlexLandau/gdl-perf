@@ -96,7 +96,11 @@ public class MissingEntriesCorrectnessTestRunner {
                 File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
                 Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile, compatibilityResult.getVersion());
                 long minMillisForEngine = getMinMillisSpentOnAnyGame(earlierResults, allValidGameKeys);
-                minMillisSpentOnAnyGame = Long.min(minMillisForEngine, minMillisSpentOnAnyGame);
+                if (minMillisForEngine < minMillisSpentOnAnyGame) {
+                    minMillisSpentOnAnyGame = minMillisForEngine;
+                    System.out.println("Reducing min time spent on any game to " + minMillisForEngine +
+                            " because of engine " + engineToTest + " and game " + getLeastTestedGame(earlierResults, allValidGameKeys));
+                }
             }
         }
         System.out.println("Min millis spent on any game/engine combination: " + minMillisSpentOnAnyGame);
@@ -196,6 +200,26 @@ public class MissingEntriesCorrectnessTestRunner {
             }
         }
         return minMillisSpent;
+    }
+
+    private static GameKey getLeastTestedGame(Map<GameKey, AggregateResult> earlierResults,
+            Set<GameKey> allValidGameKeys) {
+        if (!Sets.difference(allValidGameKeys, earlierResults.keySet()).isEmpty()) {
+            //At least one valid game is untested
+            return Sets.difference(allValidGameKeys, earlierResults.keySet()).iterator().next();
+        }
+        long minMillisSpent = Long.MAX_VALUE;
+        GameKey leastTestedGame = null;
+        for (GameKey validGame : allValidGameKeys) {
+            if (!earlierResults.get(validGame).isFailure()) {
+                long millisSpent = earlierResults.get(validGame).getMillisSpentSoFar();
+                if (millisSpent < minMillisSpent) {
+                    minMillisSpent = millisSpent;
+                    leastTestedGame = validGame;
+                }
+            }
+        }
+        return leastTestedGame;
     }
 
     private static Map<GameKey, AggregateResult> loadAlreadyTestedGames(File outputCsvFile, String version) throws IOException {
