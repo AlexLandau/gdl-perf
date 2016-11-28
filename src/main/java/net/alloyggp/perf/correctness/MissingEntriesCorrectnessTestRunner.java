@@ -92,6 +92,15 @@ public class MissingEntriesCorrectnessTestRunner {
         long minMillisSpentOnAnyGame = Long.MAX_VALUE;
         for (EngineType engineToTest : ENGINES_TO_TEST) {
             CompatibilityResult compatibilityResult = compatibilityResults.get(engineToTest);
+            if (engineToTest.getJavaEngineType().isPresent()
+                    && engineToTest.getJavaEngineType().get() == VALIDATION_ENGINE) {
+                if (compatibilityResult.isCompatible()) {
+                    continue;
+                } else {
+                    System.out.println("The validation engine is not compatible; aborting testing.");
+                    return true;
+                }
+            }
             if (compatibilityResult.isCompatible()) {
                 File outputCsvFile = CorrectnessTest.getCsvOutputFileForEngine(engineToTest);
                 Map<GameKey, AggregateResult> earlierResults = loadAlreadyTestedGames(outputCsvFile, compatibilityResult.getVersion());
