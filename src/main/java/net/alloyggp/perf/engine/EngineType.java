@@ -49,7 +49,13 @@ public enum EngineType {
     REKKURA_BACKWARD_PROVER_OSTD(JavaEngineType.REKKURA_BACKWARD_PROVER_OSTD),
     REKKURA_BACKWARD_PROVER(JavaEngineType.REKKURA_BACKWARD_PROVER),
     SANCHO_DEAD_RECKONING_PROPNET(JavaEngineType.SANCHO_DEAD_RECKONING_PROPNET),
+
+    GALVANISE_PROPNET(EngineEnvironment.createGalvanisePlayer(),
+                      ExecutableType.RELATIVE_PATH,
+                      ImmutableList.of("start_perf_test.sh"),
+                      ImmutableList.of()), // no support for correctness testing
     ;
+
     private final EngineEnvironment environment;
     private final ExecutableType executableType;
     private final ImmutableList<String> commandsForPerfTest;
