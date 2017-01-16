@@ -45,6 +45,11 @@ public class EngineEnvironment {
                 ImmutableMap.of());
     }
 
+    public static EngineEnvironment createGalvanisePlayer() {
+        return new EngineEnvironment(Optional.of(ConfigurationKey.GALVANISE_CPP_ENGINE),
+                ImmutableMap.of());
+    }
+
     public File getWorkingDirectory() {
         if (workingDirectoryKey.isPresent()) {
             Optional<String> setWorkingDirectory = LocalConfiguration.loadValue(workingDirectoryKey.get());

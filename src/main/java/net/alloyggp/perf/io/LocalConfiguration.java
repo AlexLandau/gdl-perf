@@ -21,6 +21,8 @@ public class LocalConfiguration {
                 + "(Note that this is unrelated to the commonly-used Eclipse IDE.)"),
         FLUXPLAYER_PROLOG_ENGINE("The base directory of the fluxplayer-prolog-engine repository, "
                 + "available at https://github.com/AlexLandau/fluxplayer-prolog-engine"),
+        GALVANISE_CPP_ENGINE("The bin directory of the galvanise repository, "
+                + "available at https://bitbucket.org/rxe/galvanise"),
         ;
         private final String description;
 

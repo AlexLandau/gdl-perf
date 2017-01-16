@@ -46,10 +46,6 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.1.3'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
-}
-
 // Run perf tests with all games and all working engine types.
 // This may take multiple days to complete.
 // Skips tests that have already been completed.
