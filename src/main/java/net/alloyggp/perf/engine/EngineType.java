@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -21,6 +23,7 @@ import net.alloyggp.perf.runner.CorrectnessTestProcess;
 import net.alloyggp.perf.runner.JavaEngineType;
 import net.alloyggp.perf.runner.PerfTestProcess;
 
+@Immutable
 public enum EngineType {
     GGP_BASE_PROVER(JavaEngineType.GGP_BASE_PROVER),
     //Palamedes BasicPlayer Java prover (linked from Dresden GGP page)
@@ -202,6 +205,7 @@ public enum EngineType {
         return javaEngineType;
     }
 
+    @Immutable
     private static enum ExecutableType {
         /**
          * Specifies that the command should be treated as a relative path with

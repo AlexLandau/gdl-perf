@@ -7,10 +7,12 @@ import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import com.google.common.collect.Maps;
 
 public class LocalConfiguration {
+    @Immutable
     public static enum ConfigurationKey {
         CADIAPLAYER_PROLOG_ENGINE("The base directory of the cadiaplayer-prolog-engine repository, "
                 + "available at https://github.com/AlexLandau/cadiaplayer-prolog-engine. "

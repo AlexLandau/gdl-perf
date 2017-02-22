@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -13,6 +15,7 @@ import com.google.common.collect.Sets;
 import net.alloyggp.perf.io.LocalConfiguration;
 import net.alloyggp.perf.io.LocalConfiguration.ConfigurationKey;
 
+@Immutable
 public class EngineEnvironment {
     //If present, use the directory given by that localConfig key as the working directory
     //If absent, just use the current working directory
