@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.eclipse.palamedes.gdl.core.model.GameFactory;
 import org.ggp.base.util.concurrency.ConcurrencyUtils;
 import org.ggp.base.util.game.Game;
@@ -53,6 +55,7 @@ import net.alloyggp.perf.runner.runnable.SanchoRunnables;
 import net.alloyggp.perf.runner.runnable.StateMachineRunnables;
 import rekkura.ggp.machina.GgpStateMachine;
 
+@Immutable
 public enum JavaEngineType {
     GGP_BASE_PROVER("2015-04-26",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createNormal())),

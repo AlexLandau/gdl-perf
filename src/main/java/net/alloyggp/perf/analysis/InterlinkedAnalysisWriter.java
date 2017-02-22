@@ -287,8 +287,9 @@ public class InterlinkedAnalysisWriter {
                 if (!resultsWithErrors.isEmpty()) {
                     page.addText("Machines with errors:");
                     HtmlAdHocTable errorTable = HtmlAdHocTable.create();
-                    for (Entry<EngineVersion, PerfTestResult> entry : resultsWithErrors.entrySet()) {
-                        errorTable.addRow(link(entry.getKey()), entry.getValue().getErrorMessage());
+                    for (EngineVersion engineVersion : ImmutableSortedSet.copyOf(resultsWithErrors.keySet())) {
+                        String errorMessage = resultsWithErrors.get(engineVersion).getErrorMessage();
+                        errorTable.addRow(link(engineVersion), errorMessage);
                     }
                     page.add(errorTable);
                 }

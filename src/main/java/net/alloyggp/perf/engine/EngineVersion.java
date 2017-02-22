@@ -1,8 +1,9 @@
 package net.alloyggp.perf.engine;
 
+import javax.annotation.concurrent.Immutable;
 
-//@Immutable
-public class EngineVersion {
+@Immutable
+public class EngineVersion implements Comparable<EngineVersion> {
     private final EngineType type;
     private final String version;
 
@@ -58,6 +59,15 @@ public class EngineVersion {
     @Override
     public String toString() {
         return type + ":" + version;
+    }
+
+    @Override
+    public int compareTo(EngineVersion o) {
+        int comparison = this.type.toString().compareTo(o.type.toString());
+        if (comparison != 0) {
+            return comparison;
+        }
+        return this.version.compareTo(o.version);
     }
 
 }
