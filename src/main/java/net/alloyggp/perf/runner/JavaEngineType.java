@@ -37,6 +37,7 @@ import formerlybase.util.ruleengine.fwdpropnet.v2.ForwardPropNetRuleEngineFactor
 import formerlybase.util.ruleengine.fwdpropnet.v3.ForwardPropNetRuleEngineFactory3;
 import formerlybase.util.ruleengine.fwdpropnet.v4.ForwardPropNetRuleEngineFactory4;
 import formerlybase.util.ruleengine.propnet64.PropNet64RuleEngineFactory;
+import formerlybase.util.statemachine.iterative.IterativeProverStateMachine;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngineFactory;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngineFactory2;
 import net.alloyggp.perf.correctness.ObservedError;
@@ -57,6 +58,8 @@ import rekkura.ggp.machina.GgpStateMachine;
 public enum JavaEngineType {
     GGP_BASE_PROVER("2015-04-26",
             StateMachineRunnables.getWrapper(ProverStateMachineFactory.createNormal())),
+    ITERATIVE_PROVER(IterativeProverStateMachine.VERSION,
+            StateMachineRunnables.getWrapper(IterativeProverStateMachine::create)),
     // The goal with these two is to debug why the transformed variants are inexplicably slower...
     GGP_BASE_PROVER_RULE_ENGINE("2015-04-26",
             RuleEngineRunnables.getWrapper(ProverRuleEngineFactory.createNormal())),
