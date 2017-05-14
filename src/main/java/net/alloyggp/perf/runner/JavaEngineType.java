@@ -37,8 +37,6 @@ import formerlybase.util.ruleengine.fwdpropnet.v2.ForwardPropNetRuleEngineFactor
 import formerlybase.util.ruleengine.fwdpropnet.v3.ForwardPropNetRuleEngineFactory3;
 import formerlybase.util.ruleengine.fwdpropnet.v4.ForwardPropNetRuleEngineFactory4;
 import formerlybase.util.ruleengine.propnet64.PropNet64RuleEngineFactory;
-import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngine;
-import formerlybase.util.ruleengine.tupleprover.TupleProverRuleEngineFactory;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngineFactory;
 import formerlybase.util.statemachine.superprover2.CompiledProverRuleEngineFactory2;
 import net.alloyggp.perf.correctness.ObservedError;
@@ -82,8 +80,6 @@ public enum JavaEngineType {
             RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(DomainLimiter::apply))),
     REDUNDANCY_REMOVER_TRANSFORMED_PROVER("2016-08-17",
             RuleEngineRunnables.getWrapper(TransformedProverRuleEngineFactory.create(RedundancyRemover::apply))),
-    ALLOY_TUPLE_PROVER(TupleProverRuleEngine.VERSION,
-            RuleEngineRunnables.getWrapper(TupleProverRuleEngineFactory.create())),
     ALLOY_COMPILED_PROVER_CACHING(CompiledProverRuleEngineFactory.VERSION,
             RuleEngineRunnables.getWrapper(CompiledProverRuleEngineFactory.createCachingEverything())),
     ALLOY_COMPILED_PROVER_CACHING2(CompiledProverRuleEngineFactory2.VERSION,
