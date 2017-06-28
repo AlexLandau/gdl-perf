@@ -86,3 +86,13 @@ task correctnessSkim(type: JavaExec) {
     main = 'net.alloyggp.perf.analysis.CorrectnessSkim'
 }
 
+task removeEngineResults(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.RemoveEngineResults'
+}
+
+task removeInvalidGameEntries(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'net.alloyggp.perf.RemovePerfTestInvalidGameEntries'
+}
+
