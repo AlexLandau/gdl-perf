@@ -26,7 +26,7 @@ public class JavaPerfTestRunnable<Simulator, State, Role, Move> implements PerfT
 
         long numStateChanges = 0;
         long numRollouts = 0;
-        Stopwatch timer = new Stopwatch().start();
+        Stopwatch timer = Stopwatch.createStarted();
         outer : while (true) {
             if (timer.elapsed(TimeUnit.SECONDS) >= secondsToRun) {
                 break outer;

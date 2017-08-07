@@ -22,6 +22,7 @@ import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
 import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachineFactory;
+import org.ggp.base.util.statemachine.sancho.SanchoStateMachineFactory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -127,6 +128,8 @@ public enum JavaEngineType {
 
     SANCHO_DEAD_RECKONING_PROPNET("1.61c",
             SanchoRunnables.getWrapper()),
+    PORTED_SANCHO_PROPNET(SanchoStateMachineFactory.VERSION,
+            StateMachineRunnables.getWrapper(SanchoStateMachineFactory.INSTANCE)),
     ;
     private final String version;
     private final PerfTestRunnable perfRunnable;
