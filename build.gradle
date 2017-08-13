@@ -38,7 +38,7 @@ dependencies {
 
     //Alloy-specific dependencies
     compile 'it.unimi.dsi:fastutil:7.0.12'
-    compile 'net.alloyggp:alloy-ggp-base:0.0.11'
+    compile 'net.alloyggp:alloy-ggp-base:0.0.12'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'ch.qos.logback:logback-core:1.1.3'
     compile 'ch.qos.logback:logback-classic:1.1.3'
