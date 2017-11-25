@@ -23,8 +23,9 @@ public class LocalConfiguration {
                 + "(Note that this is unrelated to the commonly-used Eclipse IDE.)"),
         FLUXPLAYER_PROLOG_ENGINE("The base directory of the fluxplayer-prolog-engine repository, "
                 + "available at https://github.com/AlexLandau/fluxplayer-prolog-engine"),
-        GALVANISE_CPP_ENGINE("The bin directory of the galvanise repository, "
-                + "available at https://bitbucket.org/rxe/galvanise"),
+        GGPLIB_BIN_PATH("The bin directory of the GGPLib repository, "
+                + "available at https://github.com/richemslie/ggplib."
+                + "Make sure to build and run '. bin/setup.sh' before using gdl-perf.")
         ;
         private final String description;
 
