@@ -48,8 +48,8 @@ public class EngineEnvironment {
                 ImmutableMap.of());
     }
 
-    public static EngineEnvironment createGalvanisePlayer() {
-        return new EngineEnvironment(Optional.of(ConfigurationKey.GALVANISE_CPP_ENGINE),
+    public static EngineEnvironment createGGPLibPlayer() {
+        return new EngineEnvironment(Optional.of(ConfigurationKey.GGPLIB_BIN_PATH),
                 ImmutableMap.of());
     }
 
